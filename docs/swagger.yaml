@@ -1,0 +1,307 @@
+openapi: 3.0.0
+info:
+  title: Terms V5 API
+  description: Topcoder Terms API
+  version: 1.0.0
+tags:
+  - name: TermsOfUse
+  - name: Docusign
+paths:
+  /terms/:termsOfUseId:
+    get:
+      tags:
+        - TermsOfUse
+      description: |
+        Get terms of use. If noauth is 'true', no need to provide authorization header.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: termsOfUseId
+          description: The id of terms of use
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: noauth
+          required: false
+          schema:
+            type: string
+          description: The flag indicate this request contain authorization information or not.
+          example: 'true'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 21303
+                  title:
+                    type: string
+                    example: "Standard Terms for Topcoder Competitions v2.2"
+                  url:
+                    type: string
+                    example: ""
+                  text:
+                    type: string
+                    example: "text"
+                  agreed:
+                    type: boolean
+                    example: true
+                  docusignTemplateId:
+                    type: string
+                  agreeabilityType:
+                    type: string
+                    example: "Electronically-agreeable"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /terms/:termsOfUseId/agree:
+    post:
+      tags:
+        - TermsOfUse
+      description: |
+        Agree the terms of use
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: termsOfUseId
+          description: The id of terms of use
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /terms/docusignViewURL:
+    post:
+      tags:
+        - Docusign
+      description: |
+        Generate Docusign View URL
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - templateId
+                - tabs
+              properties:
+                templateId:
+                  description: The template id
+                  type: string
+                tabs:
+                  description: The tabs array
+                  type: array
+                  items:
+                    type: string
+                    example: "label||value"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recipientViewUrl:
+                    type: string
+                  envelopeId:
+                    type: string
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /terms/docusignCallback:
+    post:
+      tags:
+        - Docusign
+      description: |
+        Docusign Callback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - envelopeStatus
+                - envelopeId
+                - tabs
+                - connectKey
+              properties:
+                envelopeStatus:
+                  description: the envelope status
+                  type: string
+                envelopeId:
+                  description: the envelope id
+                  type: string
+                tabs:
+                  description: The tabs array
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Tab'
+                connectKey:
+                  description: the connect key
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Tab:
+      required:
+        - tabLabel
+        - tabValue
+      properties:
+        tabLabel:
+          type: string
+        tabValue:
+          type: string
+    Error:
+      required:
+        - message
+      properties:
+        message:
+          type: string

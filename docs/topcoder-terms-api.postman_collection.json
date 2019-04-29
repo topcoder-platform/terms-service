@@ -1,0 +1,781 @@
+{
+	"info": {
+		"_postman_id": "305b3b1c-6264-4b5d-882b-257eea19286b",
+		"name": "topcoder-terms-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get terms of use",
+			"item": [
+				{
+					"name": "get terms of use by user who has agreed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{USER1_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use by user who hasn't agreed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER2_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use noauth is true",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303?noauth=true",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303"
+							],
+							"query": [
+								{
+									"key": "noauth",
+									"value": "true"
+								}
+							]
+						},
+						"description": "you can still send with auth header, but no agreed field return"
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use noauth is false",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303?noauth=false",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303"
+							],
+							"query": [
+								{
+									"key": "noauth",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get another terms of use",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21304?noauth=true",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21304"
+							],
+							"query": [
+								{
+									"key": "noauth",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use missing Docusign template 500",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21305?noauth=true",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21305"
+							],
+							"query": [
+								{
+									"key": "noauth",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "agree terms of use",
+			"item": [
+				{
+					"name": "agree terms success",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER2_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303/agree",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303",
+								"agree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agree terms fail user has agreed before 400",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{USER1_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303/agree",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303",
+								"agree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agree terms fail user hasn't agreed dependencies terms 400",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER3_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303/agree",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303",
+								"agree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agree terms fail user was banned 403",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER4_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21303/agree",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21303",
+								"agree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agree terms fail terms not found 404",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/121303/agree",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"121303",
+								"agree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "agree terms fail terms not electronically agreeable 400",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/21304/agree",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"21304",
+								"agree"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "generate docusign view url",
+			"item": [
+				{
+					"name": "generate docusign view url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.environment.set(\"ENVELOP_ID\", pm.response.json().envelopeId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{USER4_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"{{AFFIDAVIT_TEMPLATE_ID}}\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign view url 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER4_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"not-uuid\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign view url 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer invalid"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"{{AFFIDAVIT_TEMPLATE_ID}}\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign view url 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER4_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"9103DC77-D8F1-4D7B-BED1-6116604EE98D\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "docusign callback",
+			"item": [
+				{
+					"name": "callback success",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"envelopeStatus\": \"Completed\",\n\t\"envelopeId\": \"{{ENVELOP_ID}}\",\n\t\"tabs\": [],\n\t\"connectKey\": \"{{CONNECT_KEY}}\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignCallback",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignCallback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "callback fail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"envelopeStatus\": \"Completed\",\n\t\"envelopeId\": \"test-fail-id\",\n\t\"tabs\": [],\n\t\"connectKey\": \"{{CONNECT_KEY}}\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignCallback",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignCallback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "callback invalid parameter 400",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"envelopeStatus\": \"Completed\",\n\t\"envelopeId\": \"{{ENVELOP_ID}}\",\n\t\"tabs\": [{ \"tabLabel\": \"abc\" }],\n\t\"connectKey\": \"{{CONNECT_KEY}}\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignCallback",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignCallback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "callback missing parameter 400",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"envelopeId\": \"{{ENVELOP_ID}}\",\n\t\"tabs\": [{ \"tabLabel\": \"abc\", \"tabValue\": \"value\" }],\n\t\"connectKey\": \"{{CONNECT_KEY}}\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignCallback",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignCallback"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
