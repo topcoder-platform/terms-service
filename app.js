@@ -12,6 +12,8 @@ const cors = require('cors')
 const HttpStatus = require('http-status-codes')
 const logger = require('./src/common/logger')
 const interceptor = require('express-interceptor')
+const healthcheck = require('topcoder-healthcheck-dropin')
+
 
 // setup express app
 const app = express()
@@ -47,6 +49,14 @@ app.use(interceptor((req, res) => {
     }
   }
 }))
+
+// check if api is started
+// TODO: check db connection, docusign callback
+function check () {
+  return true;
+}
+
+app.use(healthcheck.middleware([check]))
 
 // Register routes
 require('./app-routes')(app)
