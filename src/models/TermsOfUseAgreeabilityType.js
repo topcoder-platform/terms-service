@@ -1,6 +1,7 @@
 /**
  * The TermsOfUseAgreeabilityType model.
  */
+const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const TermsOfUseAgreeabilityType = sequelize.define('TermsOfUseAgreeabilityType', {
@@ -8,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     name: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false }
   }, {
-    schema: 'termsdb',
+    schema: config.DB_SCHEMA_NAME,
     tableName: 'TermsOfUseAgreeabilityType',
     timestamps: false
   })

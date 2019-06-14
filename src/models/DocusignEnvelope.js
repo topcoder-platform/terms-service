@@ -1,6 +1,7 @@
 /**
  * The DocusignEnvelope model.
  */
+const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const DocusignEnvelope = sequelize.define('DocusignEnvelope', {
@@ -9,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: { type: DataTypes.BIGINT, allowNull: false },
     isCompleted: { type: DataTypes.BIGINT, allowNull: false }
   }, {
-    schema: 'termsdb',
+    schema: config.DB_SCHEMA_NAME,
     tableName: 'DocusignEnvelope',
     timestamps: false
   })

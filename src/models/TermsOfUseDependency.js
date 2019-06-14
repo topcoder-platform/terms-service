@@ -1,13 +1,14 @@
 /**
  * The TermsOfUseDependency model.
  */
+const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const TermsOfUseDependency = sequelize.define('TermsOfUseDependency', {
     dependencyTermsOfUseId: { type: DataTypes.BIGINT, allowNull: false, primaryKey: true },
     dependentTermsOfUseId: { type: DataTypes.BIGINT, allowNull: false, primaryKey: true }
   }, {
-    schema: 'termsdb',
+    schema: config.DB_SCHEMA_NAME,
     tableName: 'TermsOfUseDependency',
     timestamps: false,
     indexes: [

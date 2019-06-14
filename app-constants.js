@@ -72,9 +72,14 @@ const Templates = [{
   handlers: []
 }]
 
+const UserRoles = {
+  Admin: 'Administrator'
+}
+
 module.exports = {
   Templates,
   AGREE_FOR_DOCUSIGN_TEMPLATE: 4,
   ELECT_AGREEABLE: 'Electronically-agreeable',
-  TEMPLATE_ID_INVALID: 'TEMPLATE_ID_INVALID'
+  TEMPLATE_ID_INVALID: 'TEMPLATE_ID_INVALID',
+  UserRoles
 }

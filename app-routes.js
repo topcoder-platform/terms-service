@@ -44,6 +44,10 @@ module.exports = (app) => {
           if (def.auth || (def.optionalAuth && req.headers.authorization)) {
             if (req.authUser.isMachine) {
               next(new errors.ForbiddenError('M2M token is not supported'))
+            } else {
+              if (def.access && (!req.authUser.roles || !helper.checkIfExists(def.access, req.authUser.roles))) {
+                next(new errors.ForbiddenError('You are not allowed to perform this action!'))
+              }
             }
           }
           next()

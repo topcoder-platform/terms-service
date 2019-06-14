@@ -1,6 +1,7 @@
 /**
  * The UserTermsOfUseXref model.
  */
+const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const UserTermsOfUseXref = sequelize.define('UserTermsOfUseXref', {
@@ -8,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     termsOfUseId: { type: DataTypes.BIGINT, allowNull: false, primaryKey: true },
     created: { type: DataTypes.DATE, allowNull: false }
   }, {
-    schema: 'termsdb',
+    schema: config.DB_SCHEMA_NAME,
     tableName: 'UserTermsOfUseXref',
     timestamps: false,
     indexes: [

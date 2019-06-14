@@ -92,7 +92,17 @@ describe('Topcoder - Topcoder Terms API E2E Test', () => {
     await initDB()
   })
 
+  describe('Terms for Resource endpoints', () => {
+    require('./searchAndCheckTermsForResource.test')
+    require('./createTermsForResource.test')
+    require('./updateTermsForResource.test')
+    require('./getAndDeleteTermsForResource.test')
+  })
+
   describe('Terms of Use endpoints', () => {
+    require('./createTermsOfUse.test')
+    require('./updateTermsOfUse.test')
+    require('./deleteAndSearchTermsOfUse.test')
     require('./getTermsOfUse.test')
     require('./agreeTermsOfUse.test')
   })

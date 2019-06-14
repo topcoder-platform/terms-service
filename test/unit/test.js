@@ -56,7 +56,17 @@ describe('Topcoder - Terms API Unit Test', () => {
     await initDB()
   })
 
+  describe('Terms for Resource Unit Test', () => {
+    require('./searchAndCheckTermsForResource.test')
+    require('./createTermsForResource.test')
+    require('./updateTermsForResource.test')
+    require('./getAndDeleteTermsForResource.test')
+  })
+
   describe('Terms of Use Unit Test', () => {
+    require('./createTermsOfUse.test')
+    require('./updateTermsOfUse.test')
+    require('./deleteAndSearchTermsOfUse.test')
     require('./getTermsOfUse.test')
     require('./agreeTermsOfUse.test')
   })

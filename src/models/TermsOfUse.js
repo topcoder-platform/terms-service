@@ -1,6 +1,7 @@
 /**
  * The TermsOfUse model.
  */
+const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const TermsOfUse = sequelize.define('TermsOfUse', {
@@ -11,9 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     url: { type: DataTypes.STRING, allowNull: true },
     agreeabilityTypeId: { type: DataTypes.BIGINT, allowNull: false, defaultValue: 3 },
     created: { type: DataTypes.DATE, allowNull: false },
-    updated: { type: DataTypes.DATE, allowNull: true }
+    createdBy: { type: DataTypes.STRING, allowNull: true },
+    updated: { type: DataTypes.DATE, allowNull: true },
+    updatedBy: { type: DataTypes.STRING, allowNull: true },
+    deletedAt: { type: DataTypes.DATE, allowNull: true }
   }, {
-    schema: 'termsdb',
+    schema: config.DB_SCHEMA_NAME,
     tableName: 'TermsOfUse',
     timestamps: false
   })

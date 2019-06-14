@@ -13,6 +13,7 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 const UserTermsOfUseBanXref = models.UserTermsOfUseBanXref
 const TermsOfUseDependency = models.TermsOfUseDependency
 const DocusignEnvelope = models.DocusignEnvelope
+const TermsForResource = models.TermsForResource
 
 logger.info('Insert test data into database.')
 
@@ -153,6 +154,59 @@ const insertData = async () => {
     docusignTemplateId: '12345678',
     userId: '12345',
     isCompleted: 0
+  })
+  await TermsOfUse.create({
+    id: 30000,
+    text: 'test-for-update',
+    typeId: 10,
+    title: 'test-title',
+    url: 'test-url',
+    agreeabilityTypeId: 3,
+    created: new Date()
+  })
+  await TermsOfUse.create({
+    id: 30001,
+    text: 'test-for-update',
+    typeId: 10,
+    title: 'test-title',
+    url: 'test-url',
+    agreeabilityTypeId: 4,
+    created: new Date()
+  })
+  await TermsOfUseDocusignTemplateXref.create({
+    termsOfUseId: 30001,
+    docusignTemplateId: 'template-id-1'
+  })
+  await TermsOfUse.create({
+    id: 30002,
+    text: 'test-for-update',
+    typeId: 10,
+    title: 'test-title',
+    url: 'test-url',
+    agreeabilityTypeId: 3,
+    created: new Date()
+  })
+  await TermsOfUseDocusignTemplateXref.create({
+    termsOfUseId: 30002,
+    docusignTemplateId: 'template-id-2'
+  })
+  await TermsForResource.create({
+    id: 'a41d1974-5823-473e-bacb-7eed17500ad1',
+    reference: 'challenge',
+    referenceId: '12345',
+    tag: 'submitter',
+    termsOfUseIds: [21303, 21304],
+    created: new Date(),
+    createdBy: 'admin'
+  })
+  await TermsForResource.create({
+    id: 'a41d1974-5823-473e-bacb-7eed17500ad2',
+    reference: 'challenge',
+    referenceId: '12345',
+    tag: 'copilot',
+    termsOfUseIds: [21307],
+    created: new Date(),
+    createdBy: 'admin'
   })
 }
 

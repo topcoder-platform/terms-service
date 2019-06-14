@@ -55,13 +55,14 @@ run `npm run test` under docusign_callback folder
 - Install dependencies `npm install`
 - Run lint `npm run lint`
 - Run lint fix `npm run lint:fix`
-- Start app `npm start`
-- App is running at `http://localhost:3000`
+- Setup process environment `source env.sh`
 - Clear and init db `npm run init-db`
 - Insert test data `npm run test-data`
+- Start app `npm start`
+- App is running at `http://localhost:3000`
 
 ## Testing
-#### You need to `stop` the app before running unit or e2e tests.
+#### You need to `stop` the app and run command `source env.sh` before running unit or e2e tests.
 - Run `npm run test` to execute unit tests and generate coverage report.
 - RUN `npm run e2e` to execute e2e tests and generate coverage report.
 

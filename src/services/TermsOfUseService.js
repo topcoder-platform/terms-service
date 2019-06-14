@@ -4,6 +4,7 @@
 
 const _ = require('lodash')
 const Joi = require('joi')
+const helper = require('../common/helper')
 const logger = require('../common/logger')
 const errors = require('../common/errors')
 const models = require('../models')
@@ -13,6 +14,8 @@ const TermsOfUse = models.TermsOfUse
 const UserTermsOfUseXref = models.UserTermsOfUseXref
 const UserTermsOfUseBanXref = models.UserTermsOfUseBanXref
 const TermsOfUseDependency = models.TermsOfUseDependency
+const TermsOfUseAgreeabilityType = models.TermsOfUseAgreeabilityType
+const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 
 /**
  * Get terms of use by id
@@ -29,7 +32,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
 
   const include = [
     {
-      model: models.TermsOfUseAgreeabilityType,
+      model: TermsOfUseAgreeabilityType,
       attributes: [['name', 'agreeabilityType']]
     },
     {
@@ -50,7 +53,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
   const result = await TermsOfUse.findAll({
     attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId'],
     include,
-    where: { id: termsOfUseId },
+    where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
   if (result.length === 0) {
@@ -61,13 +64,23 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     termsOfUse.agreed = !_.isNull(termsOfUse['UserTermsOfUseXrefs.userId'])
     delete termsOfUse['UserTermsOfUseXrefs.userId']
   }
+
+  return convertRawData(termsOfUse)
+}
+
+/**
+ * Convert raw terms of use data.
+ * @params {termsOfUse} the raw terms of use
+ * @returns the converted terms of use
+ */
+function convertRawData (termsOfUse, throwError = true) {
   termsOfUse.docusignTemplateId = termsOfUse['TermsOfUseDocusignTemplateXref.docusignTemplateId']
   delete termsOfUse['TermsOfUseDocusignTemplateXref.docusignTemplateId']
   termsOfUse.agreeabilityType = termsOfUse['TermsOfUseAgreeabilityType.agreeabilityType']
   delete termsOfUse['TermsOfUseAgreeabilityType.agreeabilityType']
   if (termsOfUse.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
     // check whether this is for docusign template and that template exists
-    if (_.isNull(termsOfUse.docusignTemplateId)) {
+    if (throwError && _.isNull(termsOfUse.docusignTemplateId)) {
       throw new errors.InternalServerError('Docusign template id is missing.')
     }
   } else {
@@ -96,10 +109,10 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
   // get terms of use
   const result = await TermsOfUse.findAll({
     include: [{
-      model: models.TermsOfUseAgreeabilityType,
+      model: TermsOfUseAgreeabilityType,
       attributes: [['name', 'agreeabilityType']]
     }],
-    where: { id: termsOfUseId },
+    where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
   if (result.length === 0) {
@@ -159,9 +172,230 @@ agreeTermsOfUse.schema = {
   termsOfUseId: Joi.numberId()
 }
 
+/**
+ * Perform validation on terms of use data
+ * @params {Object} termsOfUse the terms of use
+ */
+async function validateTermsOfUse (termsOfUse) {
+  if (termsOfUse.agreeabilityTypeId) {
+    try {
+      await helper.ensureExists(TermsOfUseAgreeabilityType, { id: termsOfUse.agreeabilityTypeId })
+    } catch (err) {
+      if (err.name === 'NotFoundError') {
+        throw new errors.BadRequestError(err.message)
+      }
+      throw err
+    }
+  }
+}
+
+/**
+ * Create terms of use
+ * @params {Object} currentUser the user who perform this operation
+ * @params {Object} termsOfUse the terms of use to be created
+ * @returns {Object} the created terms of use
+ */
+async function createTermsOfUse (currentUser, termsOfUse) {
+  await validateTermsOfUse(termsOfUse)
+
+  const idResult = await TermsOfUse.findOne({
+    attributes: [[models.Sequelize.fn('MAX', models.Sequelize.col('id')), 'id']],
+    raw: true
+  })
+  termsOfUse.id = idResult.id + 1
+  termsOfUse.created = new Date()
+  termsOfUse.createdBy = currentUser.handle
+
+  await TermsOfUse.create(_.omit(termsOfUse, 'docusignTemplateId'))
+
+  if (termsOfUse.docusignTemplateId) {
+    await TermsOfUseDocusignTemplateXref.create({
+      termsOfUseId: termsOfUse.id,
+      docusignTemplateId: termsOfUse.docusignTemplateId
+    })
+  }
+
+  return termsOfUse
+}
+
+createTermsOfUse.schema = {
+  currentUser: Joi.any(),
+  termsOfUse: Joi.object().keys({
+    text: Joi.string(),
+    typeId: Joi.numberId(),
+    title: Joi.string().required(),
+    url: Joi.string(),
+    agreeabilityTypeId: Joi.numberId(),
+    docusignTemplateId: Joi.when('agreeabilityTypeId', {
+      is: AGREE_FOR_DOCUSIGN_TEMPLATE,
+      then: Joi.string().required(),
+      otherwise: Joi.string()
+    })
+  }).required()
+}
+
+/**
+ * Update terms of use
+ * @params {Object} currentUser the user who perform this operation
+ * @params {Number} termsForResourceId the id
+ * @params {Object} data the data to be updated
+ * @returns {Object} the updated terms of use
+ */
+async function updateTermsOfUse (currentUser, termsOfUseId, data, isFull) {
+  await validateTermsOfUse(data, false)
+
+  const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
+  const docusignTemplateXref = await termsOfUse.getTermsOfUseDocusignTemplateXref()
+
+  if (_.get(data, 'agreeabilityTypeId', termsOfUse.agreeabilityTypeId) === AGREE_FOR_DOCUSIGN_TEMPLATE &&
+    _.isNull(docusignTemplateXref) && _.isUndefined(data.docusignTemplateId)) {
+    throw new errors.BadRequestError('Docusign template id is missing.')
+  }
+
+  if (isFull && !_.isNull(docusignTemplateXref) && _.isUndefined(data.docusignTemplateId)) {
+    await docusignTemplateXref.destroy()
+  }
+
+  if (isFull) {
+    data.text = data.text || null
+    data.url = data.url || null
+  }
+
+  if (data.docusignTemplateId) {
+    if (_.isNull(docusignTemplateXref)) {
+      await TermsOfUseDocusignTemplateXref.create({
+        termsOfUseId,
+        docusignTemplateId: data.docusignTemplateId
+      })
+    } else {
+      docusignTemplateXref.docusignTemplateId = data.docusignTemplateId
+      await docusignTemplateXref.save()
+    }
+  }
+
+  data.updatedBy = currentUser.handle
+  data.updated = new Date()
+  await termsOfUse.update(_.omit(data, 'docusignTemplateId'))
+
+  if (!isFull && _.isUndefined(data.docusignTemplateId) && !_.isNull(docusignTemplateXref)) {
+    data.docusignTemplateId = docusignTemplateXref.docusignTemplateId
+  }
+
+  return helper.clearObject(_.assign(termsOfUse.dataValues, data))
+}
+
+/**
+ * Partially update terms of use
+ * @params {Object} currentUser the user who perform this operation
+ * @params {Number} termsOfUseId the id
+ * @params {Object} data the data to be updated
+ * @returns {Object} the updated terms of use
+ */
+async function partiallyUpdateTermsOfUse (currentUser, termsOfUseId, data) {
+  return updateTermsOfUse(currentUser, termsOfUseId, data, false)
+}
+
+partiallyUpdateTermsOfUse.schema = {
+  currentUser: Joi.any(),
+  termsOfUseId: Joi.numberId(),
+  data: Joi.object().keys({
+    text: Joi.string(),
+    typeId: Joi.optionalNumberId(),
+    title: Joi.string(),
+    url: Joi.string(),
+    agreeabilityTypeId: Joi.optionalNumberId(),
+    docusignTemplateId: Joi.string()
+  }).required()
+}
+
+/**
+ * Fully update terms of use
+ * @params {Object} currentUser the user who perform this operation
+ * @params {Number} termsOfUseId the id
+ * @params {Object} data the data to be updated
+ * @returns {Object} the updated terms of use
+ */
+async function fullyUpdateTermsOfUse (currentUser, termsOfUseId, data) {
+  return updateTermsOfUse(currentUser, termsOfUseId, data, true)
+}
+
+fullyUpdateTermsOfUse.schema = {
+  currentUser: Joi.any(),
+  termsOfUseId: Joi.numberId(),
+  data: createTermsOfUse.schema.termsOfUse
+}
+
+/**
+ * Delete terms of use
+ * @params {Number} termsOfUseId the id
+ */
+async function deleteTermsOfUse (termsOfUseId) {
+  const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
+  await termsOfUse.update({ deletedAt: new Date() })
+}
+
+deleteTermsOfUse.schema = {
+  termsOfUseId: Joi.numberId()
+}
+
+/**
+ * List terms of use
+ * @params {Object} criteria the search criteria, only pagination currently
+ * @returns {Object} the search result, contain total/page/perPage and result array
+ */
+async function searchTermsOfUses (criteria) {
+  const countResult = await TermsOfUse.findOne({
+    attributes: [[models.Sequelize.fn('COUNT', models.Sequelize.col('id')), 'total']],
+    where: { deletedAt: null },
+    raw: true
+  })
+
+  const result = await TermsOfUse.findAll({
+    order: [['id', 'ASC']],
+    attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId'],
+    include: [
+      {
+        model: TermsOfUseAgreeabilityType,
+        attributes: [['name', 'agreeabilityType']]
+      },
+      {
+        model: models.TermsOfUseDocusignTemplateXref,
+        attributes: ['docusignTemplateId']
+      }
+    ],
+    where: { deletedAt: null },
+    limit: criteria.perPage,
+    offset: (criteria.page - 1) * criteria.perPage,
+    raw: true
+  })
+
+  for (const element of result) {
+    convertRawData(element, false)
+  }
+
+  return {
+    total: countResult.total,
+    page: criteria.page,
+    perPage: criteria.perPage,
+    result: helper.clearObject(result)
+  }
+}
+
+searchTermsOfUses.schema = {
+  criteria: Joi.object().keys({
+    page: Joi.page(),
+    perPage: Joi.perPage()
+  }).required()
+}
+
 module.exports = {
   getTermsOfUse,
-  agreeTermsOfUse
+  agreeTermsOfUse,
+  createTermsOfUse,
+  partiallyUpdateTermsOfUse,
+  fullyUpdateTermsOfUse,
+  deleteTermsOfUse,
+  searchTermsOfUses
 }
 
 logger.buildService(module.exports)

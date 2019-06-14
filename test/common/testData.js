@@ -8,7 +8,7 @@ const token = {
   user3: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJob2hvc2t5IiwiZXhwIjoxNTY1NjgxOTIwLCJ1c2VySWQiOiIxNjA5NjgyMyIsImlhdCI6MTU1NTY4MTMyMCwiZW1haWwiOiJjYWxsbWVrYXRvb3RpZUB0b3Bjb2Rlci5jb20iLCJqdGkiOiIxOWEwOTM3MC0yOTg4LTQ3YjgtOTE4OS0wZGE4NWM2MzRlZDIifQ.Zym_RxIT9UElcnhbPzC-N_y1XB7FjZtCqqZZkDjX6Po',
   user4: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJHaG9zdGFyIiwiZXhwIjoxNTY1NjgxOTIwLCJ1c2VySWQiOiIxNTE3NDMiLCJpYXQiOjE1NTU2ODEzMjAsImVtYWlsIjoiZ2hvc3RhckB0b3Bjb2Rlci5jb20iLCJqdGkiOiIxOWEwOTM3MC0yOTg4LTQ3YjgtOTE4OS0wZGE4NWM2MzRlZDIifQ.VhkmYy_06PBdp48kC34pJ5u4mussfYV80jJQF7Dgqt4',
   invalidUser: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJHaG9zdGFyIiwiZXhwIjoxNTY1NjgxOTIwLCJ1c2VySWQiOiIxMTExMTE1MTc0MyIsImlhdCI6MTU1NTY4MTMyMCwiZW1haWwiOiJnaG9zdGFyQHRvcGNvZGVyLmNvbSIsImp0aSI6IjE5YTA5MzcwLTI5ODgtNDdiOC05MTg5LTBkYTg1YzYzNGVkMiJ9.2sl-wdytuOxGRExQAggLShEnmjM0zm9Ew9mX4ufozNg',
-  m2m: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3RvcGNvZGVyLWRldi5hdXRoMC5jb20vIiwic3ViIjoiZW5qdzE4MTBlRHozWFR3U08yUm4yWTljUVRyc3BuM0JAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbTJtLnRvcGNvZGVyLWRldi5jb20vIiwiaWF0IjoxNTU2MDk1OTYzLCJleHAiOjE1NjYxODIzNjMsImF6cCI6ImVuancxODEwZUR6M1hUd1NPMlJuMlk5Y1FUcnNwbjNCIiwic2NvcGUiOiJyZWFkOmNoYWxsZW5nZXMgcmVhZDpzdWJtaXNzaW9uIHJlYWQ6cmV2aWV3X3R5cGUgYWxsOnJldmlldyIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.Rh0zx0OK9uYJywkC-jwksnT9YpUHQDc2Q7GXWiKXngk'
+  m2m: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3RvcGNvZGVyLWRldi5hdXRoMC5jb20iLCJzdWIiOiJlbmp3MTgxMGVEejNYVHdTTzJSbjJZOWNRVHJzcG4zQkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9tMm0udG9wY29kZXItZGV2LmNvbSIsImlhdCI6MTU1NjA5NTk2MywiZXhwIjoxNTY2MTgyMzYzLCJhenAiOiJlbmp3MTgxMGVEejNYVHdTTzJSbjJZOWNRVHJzcG4zQiIsInNjb3BlIjoicmVhZDpjaGFsbGVuZ2VzIHJlYWQ6c3VibWlzc2lvbiByZWFkOnJldmlld190eXBlIGFsbDpyZXZpZXciLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.W_2nKfcVF0f3sV-ep0GvcmdV-cTAjzHgUBy43JZvUfE'
 }
 
 const user = {
@@ -83,7 +83,177 @@ const user = {
   }
 }
 
+const request = {
+  createTermsOfUse: {
+    requiredFields: ['typeId', 'title', 'agreeabilityTypeId'],
+    reqBody: {
+      text: 'text',
+      typeId: 10,
+      title: 'title',
+      url: 'url',
+      agreeabilityTypeId: 4,
+      docusignTemplateId: 'test-template-1'
+    }
+  },
+  updateTermsOfUse: {
+    requiredFields: ['typeId', 'title', 'agreeabilityTypeId'],
+    reqBody: {
+      text: 'update-text',
+      typeId: 11,
+      title: 'update-title',
+      url: 'update-url',
+      agreeabilityTypeId: 4,
+      docusignTemplateId: 'update-test-template-1'
+    }
+  },
+  searchTermsOfUse: {
+    response: {
+      result: [
+        {
+          id: 20754,
+          title: 'Standard Terms for Topcoder Competitions v2.2',
+          url: '',
+          text: 'text',
+          agreeabilityType: 'Electronically-agreeable'
+        },
+        {
+          id: 21303,
+          title: 'Standard Terms for Topcoder Competitions v2.2',
+          url: '',
+          text: 'text',
+          agreeabilityType: 'Electronically-agreeable'
+        },
+        {
+          id: 21304,
+          title: 'Standard Terms for Topcoder Competitions v2.2',
+          url: '',
+          text: 'another text',
+          docusignTemplateId: '100',
+          agreeabilityType: 'Docusign-template'
+        },
+        {
+          id: 21305,
+          title: 'Standard Terms for Topcoder Competitions v2.2',
+          url: '',
+          text: 'failure test case',
+          agreeabilityType: 'Docusign-template'
+        },
+        {
+          id: 21306,
+          title: 'Standard Terms for Topcoder Competitions v2.2',
+          url: '',
+          text: 'text',
+          agreeabilityType: 'Electronically-agreeable'
+        }
+      ]
+    }
+  },
+  createTermsForResource: {
+    requiredFields: ['reference', 'referenceId', 'tag', 'termsOfUseIds'],
+    reqBody: {
+      reference: 'challenge',
+      referenceId: '12346',
+      tag: 'copilot',
+      termsOfUseIds: [21307]
+    }
+  },
+  updateTermsForResource: {
+    requiredFields: ['reference', 'referenceId', 'tag', 'termsOfUseIds'],
+    reqBody: {
+      reference: 'new-reference',
+      referenceId: '11111',
+      tag: 'tester',
+      termsOfUseIds: [21303, 21304]
+    }
+  },
+  searchTermsForResource: {
+    response: {
+      result: [
+        {
+          id: 'a41d1974-5823-473e-bacb-7eed17500ad2',
+          reference: 'challenge',
+          referenceId: '12345',
+          tag: 'copilot',
+          termsOfUseIds: [
+            '21307'
+          ],
+          createdBy: 'admin'
+        },
+        {
+          id: 'a41d1974-5823-473e-bacb-7eed17500ad1',
+          reference: 'challenge',
+          referenceId: '12345',
+          tag: 'submitter',
+          termsOfUseIds: [
+            '21303',
+            '21304'
+          ],
+          createdBy: 'admin'
+        }
+      ]
+    }
+  },
+  checkTermsForResource: {
+    singleTag: {
+      response: {
+        result: [
+          {
+            tag: 'submitter',
+            allAgreed: false,
+            unAgreedTerms: [
+              {
+                id: 21304,
+                title: 'Standard Terms for Topcoder Competitions v2.2',
+                url: '',
+                text: 'another text',
+                agreed: false,
+                docusignTemplateId: '100',
+                agreeabilityType: 'Docusign-template'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    multipleTags: {
+      response: {
+        result: [
+          {
+            tag: 'submitter',
+            allAgreed: false,
+            unAgreedTerms: [
+              {
+                id: 21303,
+                title: 'Standard Terms for Topcoder Competitions v2.2',
+                url: '',
+                text: 'text',
+                agreed: false,
+                agreeabilityType: 'Electronically-agreeable'
+              },
+              {
+                id: 21304,
+                title: 'Standard Terms for Topcoder Competitions v2.2',
+                url: '',
+                text: 'another text',
+                agreed: false,
+                docusignTemplateId: '100',
+                agreeabilityType: 'Docusign-template'
+              }
+            ]
+          },
+          {
+            tag: 'copilot',
+            allAgreed: true,
+            unAgreedTerms: []
+          }
+        ]
+      }
+    }
+  }
+}
+
 module.exports = {
   token,
-  user
+  user,
+  request
 }

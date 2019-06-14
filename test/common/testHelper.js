@@ -42,6 +42,38 @@ async function postRequest (url, body, token) {
   }
 }
 
+/**
+ * Uses superagent to proxy put request
+ * @param {String} url the url
+ * @param {Object} body the request body
+ * @param {String} token the token
+ * @returns {Object} the response
+ */
+async function putRequest (url, body, token) {
+  return setheaders(request.put(url).send(body), token)
+}
+
+/**
+ * Uses superagent to proxy patch request
+ * @param {String} url the url
+ * @param {Object} body the request body
+ * @param {String} token the token
+ * @returns {Object} the response
+ */
+async function patchRequest (url, body, token) {
+  return setheaders(request.patch(url).send(body), token)
+}
+
+/**
+ * Uses superagent to proxy delete request
+ * @param {String} url the url
+ * @param {String} token the token
+ * @returns {Object} the response
+ */
+async function deleteRequest (url, token) {
+  return setheaders(request.delete(url), token)
+}
+
 let errorLogs
 let warnLogs
 let infoLogs
@@ -118,6 +150,9 @@ function assertInfoMessage (message) {
 module.exports = {
   getRequest,
   postRequest,
+  putRequest,
+  patchRequest,
+  deleteRequest,
   assertError,
   assertValidationError,
   initErrorLogs,
