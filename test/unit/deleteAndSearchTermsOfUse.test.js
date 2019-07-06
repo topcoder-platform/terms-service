@@ -7,14 +7,18 @@ const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
 const { request } = require('../common/testData')
-const { assertError } = require('../common/testHelper')
+const { assertError, clearLogs } = require('../common/testHelper')
 
 const TermsOfUse = models.TermsOfUse
 
 module.exports = describe('delete and search terms of use', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('search terms of use success', async () => {
     const ret = await service.searchTermsOfUses({ page: 1, perPage: 5 })
-    should.equal(ret.total, 11)
+    should.equal(ret.total, 13)
     should.equal(ret.perPage, 5)
     should.equal(_.isEqual(ret.result, request.searchTermsOfUse.response.result), true)
   })

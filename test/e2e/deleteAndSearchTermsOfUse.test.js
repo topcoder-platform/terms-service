@@ -7,19 +7,32 @@ const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
 const { token, request } = require('../common/testData')
-const { getRequest, deleteRequest } = require('../common/testHelper')
+const { getRequest, deleteRequest, clearLogs } = require('../common/testHelper')
 
 const TermsOfUse = models.TermsOfUse
 
 const url = `http://localhost:${config.PORT}/terms`
 
 module.exports = describe('delete and search terms of use', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('search terms of use success', async () => {
     const res = await getRequest(`${url}?page=1&perPage=5`, token.user1)
     should.equal(_.isEqual(res.body.result, request.searchTermsOfUse.response.result), true)
     should.equal(res.headers['x-page'], 1)
     should.equal(res.headers['x-per-page'], 5)
-    should.equal(res.headers['x-total'], 11)
+    should.equal(res.headers['x-total'], 13)
+    should.equal(res.headers['x-total-pages'], 3)
+  })
+
+  it('search terms of use using m2m token success', async () => {
+    const res = await getRequest(`${url}?page=1&perPage=5`, token.m2mRead)
+    should.equal(_.isEqual(res.body.result, request.searchTermsOfUse.response.result), true)
+    should.equal(res.headers['x-page'], 1)
+    should.equal(res.headers['x-per-page'], 5)
+    should.equal(res.headers['x-total'], 13)
     should.equal(res.headers['x-total-pages'], 3)
   })
 
@@ -27,6 +40,13 @@ module.exports = describe('delete and search terms of use', () => {
     const res = await deleteRequest(`${url}/30000`, token.user1)
     should.equal(res.status, 204)
     const record = await TermsOfUse.findOne({ where: { id: 30000 }, raw: true })
+    should.exist(record.deletedAt)
+  })
+
+  it('delete terms of use using m2m token success', async () => {
+    const res = await deleteRequest(`${url}/40000`, token.m2mWrite)
+    should.equal(res.status, 204)
+    const record = await TermsOfUse.findOne({ where: { id: 40000 }, raw: true })
     should.exist(record.deletedAt)
   })
 
@@ -70,6 +90,16 @@ module.exports = describe('delete and search terms of use', () => {
     }
   })
 
+  it('failure - search terms of use using forbidden m2m token', async () => {
+    try {
+      await getRequest(`${url}?page=1&perPage=5`, token.m2mWrite)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
   it('failure - delete terms of use no token', async () => {
     try {
       await deleteRequest(`${url}/30000`)
@@ -93,6 +123,16 @@ module.exports = describe('delete and search terms of use', () => {
   it('failure - delete terms of use forbidden', async () => {
     try {
       await deleteRequest(`${url}/30000`, token.user2)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
+  it('failure - delete terms of use using forbidden m2m token', async () => {
+    try {
+      await deleteRequest(`${url}/30000`, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)

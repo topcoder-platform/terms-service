@@ -43,7 +43,10 @@ module.exports = (app) => {
         actions.push((req, res, next) => {
           if (def.auth || (def.optionalAuth && req.headers.authorization)) {
             if (req.authUser.isMachine) {
-              next(new errors.ForbiddenError('M2M token is not supported'))
+              // M2M
+              if (!def.optionalAuth && (!def.scopes || (!req.authUser.scopes || !helper.checkIfExists(def.scopes, req.authUser.scopes)))) {
+                next(new errors.ForbiddenError('You are not allowed to perform this action!'))
+              }
             } else {
               if (def.access && (!req.authUser.roles || !helper.checkIfExists(def.access, req.authUser.roles))) {
                 next(new errors.ForbiddenError('You are not allowed to perform this action!'))

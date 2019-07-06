@@ -3,6 +3,7 @@
  */
 
 const _ = require('lodash')
+const config = require('config')
 const Joi = require('joi')
 const uuid = require('uuid/v4')
 const helper = require('../common/helper')
@@ -57,8 +58,10 @@ async function createTermsForResource (currentUser, termsForResource) {
 
   termsForResource.id = uuid()
   termsForResource.created = new Date()
-  termsForResource.createdBy = currentUser.handle
+  termsForResource.createdBy = currentUser.handle || currentUser.sub
   await TermsForResource.create(termsForResource)
+
+  await helper.postEvent(config.TERMS_CREATE_TOPIC, _.omit(termsForResource, 'createdBy'))
 
   return termsForResource
 }
@@ -90,7 +93,7 @@ async function updateTermsForResource (currentUser, termsForResourceId, data) {
   await checkDuplicate(_.assign(_.pick(termsForResource, identityFields), _.pick(data, identityFields)), termsForResourceId)
 
   data.updated = new Date()
-  data.updatedBy = currentUser.handle
+  data.updatedBy = currentUser.handle || currentUser.sub
   await termsForResource.update(data)
 
   return _.assign(termsForResource.dataValues, data)

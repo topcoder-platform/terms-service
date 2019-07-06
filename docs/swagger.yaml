@@ -12,7 +12,10 @@ paths:
     post:
       tags:
         - TermsOfUse
-      description: Create terms of use.
+      description: |
+        Create terms of use.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       requestBody:
@@ -54,7 +57,10 @@ paths:
     get:
       tags:
         - TermsOfUse
-      description: Search terms of use.
+      description: |
+        Search terms of use.
+
+        **Authorization** M2M token with read terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -220,7 +226,10 @@ paths:
     put:
       tags:
         - TermsOfUse
-      description: Update terms of use.
+      description: |
+        Update terms of use.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -275,7 +284,10 @@ paths:
     patch:
       tags:
         - TermsOfUse
-      description: Update terms of use.
+      description: |
+        Update terms of use.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -330,7 +342,10 @@ paths:
     delete:
       tags:
         - TermsOfUse
-      description: Delete terms of use.
+      description: |
+        Delete terms of use.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -573,7 +588,10 @@ paths:
     post:
       tags:
         - TermsReference
-      description: Create terms for resource.
+      description: |
+        Create terms for resource.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       requestBody:
@@ -615,7 +633,10 @@ paths:
     get:
       tags:
         - TermsReference
-      description: Search terms for resources.
+      description: |
+        Search terms for resources.
+
+        **Authorization** M2M token with read terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -704,6 +725,8 @@ paths:
         - TermsReference
       description: |
         Get terms for resource.
+
+        **Authorization** M2M token with read terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -754,7 +777,10 @@ paths:
     put:
       tags:
         - TermsReference
-      description: Update terms for resource.
+      description: |
+        Update terms for resource.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -810,7 +836,10 @@ paths:
     patch:
       tags:
         - TermsReference
-      description: Update terms for resource
+      description: |
+        Update terms for resource
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -866,7 +895,10 @@ paths:
     delete:
       tags:
         - TermsReference
-      description: Delete terms for resource.
+      description: |
+        Delete terms for resource.
+
+        **Authorization** M2M token with write terms scope is allowed
       security:
         - bearerAuth: []
       parameters:
@@ -916,6 +948,8 @@ paths:
         - TermsReference
       description: |
         Checking whether the user has agreed to terms for a resource
+
+        **Authorization** M2M token with read terms scope is allowed
       security:
         - bearerAuth: []
       parameters:

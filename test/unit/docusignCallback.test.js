@@ -7,12 +7,16 @@ const should = require('should')
 const service = require('../../src/services/DocusignService')
 const models = require('../../src/models')
 const { user } = require('../common/testData')
-const { assertError, assertErrorMessage, assertWarnMessage, assertInfoMessage } = require('../common/testHelper')
+const { assertError, assertErrorMessage, assertWarnMessage, assertInfoMessage, clearLogs } = require('../common/testHelper')
 
 const DocusignEnvelope = models.DocusignEnvelope
 const TermsOfUse = models.TermsOfUse
 
 module.exports = describe('docusign Callback', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('docusign Callback(AFFIDAVIT) success', async () => {
     let docuEnvelope = await DocusignEnvelope.findOne({
       where: { userId: user.user4.userId, docusignTemplateId: config.DOCUSIGN.AFFIDAVIT_TEMPLATE_ID, isCompleted: 0 },

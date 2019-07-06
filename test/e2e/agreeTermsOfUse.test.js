@@ -7,13 +7,17 @@ const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
 const { token } = require('../common/testData')
-const { postRequest } = require('../common/testHelper')
+const { postRequest, clearLogs, assertInfoMessage } = require('../common/testHelper')
 
 const UserTermsOfUseXref = models.UserTermsOfUseXref
 
 const url = `http://localhost:${config.PORT}/terms`
 
 module.exports = describe('Agree terms of use endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('agree terms of use success', async () => {
     let records = await UserTermsOfUseXref.findAll({ where: { userId: 23124329, termsOfUseId: 21303 } })
     should.equal(records.length, 0)
@@ -22,6 +26,7 @@ module.exports = describe('Agree terms of use endpoint', () => {
     should.equal(res.body.success, true)
     records = await UserTermsOfUseXref.findAll({ where: { userId: 23124329, termsOfUseId: 21303 } })
     should.equal(records.length, 1)
+    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_UPDATE_TOPIC}`)
   })
 
   it('failure - user has agreed terms of use before', async () => {
@@ -86,11 +91,11 @@ module.exports = describe('Agree terms of use endpoint', () => {
 
   it('failure - M2M not supported', async () => {
     try {
-      await postRequest(`${url}/21303/agree`, undefined, token.m2m)
+      await postRequest(`${url}/21303/agree`, undefined, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)
-      should.equal(_.get(err, 'response.body.message'), 'M2M token is not supported')
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
     }
   })
 

@@ -6,8 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
-const { token, request } = require('../common/testData')
-const { putRequest, patchRequest } = require('../common/testHelper')
+const { user, token, request } = require('../common/testData')
+const { putRequest, patchRequest, clearLogs } = require('../common/testHelper')
 
 const TermsOfUse = models.TermsOfUse
 const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
@@ -15,9 +15,37 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 const url = `http://localhost:${config.PORT}/terms`
 
 module.exports = describe('update terms of use endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   const id1 = 30000
   const id2 = 30001
   const id3 = 30002
+
+  it('fully update terms of use using m2m token success', async () => {
+    let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    data.text = 'm2m-text'
+    data.title = 'm2m-title'
+    const res = await putRequest(`${url}/${id1}`, data, token.m2mWrite)
+    const record = await TermsOfUse.findOne({ where: { id: id1, deletedAt: null }, raw: true })
+    should.equal(record.text, 'm2m-text')
+    should.equal(record.typeId, 11)
+    should.equal(record.title, 'm2m-title')
+    should.equal(record.url, 'update-url')
+    should.equal(record.updatedBy, user.m2mWrite.sub)
+    should.equal(record.agreeabilityTypeId, 4)
+    const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
+    should.equal(existed.length, 1)
+    should.equal(existed[0].docusignTemplateId, 'update-test-template-1')
+    should.equal(res.body.text, 'm2m-text')
+    should.equal(res.body.typeId, 11)
+    should.equal(res.body.title, 'm2m-title')
+    should.equal(res.body.url, 'update-url')
+    should.equal(res.body.agreeabilityTypeId, 4)
+    should.equal(res.body.updatedBy, user.m2mWrite.sub)
+    should.exist(res.body.updated)
+  })
 
   it('fully update terms of use, adding docusign template success', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
@@ -131,6 +159,26 @@ module.exports = describe('update terms of use endpoint', () => {
     }
   })
 
+  it('partially update terms of use using m2m token success', async () => {
+    const res = await patchRequest(`${url}/${id1}`, { url: 'm2m-url' }, token.m2mWrite)
+    const record = await TermsOfUse.findOne({ where: { id: id1, deletedAt: null }, raw: true })
+    should.not.exist(record.text)
+    should.equal(record.typeId, 11)
+    should.equal(record.title, 'update-title')
+    should.equal(record.url, 'm2m-url')
+    should.equal(record.updatedBy, user.m2mWrite.sub)
+    should.equal(record.agreeabilityTypeId, 3)
+    const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
+    should.equal(existed.length, 0)
+    should.not.exist(res.body.text)
+    should.equal(res.body.typeId, 11)
+    should.equal(res.body.title, 'update-title')
+    should.equal(res.body.url, 'm2m-url')
+    should.equal(res.body.agreeabilityTypeId, 3)
+    should.equal(res.body.updatedBy, user.m2mWrite.sub)
+    should.exist(res.body.updated)
+  })
+
   it('partially update terms of use, adding docusign template success', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     data = _.pick(data, 'url', 'agreeabilityTypeId', 'docusignTemplateId')
@@ -205,6 +253,17 @@ module.exports = describe('update terms of use endpoint', () => {
     }
   })
 
+  it('failure - fully update terms of use using forbidden m2m token', async () => {
+    let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    try {
+      await putRequest(`${url}/${id1}`, data, token.m2mRead)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
   it('failure - partially update terms of use no token', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     try {
@@ -231,6 +290,17 @@ module.exports = describe('update terms of use endpoint', () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     try {
       await patchRequest(`${url}/${id1}`, data, token.user2)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
+  it('failure - partially update terms of use using forbidden m2m token', async () => {
+    let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    try {
+      await patchRequest(`${url}/${id1}`, data, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)

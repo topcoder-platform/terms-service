@@ -38,6 +38,7 @@
     "sequelize": "^5.3.0",
     "superagent": "^5.0.2",
     "tc-core-library-js": "appirio-tech/tc-core-library-js.git#v2.6.1",
+    "tc-bus-api-wrapper": "topcoder-platform/tc-bus-api-wrapper.git",
     "topcoder-healthcheck-dropin": "^1.0.3",
     "uuid": "^3.3.2",
     "winston": "^3.2.1"

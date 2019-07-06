@@ -7,11 +7,15 @@ const should = require('should')
 const service = require('../../src/services/DocusignService')
 const models = require('../../src/models')
 const { user } = require('../common/testData')
-const { assertError, assertValidationError } = require('../common/testHelper')
+const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
 const DocusignEnvelope = models.DocusignEnvelope
 
 module.exports = describe('generate Docusign View Url', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   let docuEnvelope
 
   it('generate docusign view url(AFFIDAVIT) success', async () => {

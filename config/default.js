@@ -7,7 +7,7 @@ module.exports = {
   PORT: process.env.PORT || 3000,
 
   AUTH_SECRET: process.env.AUTH_SECRET || 'mysecret',
-  VALID_ISSUERS: process.env.VALID_ISSUERS || '["https://api.topcoder-dev.com", "https://api.topcoder.com", "https://topcoder-dev.auth0.com"]',
+  VALID_ISSUERS: process.env.VALID_ISSUERS || '["https://api.topcoder-dev.com", "https://api.topcoder.com", "https://topcoder-dev.auth0.com/"]',
 
   POSTGRES_URL: process.env.POSTGRES_URL || 'postgres://postgres:password@localhost:5432/postgres',
   DB_SCHEMA_NAME: process.env.DB_SCHEMA_NAME || 'termsdb',
@@ -20,6 +20,12 @@ module.exports = {
   AUTH0_PROXY_SERVER_URL: process.env.AUTH0_PROXY_SERVER_URL || 'https://topcoder-dev.auth0.com/oauth/token',
 
   USER_API_URL: process.env.USER_API_URL || 'https://api.topcoder-dev.com/v3/users',
+
+  BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v5',
+  KAFKA_ERROR_TOPIC: process.env.KAFKA_ERROR_TOPIC || 'common.error.reporting',
+  KAFKA_MESSAGE_ORIGINATOR: process.env.KAFKA_MESSAGE_ORIGINATOR || 'resources-api',
+  TERMS_CREATE_TOPIC: process.env.TERMS_CREATE_TOPIC || 'test.new.bus.events', // 'terms.notification.created',
+  TERMS_UPDATE_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'test.new.bus.events', // 'terms.notification.updated',
 
   DOCUSIGN: {
     USERNAME: process.env.DOCUSIGN_USERNAME,

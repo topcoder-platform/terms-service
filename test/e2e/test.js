@@ -6,7 +6,9 @@ process.env.NODE_ENV = 'test'
 
 global.Promise = require('bluebird')
 
+const _ = require('lodash')
 const config = require('config')
+const should = require('should')
 const logger = require('../../src/common/logger')
 const testHelper = require('../common/testHelper')
 const { initDB } = require('../../src/init-db')
@@ -110,5 +112,27 @@ describe('Topcoder - Topcoder Terms API E2E Test', () => {
   describe('Docusign Unit endpoints', () => {
     require('./generateDocusignViewUrl.test')
     require('./docusignCallback.test')
+  })
+
+  describe('Fail routes Tests', () => {
+    const url = `http://localhost:${config.PORT}`
+
+    it('Unsupported http method, return 405', async () => {
+      try {
+        await testHelper.putRequest(`${url}/terms`, { name: 'fail-route' })
+      } catch (err) {
+        should.equal(err.status, 405)
+        should.equal(_.get(err, 'response.body.message'), 'The requested HTTP method is not supported.')
+      }
+    })
+
+    it('Http resource not found, return 404', async () => {
+      try {
+        await testHelper.getRequest(`${url}/invalid`)
+      } catch (err) {
+        should.equal(err.status, 404)
+        should.equal(_.get(err, 'response.body.message'), 'The requested resource cannot be found.')
+      }
+    })
   })
 })

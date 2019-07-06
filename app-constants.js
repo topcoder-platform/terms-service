@@ -76,10 +76,18 @@ const UserRoles = {
   Admin: 'Administrator'
 }
 
+const Scopes = {
+  Terms: {
+    Read: 'terms:read',
+    Write: 'terms:write'
+  }
+}
+
 module.exports = {
   Templates,
   AGREE_FOR_DOCUSIGN_TEMPLATE: 4,
   ELECT_AGREEABLE: 'Electronically-agreeable',
   TEMPLATE_ID_INVALID: 'TEMPLATE_ID_INVALID',
-  UserRoles
+  UserRoles,
+  Scopes
 }

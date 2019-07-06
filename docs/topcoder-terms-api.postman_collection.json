@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "972b381b-90aa-4e03-8031-d5d8c330344c",
+		"_postman_id": "f78a998a-5aa4-4c0a-820e-e26ee66fe032",
 		"name": "topcoder-terms-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -24,12 +24,8 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{URL}}/terms/reference?page=1&perPage=2",
+							"raw": "{{URL}}/terms/reference?page=1&perPage=3",
 							"host": [
 								"{{URL}}"
 							],
@@ -44,7 +40,85 @@
 								},
 								{
 									"key": "perPage",
-									"value": "2"
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search terms reference with m2m token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_READ_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/reference?page=1&perPage=3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search terms reference with forbidden m2m token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/reference?page=1&perPage=3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "3"
 								}
 							]
 						}
@@ -85,6 +159,99 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [21307]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create terms for resource with m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.environment.set(\"TERMS_RESOURCE_ID2\", pm.response.json().id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"manager\",\n    \"termsOfUseIds\": [21307]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create terms for resource with forbidden m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_READ_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"manager\",\n    \"termsOfUseIds\": [21307]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference",
@@ -190,6 +357,52 @@
 					"response": []
 				},
 				{
+					"name": "fully terms for resource using m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reference\": \"m2m-update\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [21303, 21304]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference",
+								"{{TERMS_RESOURCE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "fully terms for resource",
 					"event": [
 						{
@@ -220,6 +433,98 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [21303, 21304]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference",
+								"{{TERMS_RESOURCE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fully terms for resource with forbidden m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_READ_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reference\": \"m2m-update\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [21303, 21304]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference",
+								"{{TERMS_RESOURCE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "partially terms for resource with m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reference\": \"patch-m2m\",\n    \"tag\": \"copilot\"\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
@@ -282,6 +587,52 @@
 					"response": []
 				},
 				{
+					"name": "partially terms for resource with forbidden m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_READ_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"reference\": \"patch-m2m\",\n    \"tag\": \"copilot\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference",
+								"{{TERMS_RESOURCE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "delete terms for resource",
 					"event": [
 						{
@@ -328,6 +679,98 @@
 					"response": []
 				},
 				{
+					"name": "delete terms for resource using m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference",
+								"{{TERMS_RESOURCE_ID2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete terms for resource using forbidden m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_READ_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"reference",
+								"{{TERMS_RESOURCE_ID2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "check terms reference",
 					"request": {
 						"method": "GET",
@@ -338,10 +781,86 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"url": {
+							"raw": "{{URL}}/terms/user/8547899/reference?reference=challenge&referenceId=12345&tags=submitter",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"user",
+								"8547899",
+								"reference"
+							],
+							"query": [
+								{
+									"key": "reference",
+									"value": "challenge"
+								},
+								{
+									"key": "referenceId",
+									"value": "12345"
+								},
+								{
+									"key": "tags",
+									"value": "submitter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check terms reference using m2m token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_READ_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/user/8547899/reference?reference=challenge&referenceId=12345&tags=submitter",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"user",
+								"8547899",
+								"reference"
+							],
+							"query": [
+								{
+									"key": "reference",
+									"value": "challenge"
+								},
+								{
+									"key": "referenceId",
+									"value": "12345"
+								},
+								{
+									"key": "tags",
+									"value": "submitter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check terms reference using forbidden m2m token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							}
+						],
 						"url": {
 							"raw": "{{URL}}/terms/user/8547899/reference?reference=challenge&referenceId=12345&tags=submitter",
 							"host": [
@@ -382,10 +901,6 @@
 								"value": "Bearer {{USER1_TOKEN}}"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{URL}}/terms/user/151743/reference?reference=challenge&referenceId=12345&tags=submitter&tags=copilot",
 							"host": [
@@ -430,10 +945,6 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{URL}}/terms/user/8547899/reference?reference=challenge&referenceId=12347&tags=submitter",
 							"host": [
@@ -518,6 +1029,99 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "create terms of use using m2m token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e2736494-7b96-498f-85a0-0e558587b520",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.environment.set(\"TERMS_ID2\", pm.response.json().id);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_WRITE_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": 3\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms of use using forbidden m2m token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e2736494-7b96-498f-85a0-0e558587b520",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_READ_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": 3\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
@@ -544,6 +1148,72 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n\t\"docusignTemplateId\": \"test-template-1\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_ID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update terms of use with m2m token",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{M2M_WRITE_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"url\": \"test-url\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_ID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update terms of use with forbidden m2m token",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_READ_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"url\": \"test-url\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms/{{TERMS_ID}}",
@@ -629,6 +1299,72 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "update terms of use with m2m token",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_WRITE_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"m2m-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": 4,\n    \"docusignTemplateId\": \"template-1\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_ID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update terms of use with forbidden m2m token",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_READ_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"m2m-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": 4,\n    \"docusignTemplateId\": \"template-1\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_ID}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_ID}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
@@ -647,10 +1383,72 @@
 										"type": "text"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
+								"url": {
+									"raw": "{{URL}}/terms?page=2&perPage=5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms of use with m2m token",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{M2M_READ_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms?page=2&perPage=5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms of use with forbidden m2m token",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_WRITE_TOKEN}}"
+									}
+								],
 								"url": {
 									"raw": "{{URL}}/terms?page=2&perPage=5",
 									"host": [
@@ -706,6 +1504,62 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "delete terms of use with m2m token success",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_WRITE_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_ID2}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_ID2}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms of use with forbidden m2m token",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_READ_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_ID2}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_ID2}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
@@ -727,6 +1581,40 @@
 										"key": "Authorization",
 										"type": "text",
 										"value": "Bearer {{USER2_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/terms/21303/agree",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"21303",
+										"agree"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "agree terms success fail, m2m token is not allowed",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_WRITE_TOKEN}}"
 									}
 								],
 								"body": {
@@ -939,10 +1827,6 @@
 										"type": "text"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{URL}}/terms/21303",
 									"host": [
@@ -972,10 +1856,6 @@
 										"value": "Bearer {{USER2_TOKEN}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{URL}}/terms/21303",
 									"host": [
@@ -1005,10 +1885,6 @@
 										"value": "Bearer {{USER1_TOKEN}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{URL}}/terms/21303?noauth=true",
 									"host": [
@@ -1045,10 +1921,6 @@
 										"value": "Bearer {{USER1_TOKEN}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{URL}}/terms/21303?noauth=false",
 									"host": [
@@ -1079,10 +1951,6 @@
 										"value": "application/json"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{URL}}/terms/21304?noauth=true",
 									"host": [
@@ -1113,10 +1981,6 @@
 										"value": "application/json"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{URL}}/terms/21305?noauth=true",
 									"host": [
@@ -1125,6 +1989,70 @@
 									"path": [
 										"terms",
 										"21305"
+									],
+									"query": [
+										{
+											"key": "noauth",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms of use, authentication is need(m2m token is considered as anonymous) if noauth is false",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_READ_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/21303",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"21303"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms of use, can accept valid m2m token, noauth is true, consider it as anonymous",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{M2M_READ_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/21303?noauth=true",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"21303"
 									],
 									"query": [
 										{
@@ -1470,6 +2398,56 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"templateId\": \"9103DC77-D8F1-4D7B-BED1-6116604EE98D\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "failure generate docusign view url using m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{M2M_WRITE_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"{{AFFIDAVIT_TEMPLATE_ID}}\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/docusignViewURL",

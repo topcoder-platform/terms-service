@@ -186,6 +186,15 @@ const insertData = async () => {
     agreeabilityTypeId: 3,
     created: new Date()
   })
+  await TermsOfUse.create({
+    id: 40000,
+    text: 'test-for-delete',
+    typeId: 10,
+    title: 'test-title',
+    url: 'test-url',
+    agreeabilityTypeId: 3,
+    created: new Date()
+  })
   await TermsOfUseDocusignTemplateXref.create({
     termsOfUseId: 30002,
     docusignTemplateId: 'template-id-2'
@@ -204,6 +213,15 @@ const insertData = async () => {
     reference: 'challenge',
     referenceId: '12345',
     tag: 'copilot',
+    termsOfUseIds: [21307],
+    created: new Date(),
+    createdBy: 'admin'
+  })
+  await TermsForResource.create({
+    id: 'a41d1974-5823-473e-bacb-7eed17500ad3',
+    reference: 'challenge',
+    referenceId: '12345',
+    tag: 'manager',
     termsOfUseIds: [21307],
     created: new Date(),
     createdBy: 'admin'

@@ -3,6 +3,7 @@
  */
 
 const _ = require('lodash')
+const config = require('config')
 const Joi = require('joi')
 const helper = require('../common/helper')
 const logger = require('../common/logger')
@@ -26,7 +27,9 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
  */
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
   const noauth = query.noauth === 'true'
-  if (!noauth && !currentUser) {
+  if (!noauth && (!currentUser || currentUser.isMachine)) {
+    // since we can get terms of use anonymous, we can accept any valid m2m token.
+    // however it should be consider as anonymous, so noauth query parameter should be true
     throw new errors.UnauthorizedError('Authentication credential was missing.')
   }
 
@@ -158,11 +161,14 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
     throw new errors.ForbiddenError('Sorry, you can not agree to this terms of use.')
   }
 
-  await UserTermsOfUseXref.create({
+  const body = {
     userId: currentUser.userId,
     termsOfUseId,
     created: new Date()
-  })
+  }
+  await UserTermsOfUseXref.create(body)
+
+  await helper.postEvent(config.TERMS_UPDATE_TOPIC, body)
 
   return { success: true }
 }
@@ -204,7 +210,7 @@ async function createTermsOfUse (currentUser, termsOfUse) {
   })
   termsOfUse.id = idResult.id + 1
   termsOfUse.created = new Date()
-  termsOfUse.createdBy = currentUser.handle
+  termsOfUse.createdBy = currentUser.handle || currentUser.sub
 
   await TermsOfUse.create(_.omit(termsOfUse, 'docusignTemplateId'))
 
@@ -273,7 +279,7 @@ async function updateTermsOfUse (currentUser, termsOfUseId, data, isFull) {
     }
   }
 
-  data.updatedBy = currentUser.handle
+  data.updatedBy = currentUser.handle || currentUser.sub
   data.updated = new Date()
   await termsOfUse.update(_.omit(data, 'docusignTemplateId'))
 

@@ -6,17 +6,22 @@ const _ = require('lodash')
 const should = require('should')
 const service = require('../../src/services/TermsForResourceService')
 const { request } = require('../common/testData')
-const { assertError } = require('../common/testHelper')
+const { assertError, clearLogs } = require('../common/testHelper')
 
 module.exports = describe('search and check terms for resource', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('search terms for resource success', async () => {
-    const result = await service.searchTermsForResources({ page: 1, perPage: 2 })
-    should.equal(result.total, 2)
+    const result = await service.searchTermsForResources({ page: 1, perPage: 3 })
+    should.equal(result.total, 3)
     should.equal(result.page, 1)
-    should.equal(result.perPage, 2)
-    should.equal(result.result.length, 2)
+    should.equal(result.perPage, 3)
+    should.equal(result.result.length, 3)
     should.deepEqual(_.omit(result.result[0], 'created'), request.searchTermsForResource.response.result[0])
     should.deepEqual(_.omit(result.result[1], 'created'), request.searchTermsForResource.response.result[1])
+    should.deepEqual(_.omit(result.result[2], 'created'), request.searchTermsForResource.response.result[2])
   })
 
   it('check terms for resource success, single tag', async () => {

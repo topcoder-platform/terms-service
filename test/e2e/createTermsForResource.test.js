@@ -6,14 +6,18 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
-const { token, request } = require('../common/testData')
-const { postRequest } = require('../common/testHelper')
+const { user, token, request } = require('../common/testData')
+const { postRequest, clearLogs, assertInfoMessage } = require('../common/testHelper')
 
 const TermsForResource = models.TermsForResource
 
 const url = `http://localhost:${config.PORT}/terms/reference`
 
 module.exports = describe('create terms for resource endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('create terms for resource success', async () => {
     let data = _.cloneDeep(request.createTermsForResource.reqBody)
     const res = await postRequest(url, data, token.user1)
@@ -32,6 +36,29 @@ module.exports = describe('create terms for resource endpoint', () => {
     should.equal(res.body.termsOfUseIds[0], 21307)
     should.equal(res.body.createdBy, 'TonyJ')
     should.exist(res.body.created)
+    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
+  })
+
+  it('create terms for resource using m2m token success', async () => {
+    let data = _.cloneDeep(request.createTermsForResource.reqBody)
+    data.tag = 'manager'
+    const res = await postRequest(url, data, token.m2mWrite)
+    const record = await TermsForResource.findOne({ where: { id: res.body.id }, raw: true })
+    should.equal(record.reference, 'challenge')
+    should.equal(record.referenceId, '12346')
+    should.equal(record.tag, 'manager')
+    should.equal(record.termsOfUseIds.length, 1)
+    should.equal(record.termsOfUseIds[0], 21307)
+    should.equal(record.createdBy, user.m2mWrite.sub)
+    should.exist(record.created)
+    should.equal(res.body.reference, 'challenge')
+    should.equal(res.body.referenceId, '12346')
+    should.equal(res.body.tag, 'manager')
+    should.equal(res.body.termsOfUseIds.length, 1)
+    should.equal(res.body.termsOfUseIds[0], 21307)
+    should.equal(res.body.createdBy, user.m2mWrite.sub)
+    should.exist(res.body.created)
+    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
   })
 
   it('failure - create terms for resource again, duplicate', async () => {
@@ -99,6 +126,17 @@ module.exports = describe('create terms for resource endpoint', () => {
     let data = _.cloneDeep(request.createTermsForResource.reqBody)
     try {
       await postRequest(url, data, token.user2)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
+  it('failure - create terms for resource using forbidden m2m token', async () => {
+    let data = _.cloneDeep(request.createTermsForResource.reqBody)
+    try {
+      await postRequest(url, data, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)

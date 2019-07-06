@@ -6,8 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
-const { token, request } = require('../common/testData')
-const { postRequest } = require('../common/testHelper')
+const { user, token, request } = require('../common/testData')
+const { postRequest, clearLogs } = require('../common/testHelper')
 
 const TermsOfUse = models.TermsOfUse
 const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
@@ -15,6 +15,10 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 const url = `http://localhost:${config.PORT}/terms`
 
 module.exports = describe('create terms of use endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('create terms of use without docusign template success', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
@@ -36,6 +40,30 @@ module.exports = describe('create terms of use endpoint', () => {
     should.equal(res.body.url, 'url')
     should.equal(res.body.agreeabilityTypeId, 3)
     should.equal(res.body.createdBy, 'TonyJ')
+    should.exist(res.body.created)
+  })
+
+  it('create terms of use without docusign template using m2m token success', async () => {
+    let data = _.cloneDeep(request.createTermsOfUse.reqBody)
+    data = _.omit(data, 'docusignTemplateId')
+    data.agreeabilityTypeId = 3
+    const res = await postRequest(url, data, token.m2mWrite)
+    const record = await TermsOfUse.findOne({ where: { id: res.body.id, deletedAt: null }, raw: true })
+    should.equal(record.text, 'text')
+    should.equal(record.typeId, 10)
+    should.equal(record.title, 'title')
+    should.equal(record.url, 'url')
+    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.createdBy, user.m2mWrite.sub)
+    should.exist(record.created)
+    const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: res.body.id }, raw: true })
+    should.equal(existed.length, 0)
+    should.equal(res.body.text, 'text')
+    should.equal(res.body.typeId, 10)
+    should.equal(res.body.title, 'title')
+    should.equal(res.body.url, 'url')
+    should.equal(res.body.agreeabilityTypeId, 3)
+    should.equal(res.body.createdBy, user.m2mWrite.sub)
     should.exist(res.body.created)
   })
 
@@ -110,6 +138,17 @@ module.exports = describe('create terms of use endpoint', () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     try {
       await postRequest(url, data, token.user2)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
+  it('failure - forbidden m2m token', async () => {
+    let data = _.cloneDeep(request.createTermsOfUse.reqBody)
+    try {
+      await postRequest(url, data, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)

@@ -6,11 +6,15 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const { token } = require('../common/testData')
-const { getRequest } = require('../common/testHelper')
+const { getRequest, clearLogs } = require('../common/testHelper')
 
 const url = `http://localhost:${config.PORT}/terms`
 
 module.exports = describe('Get terms of use endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('get terms of use by user who has agreed', async () => {
     const res = await getRequest(`${url}/21303`, token.user1)
     should.equal(res.status, 200)
@@ -35,6 +39,17 @@ module.exports = describe('Get terms of use endpoint', () => {
 
   it(`get terms of use noauth`, async () => {
     const res = await getRequest(`${url}/21303?noauth=true`)
+    should.equal(res.status, 200)
+    should.equal(res.body.id, 21303)
+    should.equal(res.body.title, 'Standard Terms for Topcoder Competitions v2.2')
+    should.equal(res.body.url, '')
+    should.equal(res.body.text, 'text')
+    should.not.exist(res.body.agreed)
+    should.equal(res.body.agreeabilityType, 'Electronically-agreeable')
+  })
+
+  it(`get terms of use noauth using m2m token`, async () => {
+    const res = await getRequest(`${url}/21303?noauth=true`, token.m2mWrite)
     should.equal(res.status, 200)
     should.equal(res.body.id, 21303)
     should.equal(res.body.title, 'Standard Terms for Topcoder Competitions v2.2')
@@ -107,13 +122,13 @@ module.exports = describe('Get terms of use endpoint', () => {
     }
   })
 
-  it('failure - M2M not supported', async () => {
+  it('failure - missing authentication(using m2m token)', async () => {
     try {
-      await getRequest(`${url}/21303`, token.m2m)
+      await getRequest(`${url}/21303`, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
-      should.equal(err.status, 403)
-      should.equal(_.get(err, 'response.body.message'), 'M2M token is not supported')
+      should.equal(err.status, 401)
+      should.equal(_.get(err, 'response.body.message'), `Authentication credential was missing.`)
     }
   })
 

@@ -3,14 +3,19 @@
  */
 
 const should = require('should')
+const config = require('config')
 const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
 const { user } = require('../common/testData')
-const { assertError, assertValidationError } = require('../common/testHelper')
+const { assertError, assertValidationError, assertInfoMessage, clearLogs } = require('../common/testHelper')
 
 const UserTermsOfUseXref = models.UserTermsOfUseXref
 
 module.exports = describe('agree terms of use', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('agree terms of use success', async () => {
     let records = await UserTermsOfUseXref.findAll({ where: { userId: 23124329, termsOfUseId: 21303 } })
     should.equal(records.length, 0)
@@ -18,6 +23,7 @@ module.exports = describe('agree terms of use', () => {
     should.equal(result.success, true)
     records = await UserTermsOfUseXref.findAll({ where: { userId: 23124329, termsOfUseId: 21303 } })
     should.equal(records.length, 1)
+    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_UPDATE_TOPIC}`)
   })
 
   it('failure - user has agreed terms of use before', async () => {

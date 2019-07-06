@@ -5,9 +5,13 @@
 const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const { user } = require('../common/testData')
-const { assertError, assertValidationError } = require('../common/testHelper')
+const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
 module.exports = describe('get terms of use', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   it('get terms of use by user who has agreed', async () => {
     const result = await service.getTermsOfUse(user.user1, 21303, {})
     should.equal(result.id, 21303)
@@ -30,6 +34,16 @@ module.exports = describe('get terms of use', () => {
 
   it(`get terms of use noauth`, async () => {
     const result = await service.getTermsOfUse(undefined, 21303, { noauth: 'true' })
+    should.equal(result.id, 21303)
+    should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
+    should.equal(result.url, '')
+    should.equal(result.text, 'text')
+    should.not.exist(result.agreed)
+    should.equal(result.agreeabilityType, 'Electronically-agreeable')
+  })
+
+  it(`get terms of use noauth using m2m token`, async () => {
+    const result = await service.getTermsOfUse(user.m2mWrite, 21303, { noauth: 'true' })
     should.equal(result.id, 21303)
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -85,6 +99,16 @@ module.exports = describe('get terms of use', () => {
     } catch (err) {
       should.equal(err.name, 'NotFoundError')
       assertError(err, `Terms of use with id: 1121305 doesn't exists.`)
+    }
+  })
+
+  it(`failure - missing authentication(using m2m token)`, async () => {
+    try {
+      await service.getTermsOfUse(user.m2mWrite, 21303, {})
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'UnauthorizedError')
+      assertError(err, `Authentication credential was missing.`)
     }
   })
 

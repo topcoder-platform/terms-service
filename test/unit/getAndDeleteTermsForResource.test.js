@@ -5,12 +5,17 @@
 const should = require('should')
 const service = require('../../src/services/TermsForResourceService')
 const models = require('../../src/models')
-const { assertError } = require('../common/testHelper')
+const { assertError, clearLogs } = require('../common/testHelper')
 
 const TermsForResource = models.TermsForResource
 
 module.exports = describe('get and delete terms for resource', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   const id = 'a41d1974-5823-473e-bacb-7eed17500ad1'
+  const id2 = 'a41d1974-5823-473e-bacb-7eed17500ad2'
   const notFoundId = 'b41d1974-5823-473e-bacb-7eed17500ad1'
 
   it('Get terms for resource success', async () => {
@@ -39,6 +44,12 @@ module.exports = describe('get and delete terms for resource', () => {
   it('Delete terms for resource success', async () => {
     await service.deleteTermsForResource(id)
     const record = await TermsForResource.findOne({ where: { id }, raw: true })
+    should.not.exist(record)
+  })
+
+  it('Delete terms for resource 2 success', async () => {
+    await service.deleteTermsForResource(id2)
+    const record = await TermsForResource.findOne({ where: { id: id2 }, raw: true })
     should.not.exist(record)
   })
 

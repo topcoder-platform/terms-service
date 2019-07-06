@@ -7,12 +7,16 @@ const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
 const { user, token } = require('../common/testData')
-const { postRequest } = require('../common/testHelper')
+const { postRequest, clearLogs } = require('../common/testHelper')
 
 const url = `http://localhost:${config.PORT}/terms/docusignViewURL`
 const DocusignEnvelope = models.DocusignEnvelope
 
 module.exports = describe('Generate docusign view url endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   let docuEnvelope
 
   it('generate docusign view url(AFFIDAVIT) success', async () => {
@@ -185,11 +189,11 @@ module.exports = describe('Generate docusign view url endpoint', () => {
       await await postRequest(url, {
         templateId: config.DOCUSIGN.ASSIGNMENT_V2_TEMPLATE_ID,
         tabs: [ 'testKey||testValue' ]
-      }, token.m2m)
+      }, token.m2mWrite)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)
-      should.equal(_.get(err, 'response.body.message'), 'M2M token is not supported')
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
     }
   })
 

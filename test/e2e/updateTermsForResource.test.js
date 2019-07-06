@@ -6,17 +6,48 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
-const { token, request } = require('../common/testData')
-const { putRequest, patchRequest } = require('../common/testHelper')
+const { user, token, request } = require('../common/testData')
+const { putRequest, patchRequest, clearLogs } = require('../common/testHelper')
 
 const TermsForResource = models.TermsForResource
 
 const url = `http://localhost:${config.PORT}/terms/reference`
 
 module.exports = describe('update terms for resource endpoint', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   const id1 = 'a41d1974-5823-473e-bacb-7eed17500ad1'
   const id2 = 'a41d1974-5823-473e-bacb-7eed17500ad2'
   const notFoundId = 'b41d1974-5823-473e-bacb-7eed17500ad1'
+
+  it('fully update terms for resource using m2m token success', async () => {
+    let data = _.cloneDeep(request.updateTermsForResource.reqBody)
+    data.tag = 'm2m-test'
+    const res = await putRequest(`${url}/${id1}`, data, token.m2mWrite)
+    const record = await TermsForResource.findOne({ where: { id: res.body.id }, raw: true })
+    should.equal(record.reference, 'new-reference')
+    should.equal(record.referenceId, '11111')
+    should.equal(record.tag, 'm2m-test')
+    should.equal(record.termsOfUseIds.length, 2)
+    should.equal(record.termsOfUseIds[0], 21303)
+    should.equal(record.termsOfUseIds[1], 21304)
+    should.equal(record.createdBy, 'admin')
+    should.exist(record.created)
+    should.equal(record.updatedBy, user.m2mWrite.sub)
+    should.exist(record.updated)
+    should.equal(res.body.reference, 'new-reference')
+    should.equal(res.body.referenceId, '11111')
+    should.equal(res.body.tag, 'm2m-test')
+    should.equal(res.body.termsOfUseIds.length, 2)
+    should.equal(res.body.termsOfUseIds[0], 21303)
+    should.equal(res.body.termsOfUseIds[1], 21304)
+    should.equal(res.body.createdBy, 'admin')
+    should.exist(res.body.created)
+    should.equal(res.body.updatedBy, user.m2mWrite.sub)
+    should.exist(res.body.updated)
+  })
 
   it('fully update terms for resource success', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
@@ -69,7 +100,7 @@ module.exports = describe('update terms for resource endpoint', () => {
     should.exist(res.body.updated)
   })
 
-  it('failure - fully update terms for resource success no token', async () => {
+  it('failure - fully update terms for resource no token', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     try {
       await putRequest(`${url}/${id1}`, data)
@@ -80,7 +111,7 @@ module.exports = describe('update terms for resource endpoint', () => {
     }
   })
 
-  it('failure - fully update terms for resource success invalid token', async () => {
+  it('failure - fully update terms for resource invalid token', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     try {
       await putRequest(`${url}/${id1}`, data, 'invalid')
@@ -91,10 +122,21 @@ module.exports = describe('update terms for resource endpoint', () => {
     }
   })
 
-  it('failure - fully update terms for resource success forbidden', async () => {
+  it('failure - fully update terms for resource forbidden', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     try {
       await putRequest(`${url}/${id1}`, data, token.user2)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
+  it('failure - fully update terms for resource using forbidden m2m token', async () => {
+    let data = _.cloneDeep(request.updateTermsForResource.reqBody)
+    try {
+      await putRequest(`${url}/${id1}`, data, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)
@@ -154,6 +196,32 @@ module.exports = describe('update terms for resource endpoint', () => {
     })
   }
 
+  it('partially update terms for resource using m2m token success', async () => {
+    let data = _.cloneDeep(request.updateTermsForResource.reqBody)
+    data = _.omit(data, 'tag', 'termsOfUseIds')
+    data.reference = 'm2m-reference'
+    const res = await patchRequest(`${url}/${id2}`, data, token.m2mWrite)
+    const record = await TermsForResource.findOne({ where: { id: res.body.id }, raw: true })
+    should.equal(record.reference, 'm2m-reference')
+    should.equal(record.referenceId, '11111')
+    should.equal(record.tag, 'copilot')
+    should.equal(record.termsOfUseIds.length, 1)
+    should.equal(record.termsOfUseIds[0], 21307)
+    should.equal(record.createdBy, 'admin')
+    should.exist(record.created)
+    should.equal(record.updatedBy, user.m2mWrite.sub)
+    should.exist(record.updated)
+    should.equal(res.body.reference, 'm2m-reference')
+    should.equal(res.body.referenceId, '11111')
+    should.equal(res.body.tag, 'copilot')
+    should.equal(res.body.termsOfUseIds.length, 1)
+    should.equal(res.body.termsOfUseIds[0], 21307)
+    should.equal(res.body.createdBy, 'admin')
+    should.exist(res.body.created)
+    should.equal(res.body.updatedBy, user.m2mWrite.sub)
+    should.exist(res.body.updated)
+  })
+
   it('partially update terms for resource success', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     data = _.omit(data, 'tag', 'termsOfUseIds')
@@ -179,7 +247,7 @@ module.exports = describe('update terms for resource endpoint', () => {
     should.exist(res.body.updated)
   })
 
-  it('failure - partially update terms for resource success no token', async () => {
+  it('failure - partially update terms for resource no token', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     try {
       await patchRequest(`${url}/${id1}`, data)
@@ -190,7 +258,7 @@ module.exports = describe('update terms for resource endpoint', () => {
     }
   })
 
-  it('failure - partially update terms for resource success invalid token', async () => {
+  it('failure - partially update terms for resource invalid token', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     try {
       await patchRequest(`${url}/${id1}`, data, 'invalid')
@@ -201,10 +269,21 @@ module.exports = describe('update terms for resource endpoint', () => {
     }
   })
 
-  it('failure - partially update terms for resource success forbidden', async () => {
+  it('failure - partially update terms for resource forbidden', async () => {
     let data = _.cloneDeep(request.updateTermsForResource.reqBody)
     try {
       await patchRequest(`${url}/${id1}`, data, token.user2)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.status, 403)
+      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+    }
+  })
+
+  it('failure - partially update terms for resource using forbidden m2m token', async () => {
+    let data = _.cloneDeep(request.updateTermsForResource.reqBody)
+    try {
+      await patchRequest(`${url}/${id1}`, data, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)

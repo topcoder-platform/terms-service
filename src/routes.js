@@ -22,13 +22,15 @@ module.exports = {
       controller: 'TermsForResourceController',
       method: 'createTermsForResource',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     },
     get: {
       controller: 'TermsForResourceController',
       method: 'searchTermsForResources',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
     }
   },
   '/terms': {
@@ -36,13 +38,15 @@ module.exports = {
       controller: 'TermsOfUseController',
       method: 'createTermsOfUse',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     },
     get: {
       controller: 'TermsOfUseController',
       method: 'searchTermsOfUses',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
     }
   },
   '/terms/:termsOfUseId': {
@@ -55,19 +59,22 @@ module.exports = {
       controller: 'TermsOfUseController',
       method: 'fullyUpdateTermsOfUse',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     },
     patch: {
       controller: 'TermsOfUseController',
       method: 'partiallyUpdateTermsOfUse',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     },
     delete: {
       controller: 'TermsOfUseController',
       method: 'deleteTermsOfUse',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     }
   },
   '/terms/:termsOfUseId/agree': {
@@ -82,25 +89,29 @@ module.exports = {
       controller: 'TermsForResourceController',
       method: 'getTermsForResource',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
     },
     put: {
       controller: 'TermsForResourceController',
       method: 'fullyUpdateTermsForResource',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     },
     patch: {
       controller: 'TermsForResourceController',
       method: 'partiallyUpdateTermsForResource',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     },
     delete: {
       controller: 'TermsForResourceController',
       method: 'deleteTermsForResource',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     }
   },
   '/terms/user/:userId/reference': {
@@ -108,7 +119,8 @@ module.exports = {
       controller: 'TermsForResourceController',
       method: 'checkTermsForResourceOfUser',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin]
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
     }
   }
 }

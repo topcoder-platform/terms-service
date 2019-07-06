@@ -23,6 +23,11 @@ The following parameters can be set in config files or in env variables:
 - AUTH0_CLIENT_SECRET: Auth0 client secret, used to get TC M2M token
 - AUTH0_PROXY_SERVER_URL: Proxy Auth0 URL, used to get TC M2M token
 - USER_API_URL: User api url, default is 'https://api.topcoder-dev.com/v3/users'
+- BUSAPI_URL: the Topcoder bus api base url.
+- KAFKA_ERROR_TOPIC: the error topic used when posting Kafka event.
+- KAFKA_MESSAGE_ORIGINATOR: the Kafka message originator.
+- TERMS_CREATE_TOPIC: terms create topic name.
+- TERMS_UPDATE_TOPIC: terms update topic name.
 - DOCUSIGN: Contain configuration relate to DOCUSIGN API, you don't need to modify anything, refer `config/default.js` for more information
 - EMAIL: Contain configuration relate to a simple SMTP server(Host, Port, UserName, Password and etc, refer `config/default.js` for more information)
 

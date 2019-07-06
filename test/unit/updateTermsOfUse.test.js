@@ -7,15 +7,36 @@ const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
 const { user, request } = require('../common/testData')
-const { assertError, assertValidationError } = require('../common/testHelper')
+const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
 const TermsOfUse = models.TermsOfUse
 const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 
 module.exports = describe('update terms of use', () => {
+  beforeEach(() => {
+    clearLogs()
+  })
+
   const id1 = 30000
   const id2 = 30001
   const id3 = 30002
+
+  it('fully update terms of use using m2m token success', async () => {
+    let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    data.text = 'm2m-text'
+    data.title = 'm2m-title'
+    await service.fullyUpdateTermsOfUse(user.m2mWrite, id1, data)
+    const record = await TermsOfUse.findOne({ where: { id: id1, deletedAt: null }, raw: true })
+    should.equal(record.text, 'm2m-text')
+    should.equal(record.typeId, 11)
+    should.equal(record.title, 'm2m-title')
+    should.equal(record.url, 'update-url')
+    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.updatedBy, user.m2mWrite.sub)
+    const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
+    should.equal(existed.length, 1)
+    should.equal(existed[0].docusignTemplateId, 'update-test-template-1')
+  })
 
   it('fully update terms of use, adding docusign template success', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
@@ -105,6 +126,19 @@ module.exports = describe('update terms of use', () => {
       should.equal(err.name, 'NotFoundError')
       assertError(err, `TermsOfUse not found with id: 20000`)
     }
+  })
+
+  it('partially update terms of use using m2m token success', async () => {
+    await service.partiallyUpdateTermsOfUse(user.m2mWrite, id1, { url: 'm2m-url' })
+    const record = await TermsOfUse.findOne({ where: { id: id1, deletedAt: null }, raw: true })
+    should.not.exist(record.text)
+    should.equal(record.typeId, 11)
+    should.equal(record.title, 'update-title')
+    should.equal(record.url, 'm2m-url')
+    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.updatedBy, user.m2mWrite.sub)
+    const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
+    should.equal(existed.length, 0)
   })
 
   it('partially update terms of use, adding docusign template success', async () => {

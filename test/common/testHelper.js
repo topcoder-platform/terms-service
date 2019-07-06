@@ -147,6 +147,21 @@ function assertInfoMessage (message) {
   infoLogs.should.containEql(message)
 }
 
+/**
+ * Clear the logs.
+ */
+function clearLogs () {
+  while (errorLogs.length > 0) {
+    errorLogs.pop()
+  }
+  while (warnLogs.length > 0) {
+    warnLogs.pop()
+  }
+  while (infoLogs.length > 0) {
+    infoLogs.pop()
+  }
+}
+
 module.exports = {
   getRequest,
   postRequest,
@@ -160,5 +175,6 @@ module.exports = {
   initInfoLogs,
   assertErrorMessage,
   assertWarnMessage,
-  assertInfoMessage
+  assertInfoMessage,
+  clearLogs
 }
