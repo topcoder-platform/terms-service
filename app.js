@@ -12,7 +12,6 @@ const cors = require('cors')
 const HttpStatus = require('http-status-codes')
 const logger = require('./src/common/logger')
 const interceptor = require('express-interceptor')
-const healthcheck = require('topcoder-healthcheck-dropin')
 
 // setup express app
 const app = express()
@@ -55,8 +54,14 @@ function check () {
   return true
 }
 
-app.use(healthcheck.middleware([check]))
-
+// Check if the route is not found or HTTP method is not supported
+app.use('/v5/terms/health', (req, res) => {
+  if (check()) {
+    res.status(HttpStatus.OK).json({ message: 'The service is up.' })
+  } else {
+    res.status(HttpStatus.SERVICE_UNAVAILABLE).json({ message: 'The service is unavailable.' })
+  }
+})
 // Register routes
 require('./app-routes')(app)
 
