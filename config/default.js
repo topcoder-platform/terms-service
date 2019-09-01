@@ -47,14 +47,5 @@ module.exports = {
     CALLBACK_FAILED_SUPPORT_EMAIL_ADDRESS: process.env.DOCUSIGN_CALLBACK_FAILED_SUPPORT_EMAIL_ADDRESS,
     CALLBACK_FAILED_FROM_EMAIL_ADDRESS: process.env.DOCUSIGN_CALLBACK_FAILED_FROM_EMAIL_ADDRESS,
     CALLBACK_ENDPOINT: process.env.DOCUSIGN_CALLBACK_ENDPOINT || 'http://localhost:3000/terms/docusignCallback'
-  },
-
-  EMAIL: {
-    ACCOUNT: process.env.TC_EMAIL_ACCOUNT,
-    PASSWORD: process.env.TC_EMAIL_PASSWORD,
-    FROM: process.env.TC_EMAIL_FROM,
-    SECURED: String(process.env.TC_EMAIL_SECURED || 'false').toLowerCase() === 'true',
-    HOST: process.env.TC_EMAIL_HOST,
-    PORT: process.env.TC_EMAIL_HOST_PORT
   }
 }
