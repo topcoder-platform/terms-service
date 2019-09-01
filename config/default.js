@@ -24,8 +24,9 @@ module.exports = {
   BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v5',
   KAFKA_ERROR_TOPIC: process.env.KAFKA_ERROR_TOPIC || 'common.error.reporting',
   KAFKA_MESSAGE_ORIGINATOR: process.env.KAFKA_MESSAGE_ORIGINATOR || 'resources-api',
-  TERMS_CREATE_TOPIC: process.env.TERMS_CREATE_TOPIC || 'test.new.bus.events', // 'terms.notification.created',
-  TERMS_UPDATE_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'test.new.bus.events', // 'terms.notification.updated',
+  TERMS_CREATE_TOPIC: process.env.TERMS_CREATE_TOPIC || 'terms.notification.created',
+  TERMS_UPDATE_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'terms.notification.updated',
+  TERMS_EMAIL_SUPPORT_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'terms.action.email.support',
 
   DOCUSIGN: {
     USERNAME: process.env.DOCUSIGN_USERNAME,

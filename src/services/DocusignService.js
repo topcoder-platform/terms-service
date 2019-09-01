@@ -3,60 +3,39 @@
  */
 
 const _ = require('lodash')
-const fs = require('fs')
-const ejs = require('ejs')
 const config = require('config')
 const Joi = require('joi')
 const helper = require('../common/helper')
 const logger = require('../common/logger')
 const errors = require('../common/errors')
 const { Templates, TEMPLATE_ID_INVALID } = require('../../app-constants')
-const { createTransport } = require('nodemailer')
 const models = require('../models')
 
 const DocusignEnvelope = models.DocusignEnvelope
-
-const emailTemplateDir = './mail_templates/docusign_callback_failure_email'
 
 /**
  * Send an email
  * @param {Object} params the parameters, include from address, to address, subject and etc.
  */
 async function sendEmail (params) {
-  const transportOptions = {
-    host: config.EMAIL.HOST,
-    port: Number(config.EMAIL.PORT),
-    secure: config.EMAIL.SECURED
-  }
-  if (config.EMAIL.ACCOUNT.length > 0) {
-    transportOptions.auth = {
-      user: config.EMAIL.ACCOUNT,
-      pass: config.EMAIL.PASSWORD
+  let eventMessage = {
+    data: params,
+    version: 'v3',
+    recipients: [params.toAddress],
+    from: {
+      name: 'Terms service',
+      email: params.fromAddress
     }
   }
-
-  const transport = createTransport(transportOptions)
-
-  const htmlTemplateContent = fs.readFileSync(`${emailTemplateDir}/html.ejs`, 'utf8')
-  const textTemplateContent = fs.readFileSync(`${emailTemplateDir}/text.ejs`, 'utf8')
-
-  // build email message
-  const message = {
-    from: params.fromAddress || config.EMAIL.FROM,
-    to: params.toAddress,
-    subject: params.subject,
-    html: ejs.render(htmlTemplateContent, params),
-    text: ejs.render(textTemplateContent, params)
-  }
-
-  try {
-    await transport.sendMail(message)
-  } catch (err) {
+  helper.postEvent(config.TERMS_EMAIL_SUPPORT_TOPIC, { payload: eventMessage }).then(() => {
+    logger.info(`Successfully sent ${config.TERMS_EMAIL_SUPPORT_TOPIC} event` +
+      ` with body ${JSON.stringify(eventMessage)} to bus api`)
+  }).catch((err) => {
+    logger.error(`Failed to send ${config.TERMS_EMAIL_SUPPORT_TOPIC} event` +
+      `; error: ${err.message}` +
+      `; with body ${JSON.stringify(eventMessage)} to bus api`)
     logger.logFullError(err)
-  } finally {
-    // close transport in the end
-    transport.close()
-  }
+  })
 }
 
 /**
