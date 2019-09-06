@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f78a998a-5aa4-4c0a-820e-e26ee66fe032",
+		"_postman_id": "f63f8d76-a914-4362-a32c-638718ed6d2c",
 		"name": "topcoder-terms-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -2199,6 +2199,42 @@
 							"path": [
 								"terms",
 								"docusignCallback"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listener",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/xml",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<DocuSignEnvelopeInformation xmlns=\"http://www.docusign.net/API/3.0\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <EnvelopeStatus>\n        <RecipientStatuses>\n            <RecipientStatus>\n                <TabStatuses>\n                    <TabStatus>\n                        <TabLabel>Handle</TabLabel>\n                        <TabValue>Hung</TabValue>\n                    </TabStatus>\n                    <TabStatus>\n                        <TabLabel>Full Name</TabLabel>\n                        <TabValue>firstHung lastHung</TabValue>\n                    </TabStatus>\n                    <TabStatus>\n                        <TabLabel>Email Address</TabLabel>\n                        <TabValue>foo@fooonyou.com</TabValue>\n                    </TabStatus>\n                </TabStatuses>\n            </RecipientStatus>\n        </RecipientStatuses>\n        <EnvelopeID>{{ENVELOP_ID}}</EnvelopeID>\n        <Status>Completed</Status>\n    </EnvelopeStatus>\n</DocuSignEnvelopeInformation>"
+						},
+						"url": {
+							"raw": "{{URL}}/v5/terms/docusignListener?connectKey={{CONNECT_KEY}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"v5",
+								"terms",
+								"docusignListener"
+							],
+							"query": [
+								{
+									"key": "connectKey",
+									"value": "{{CONNECT_KEY}}"
+								}
 							]
 						}
 					},

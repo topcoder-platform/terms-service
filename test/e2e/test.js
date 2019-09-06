@@ -112,6 +112,7 @@ describe('Topcoder - Topcoder Terms API E2E Test', () => {
   describe('Docusign Unit endpoints', () => {
     require('./generateDocusignViewUrl.test')
     require('./docusignCallback.test')
+    require('./docusignCallbackListener.test')
   })
 
   describe('Fail routes Tests', () => {

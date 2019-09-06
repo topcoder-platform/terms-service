@@ -11,6 +11,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const HttpStatus = require('http-status-codes')
 const logger = require('./src/common/logger')
+const docusignListener = require('./src/common/docusignListener')
 const interceptor = require('express-interceptor')
 
 // setup express app
@@ -62,6 +63,9 @@ app.use('/v5/terms/health', (req, res) => {
     res.status(HttpStatus.SERVICE_UNAVAILABLE).json({ message: 'The service is unavailable.' })
   }
 })
+
+app.post(config.DOCUSIGN_LISTENER_PATH, docusignListener)
+
 // Register routes
 require('./app-routes')(app)
 
