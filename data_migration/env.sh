@@ -1,0 +1,6 @@
+export BATCH_COUNT='100'
+export INFORMIX_HOST='localhost'
+export INFORMIX_PORT='2021'
+export INFORMIX_USER='informix'
+export INFORMIX_PASSWORD='1nf0rm1x'
+export POSTGRES_URL='postgres://postgres:password@localhost:5432/postgres'

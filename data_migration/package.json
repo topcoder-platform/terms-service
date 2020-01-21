@@ -1,0 +1,25 @@
+{
+  "name": "data-migration",
+  "version": "1.0.0",
+  "description": "data migration",
+  "main": "index.js",
+  "scripts": {
+    "clean": "node index.js clean",
+    "restart": "node index.js force",
+    "start": "node index.js",
+    "test-data": "node test/testData.js"
+  },
+  "author": "TCSCODER",
+  "license": "none",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "config": "^3.2.0",
+    "informix-wrapper": "git+https://github.com/appirio-tech/informix-wrapper.git",
+    "lodash": "^4.17.14",
+    "pg": "^7.10.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^5.3.0",
+    "uuid": "^3.3.2",
+    "winston": "^3.2.0"
+  }
+}
