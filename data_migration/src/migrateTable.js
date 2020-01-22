@@ -91,6 +91,10 @@ async function process (informixTableName, modelName, lastSkip) {
           } else {
             entity[key] = element[value]
           }
+        } else {
+          if (key === 'created' || key === 'updated') {
+            entity[key] = new Date()
+          }
         }
       })
       entities.push(entity)
