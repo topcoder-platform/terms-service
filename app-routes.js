@@ -58,7 +58,8 @@ module.exports = (app) => {
       }
 
       actions.push(method)
-      app[verb](path, helper.autoWrapExpress(actions))
+      const fullPath = config.get('BASE_PATH') + path;
+      app[verb](fullPath, helper.autoWrapExpress(actions))
     })
   })
 
@@ -66,7 +67,7 @@ module.exports = (app) => {
   app.use('*', (req, res) => {
     let url = req.baseUrl;
     if (url.indexOf(config.get('BASE_PATH'))==0){
-      url = url.substring(config.get('BASE_PATH').length+1);
+      url = url.substring(config.get('BASE_PATH').length);
     }
     const route = routes[url];
     if (route) {
