@@ -49,5 +49,7 @@ module.exports = {
     CALLBACK_ENDPOINT: process.env.DOCUSIGN_CALLBACK_ENDPOINT || 'http://localhost:3000/terms/docusignCallback'
   },
 
-  DOCUSIGN_LISTENER_PATH: process.env.DOCUSIGN_LISTENER_PATH || '/v5/terms/docusignListener'
+  DOCUSIGN_LISTENER_PATH: process.env.DOCUSIGN_LISTENER_PATH || '/v5/terms/docusignListener',
+
+  BASE_PATH: '/v5'
 }

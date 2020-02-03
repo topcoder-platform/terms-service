@@ -64,7 +64,11 @@ module.exports = (app) => {
 
   // Check if the route is not found or HTTP method is not supported
   app.use('*', (req, res) => {
-    const route = routes[req.baseUrl]
+    let url = req.baseUrl;
+    if (url.indexOf(config.get('BASE_PATH'))){
+      url = url.substring(config.get('BASE_PATH').length+1);
+    }
+    const route = routes[url];
     if (route) {
       res.status(HttpStatus.METHOD_NOT_ALLOWED).json({ message: 'The requested HTTP method is not supported.' })
     } else {
