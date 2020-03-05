@@ -89,10 +89,10 @@ const user = {
     iat: 1556095963,
     exp: 1566182363,
     azp: 'enjw1810eDz3XTwSO2Rn2Y9cQTrspn3B',
-    scope: 'terms:read',
+    scope: 'read:terms',
     gty: 'client-credentials',
     userId: null,
-    scopes: [ 'terms:read' ],
+    scopes: [ 'read:terms' ],
     isMachine: true
   },
   m2mWrite: {
@@ -102,10 +102,10 @@ const user = {
     iat: 1556095963,
     exp: 1566182363,
     azp: 'enjw1810eDz3XTwSO2Rn2Y9cQTrspn3B',
-    scope: 'terms:write',
+    scope: 'write:terms',
     gty: 'client-credentials',
     userId: null,
-    scopes: [ 'terms:write' ],
+    scopes: [ 'write:terms' ],
     isMachine: true
   }
 }

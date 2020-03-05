@@ -78,8 +78,8 @@ const UserRoles = {
 
 const Scopes = {
   Terms: {
-    Read: 'terms:read',
-    Write: 'terms:write'
+    Read: 'read:terms',
+    Write: 'write:terms'
   }
 }
 
