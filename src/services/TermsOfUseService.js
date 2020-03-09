@@ -21,7 +21,7 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 /**
  * Get terms of use by id
  * @param {Object} currentUser the user who perform this operation.
- * @param {Number} termsOfUseId the terms of use id
+ * @param {String} termsOfUseId the terms of use id
  * @param {Object} query the query object
  * @returns {Object} the terms of use
  */
@@ -96,7 +96,7 @@ function convertRawData (termsOfUse, throwError = true) {
 
 getTermsOfUse.schema = {
   currentUser: Joi.any(),
-  termsOfUseId: Joi.numberId(),
+  termsOfUseId: Joi.string().guid(),
   query: Joi.object().keys({
     noauth: Joi.string()
   })
@@ -105,7 +105,7 @@ getTermsOfUse.schema = {
 /**
  * Agree terms of use
  * @param {Object} currentUser the user who perform this operation.
- * @param {Number} termsOfUseId the terms of use id
+ * @param {String} termsOfUseId the terms of use id
  * @returns {Object} successful message if user agree terms of use successfully
  */
 async function agreeTermsOfUse (currentUser, termsOfUseId) {
@@ -175,7 +175,7 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
 
 agreeTermsOfUse.schema = {
   currentUser: Joi.any(),
-  termsOfUseId: Joi.numberId()
+  termsOfUseId: Joi.string().guid()
 }
 
 /**
@@ -204,34 +204,31 @@ async function validateTermsOfUse (termsOfUse) {
 async function createTermsOfUse (currentUser, termsOfUse) {
   await validateTermsOfUse(termsOfUse)
 
-  const idResult = await TermsOfUse.findOne({
-    attributes: [[models.Sequelize.fn('MAX', models.Sequelize.col('id')), 'id']],
-    raw: true
-  })
-  termsOfUse.id = idResult.id + 1
   termsOfUse.created = new Date()
   termsOfUse.createdBy = currentUser.handle || currentUser.sub
 
-  await TermsOfUse.create(_.omit(termsOfUse, 'docusignTemplateId'))
+  let created = await TermsOfUse.create(_.omit(termsOfUse, 'docusignTemplateId'))
 
   if (termsOfUse.docusignTemplateId) {
     await TermsOfUseDocusignTemplateXref.create({
-      termsOfUseId: termsOfUse.id,
+      termsOfUseId: created.id,
       docusignTemplateId: termsOfUse.docusignTemplateId
     })
   }
 
-  return termsOfUse
+  return created
 }
 
 createTermsOfUse.schema = {
   currentUser: Joi.any(),
   termsOfUse: Joi.object().keys({
+    id: Joi.string().guid().optional(),
+    legacyId: Joi.numberId().optional(),
     text: Joi.string(),
     typeId: Joi.numberId(),
     title: Joi.string().required(),
     url: Joi.string(),
-    agreeabilityTypeId: Joi.numberId(),
+    agreeabilityTypeId: Joi.uuid(),
     docusignTemplateId: Joi.when('agreeabilityTypeId', {
       is: AGREE_FOR_DOCUSIGN_TEMPLATE,
       then: Joi.string().required(),
@@ -293,7 +290,7 @@ async function updateTermsOfUse (currentUser, termsOfUseId, data, isFull) {
 /**
  * Partially update terms of use
  * @params {Object} currentUser the user who perform this operation
- * @params {Number} termsOfUseId the id
+ * @params {String} termsOfUseId the id
  * @params {Object} data the data to be updated
  * @returns {Object} the updated terms of use
  */
@@ -303,13 +300,13 @@ async function partiallyUpdateTermsOfUse (currentUser, termsOfUseId, data) {
 
 partiallyUpdateTermsOfUse.schema = {
   currentUser: Joi.any(),
-  termsOfUseId: Joi.numberId(),
+  termsOfUseId: Joi.string().guid(),
   data: Joi.object().keys({
     text: Joi.string(),
     typeId: Joi.optionalNumberId(),
     title: Joi.string(),
     url: Joi.string(),
-    agreeabilityTypeId: Joi.optionalNumberId(),
+    agreeabilityTypeId: Joi.string().uuid().optional(),
     docusignTemplateId: Joi.string()
   }).required()
 }
@@ -317,7 +314,7 @@ partiallyUpdateTermsOfUse.schema = {
 /**
  * Fully update terms of use
  * @params {Object} currentUser the user who perform this operation
- * @params {Number} termsOfUseId the id
+ * @params {String} termsOfUseId the id
  * @params {Object} data the data to be updated
  * @returns {Object} the updated terms of use
  */
@@ -327,13 +324,13 @@ async function fullyUpdateTermsOfUse (currentUser, termsOfUseId, data) {
 
 fullyUpdateTermsOfUse.schema = {
   currentUser: Joi.any(),
-  termsOfUseId: Joi.numberId(),
+  termsOfUseId: Joi.string().guid(),
   data: createTermsOfUse.schema.termsOfUse
 }
 
 /**
  * Delete terms of use
- * @params {Number} termsOfUseId the id
+ * @params {String} termsOfUseId the id
  */
 async function deleteTermsOfUse (termsOfUseId) {
   const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
@@ -341,12 +338,12 @@ async function deleteTermsOfUse (termsOfUseId) {
 }
 
 deleteTermsOfUse.schema = {
-  termsOfUseId: Joi.numberId()
+  termsOfUseId: Joi.string().guid()
 }
 
 /**
  * List terms of use
- * @params {Object} criteria the search criteria, only pagination currently
+ * @params {Object} criteria the search criteria, only pagination and legacy Id currently
  * @returns {Object} the search result, contain total/page/perPage and result array
  */
 async function searchTermsOfUses (criteria) {
@@ -369,7 +366,7 @@ async function searchTermsOfUses (criteria) {
         attributes: ['docusignTemplateId']
       }
     ],
-    where: { deletedAt: null },
+    where: _.assign({ deletedAt: null }, _.omit(criteria, ['perPage', 'page'])),
     limit: criteria.perPage,
     offset: (criteria.page - 1) * criteria.perPage,
     raw: true
@@ -390,7 +387,8 @@ async function searchTermsOfUses (criteria) {
 searchTermsOfUses.schema = {
   criteria: Joi.object().keys({
     page: Joi.page(),
-    perPage: Joi.perPage()
+    perPage: Joi.perPage(),
+    legacyId: Joi.numberId().optional()
   }).required()
 }
 

@@ -1,1 +1,7 @@
 node_modules
+coverage
+env.sh
+.nyc_output
+.idea
+.DS_Store
+data_migration/log

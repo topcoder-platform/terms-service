@@ -58,18 +58,18 @@ module.exports = (app) => {
       }
 
       actions.push(method)
-      const fullPath = config.get('BASE_PATH') + path;
+      const fullPath = config.get('BASE_PATH') + path
       app[verb](fullPath, helper.autoWrapExpress(actions))
     })
   })
 
   // Check if the route is not found or HTTP method is not supported
   app.use('*', (req, res) => {
-    let url = req.baseUrl;
-    if (url.indexOf(config.get('BASE_PATH'))==0){
-      url = url.substring(config.get('BASE_PATH').length);
+    let url = req.baseUrl
+    if (url.indexOf(config.get('BASE_PATH')) == 0) {
+      url = url.substring(config.get('BASE_PATH').length)
     }
-    const route = routes[url];
+    const route = routes[url]
     if (route) {
       res.status(HttpStatus.METHOD_NOT_ALLOWED).json({ message: 'The requested HTTP method is not supported.' })
     } else {

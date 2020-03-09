@@ -6,6 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
+const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
+
 const { token } = require('../common/testData')
 const { getRequest, deleteRequest, clearLogs } = require('../common/testHelper')
 
@@ -28,7 +30,7 @@ module.exports = describe('get and delete terms for resource endpoint', () => {
     should.equal(res.body.referenceId, '11111')
     should.equal(res.body.tag, 'tester')
     should.equal(res.body.termsOfUseIds.length, 1)
-    should.equal(res.body.termsOfUseIds[0], 21305)
+    should.equal(res.body.termsOfUseIds[0], termsOfUseIdsMapping[21305])
     should.equal(res.body.createdBy, 'admin')
     should.exist(res.body.created)
     should.equal(res.body.updatedBy, 'TonyJ')
@@ -41,7 +43,7 @@ module.exports = describe('get and delete terms for resource endpoint', () => {
     should.equal(res.body.referenceId, '11111')
     should.equal(res.body.tag, 'tester')
     should.equal(res.body.termsOfUseIds.length, 1)
-    should.equal(res.body.termsOfUseIds[0], 21305)
+    should.equal(res.body.termsOfUseIds[0], termsOfUseIdsMapping[21305])
     should.equal(res.body.createdBy, 'admin')
     should.exist(res.body.created)
     should.equal(res.body.updatedBy, 'TonyJ')

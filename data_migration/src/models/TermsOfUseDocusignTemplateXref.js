@@ -5,7 +5,7 @@ const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const TermsOfUseDocusignTemplateXref = sequelize.define('TermsOfUseDocusignTemplateXref', {
-    termsOfUseId: { type: DataTypes.BIGINT, allowNull: false, primaryKey: true },
+    termsOfUseId: { type: DataTypes.UUID, allowNull: false, primaryKey: true },
     docusignTemplateId: { type: DataTypes.STRING, allowNull: false }
   }, {
     schema: config.DB_SCHEMA_NAME,

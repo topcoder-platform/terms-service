@@ -78,6 +78,13 @@ paths:
             type: integer
             default: 20
           description: The number of items to list per page.
+        - in: query
+          name: legacyId
+          required: false
+          schema:
+            type: integer
+          description: The legacy id.
+
       responses:
         '200':
           description: OK
@@ -1040,6 +1047,8 @@ components:
         - createdBy
       properties:
         id:
+          type: string
+        legacyId:
           type: integer
         text:
           type: string
@@ -1050,7 +1059,7 @@ components:
         url:
           type: string
         agreeabilityTypeId:
-          type: integer
+          type: string
         docusignTemplateId:
           type: string
         created:
@@ -1076,7 +1085,7 @@ components:
         url:
           type: string
         agreeabilityTypeId:
-          type: integer
+          type: string
         docusignTemplateId:
           type: string
     TermsOfUseRequestBody:
@@ -1094,7 +1103,7 @@ components:
         url:
           type: string
         agreeabilityTypeId:
-          type: integer
+          type: string
         docusignTemplateId:
           type: string
     TermsForResource:
@@ -1117,7 +1126,7 @@ components:
         termsOfUseIds:
           type: array
           items:
-            type: integer
+            type: string
         created:
           type: string
           format: date-time
@@ -1141,7 +1150,7 @@ components:
         termsOfUseIds:
           type: array
           items:
-            type: integer
+            type: string
     TermsForResourceRequestBody:
       required:
         - reference
@@ -1158,7 +1167,7 @@ components:
         termsOfUseIds:
           type: array
           items:
-            type: integer
+            type: string
     CheckResultItem:
       properties:
         tag:

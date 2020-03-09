@@ -5,6 +5,8 @@
 const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const { user } = require('../common/testData')
+const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
+
 const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
 module.exports = describe('get terms of use', () => {
@@ -13,8 +15,8 @@ module.exports = describe('get terms of use', () => {
   })
 
   it('get terms of use by user who has agreed', async () => {
-    const result = await service.getTermsOfUse(user.user1, 21303, {})
-    should.equal(result.id, 21303)
+    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping[21303], {})
+    should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
     should.equal(result.text, 'text')
@@ -23,8 +25,8 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use by user who hasn't agreed`, async () => {
-    const result = await service.getTermsOfUse(user.user2, 21303, {})
-    should.equal(result.id, 21303)
+    const result = await service.getTermsOfUse(user.user2, termsOfUseIdsMapping[21303], {})
+    should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
     should.equal(result.text, 'text')
@@ -33,8 +35,8 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use noauth`, async () => {
-    const result = await service.getTermsOfUse(undefined, 21303, { noauth: 'true' })
-    should.equal(result.id, 21303)
+    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303], { noauth: 'true' })
+    should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
     should.equal(result.text, 'text')
@@ -43,8 +45,8 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use noauth using m2m token`, async () => {
-    const result = await service.getTermsOfUse(user.m2mWrite, 21303, { noauth: 'true' })
-    should.equal(result.id, 21303)
+    const result = await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303], { noauth: 'true' })
+    should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
     should.equal(result.text, 'text')
@@ -53,8 +55,8 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use noauth is false with user`, async () => {
-    const result = await service.getTermsOfUse(user.user1, 21303, { noauth: 'false' })
-    should.equal(result.id, 21303)
+    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping[21303], { noauth: 'false' })
+    should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
     should.equal(result.text, 'text')
@@ -63,8 +65,8 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use with docusignTemplateId`, async () => {
-    const result = await service.getTermsOfUse(undefined, 21304, { noauth: 'true' })
-    should.equal(result.id, 21304)
+    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21304], { noauth: 'true' })
+    should.equal(result.id, termsOfUseIdsMapping[21304])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
     should.equal(result.text, 'another text')
@@ -75,7 +77,7 @@ module.exports = describe('get terms of use', () => {
 
   it('failure - get terms of use missing Docusign template', async () => {
     try {
-      await service.getTermsOfUse(undefined, 21305, { noauth: 'true' })
+      await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305], { noauth: 'true' })
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'InternalServerError')
@@ -85,26 +87,26 @@ module.exports = describe('get terms of use', () => {
 
   it(`failure - invalid parameter termsOfUseId`, async () => {
     try {
-      await service.getTermsOfUse(undefined, 'string', { noauth: 'true' })
+      await service.getTermsOfUse(undefined, 123, { noauth: 'true' })
       throw new Error('should not throw error here')
     } catch (err) {
-      assertValidationError(err, `"termsOfUseId" must be a number`)
+      assertValidationError(err, `"termsOfUseId" must be a string`)
     }
   })
 
   it('failure - get terms of use not found', async () => {
     try {
-      await service.getTermsOfUse(undefined, 1121305, { noauth: 'true' })
+      await service.getTermsOfUse(undefined, termsOfUseIdsMapping['not-exist-1'], { noauth: 'true' })
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'NotFoundError')
-      assertError(err, `Terms of use with id: 1121305 doesn't exists.`)
+      assertError(err, `Terms of use with id: ${termsOfUseIdsMapping['not-exist-1']} doesn't exists.`)
     }
   })
 
   it(`failure - missing authentication(using m2m token)`, async () => {
     try {
-      await service.getTermsOfUse(user.m2mWrite, 21303, {})
+      await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303], {})
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'UnauthorizedError')
@@ -114,7 +116,7 @@ module.exports = describe('get terms of use', () => {
 
   it('failure - missing authentication', async () => {
     try {
-      await service.getTermsOfUse(undefined, 21303, {})
+      await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303], {})
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'UnauthorizedError')
