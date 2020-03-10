@@ -355,7 +355,7 @@ async function searchTermsOfUses (criteria) {
 
   const result = await TermsOfUse.findAll({
     order: [['id', 'ASC']],
-    attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId'],
+    attributes: ['id', 'legacyId', 'title', 'url', 'text', 'agreeabilityTypeId'],
     include: [
       {
         model: TermsOfUseAgreeabilityType,
