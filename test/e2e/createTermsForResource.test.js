@@ -6,6 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
+const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
+
 const { user, token, request } = require('../common/testData')
 const { postRequest, clearLogs, assertInfoMessage } = require('../common/testHelper')
 
@@ -26,14 +28,14 @@ module.exports = describe('create terms for resource endpoint', () => {
     should.equal(record.referenceId, '12346')
     should.equal(record.tag, 'copilot')
     should.equal(record.termsOfUseIds.length, 1)
-    should.equal(record.termsOfUseIds[0], 21307)
+    should.equal(record.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(record.createdBy, 'TonyJ')
     should.exist(record.created)
     should.equal(res.body.reference, 'challenge')
     should.equal(res.body.referenceId, '12346')
     should.equal(res.body.tag, 'copilot')
     should.equal(res.body.termsOfUseIds.length, 1)
-    should.equal(res.body.termsOfUseIds[0], 21307)
+    should.equal(res.body.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(res.body.createdBy, 'TonyJ')
     should.exist(res.body.created)
     assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
@@ -48,14 +50,14 @@ module.exports = describe('create terms for resource endpoint', () => {
     should.equal(record.referenceId, '12346')
     should.equal(record.tag, 'manager')
     should.equal(record.termsOfUseIds.length, 1)
-    should.equal(record.termsOfUseIds[0], 21307)
+    should.equal(record.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(record.createdBy, user.m2mWrite.sub)
     should.exist(record.created)
     should.equal(res.body.reference, 'challenge')
     should.equal(res.body.referenceId, '12346')
     should.equal(res.body.tag, 'manager')
     should.equal(res.body.termsOfUseIds.length, 1)
-    should.equal(res.body.termsOfUseIds[0], 21307)
+    should.equal(res.body.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(res.body.createdBy, user.m2mWrite.sub)
     should.exist(res.body.created)
     assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
@@ -75,14 +77,15 @@ module.exports = describe('create terms for resource endpoint', () => {
   it('failure - create terms for resource again, invalid terms id', async () => {
     let data = _.cloneDeep(request.createTermsForResource.reqBody)
     data.referenceId = '10000'
-    data.termsOfUseIds.push(10000)
-    data.termsOfUseIds.push(10001)
+    data.termsOfUseIds.push(termsOfUseIdsMapping['not-exist-1'])
+    data.termsOfUseIds.push(termsOfUseIdsMapping['not-exist-2'])
     try {
       await postRequest(url, data, token.user1)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 400)
-      should.equal(_.get(err, 'response.body.message'), `The following terms doesn't exist: [ 10000, 10001 ]`)
+      should.equal(_.get(err, 'response.body.message'),
+        `The following terms doesn't exist: [ '${termsOfUseIdsMapping['not-exist-1']}', '${termsOfUseIdsMapping['not-exist-2']}' ]`)
     }
   })
 

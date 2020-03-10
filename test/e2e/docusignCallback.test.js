@@ -6,6 +6,7 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
+
 const { user } = require('../common/testData')
 const { postRequest, assertErrorMessage, assertWarnMessage, assertInfoMessage, clearLogs } = require('../common/testHelper')
 
@@ -175,7 +176,7 @@ module.exports = describe('Docusign Callback endpoint', () => {
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 500)
-      should.equal(_.get(err, 'response.body.message'), 'Unable to process terms of use. The reason is: No terms of use exists for id: 20754. Try again later.')
+      should.equal(_.get(err, 'response.body.message'), `Unable to process terms of use. The reason is: No terms of use exists for id: ${config.DOCUSIGN.ASSIGNMENT_TERMS_OF_USE_ID}. Try again later.`)
     }
   })
 

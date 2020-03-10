@@ -166,7 +166,7 @@ module.exports = describe('docusign Callback', () => {
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'InternalServerError')
-      assertError(err, 'Unable to process terms of use. The reason is: No terms of use exists for id: 20754. Try again later.')
+      assertError(err, `Unable to process terms of use. The reason is: No terms of use exists for id: ${config.DOCUSIGN.ASSIGNMENT_TERMS_OF_USE_ID}. Try again later.`)
     }
   })
 

@@ -5,12 +5,13 @@ const config = require('config')
 
 module.exports = (sequelize, DataTypes) => {
   const TermsOfUse = sequelize.define('TermsOfUse', {
-    id: { type: DataTypes.BIGINT, allowNull: false, primaryKey: true },
+    id: { type: DataTypes.UUID, allowNull: false, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
+    legacyId: { type: DataTypes.BIGINT, allowNull: true, unique: true },
     text: { type: DataTypes.TEXT, allowNull: true },
     typeId: { type: DataTypes.BIGINT, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
     url: { type: DataTypes.STRING, allowNull: true },
-    agreeabilityTypeId: { type: DataTypes.BIGINT, allowNull: false, defaultValue: 3 },
+    agreeabilityTypeId: { type: DataTypes.UUID, allowNull: false, defaultValue: config.AGREE_ELECTRONICALLY },
     created: { type: DataTypes.DATE, allowNull: false },
     createdBy: { type: DataTypes.STRING, allowNull: true },
     updated: { type: DataTypes.DATE, allowNull: true },

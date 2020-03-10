@@ -6,6 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
+const {agreeabilityTypeIdsMapping} = require('../../src/test-data')
+
 const { user, token, request } = require('../common/testData')
 const { postRequest, clearLogs } = require('../common/testHelper')
 
@@ -22,14 +24,14 @@ module.exports = describe('create terms of use endpoint', () => {
   it('create terms of use without docusign template success', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
-    data.agreeabilityTypeId = 3
+    data.agreeabilityTypeId = agreeabilityTypeIdsMapping[3]
     const res = await postRequest(url, data, token.user1)
     const record = await TermsOfUse.findOne({ where: { id: res.body.id, deletedAt: null }, raw: true })
     should.equal(record.text, 'text')
     should.equal(record.typeId, 10)
     should.equal(record.title, 'title')
     should.equal(record.url, 'url')
-    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     should.equal(record.createdBy, 'TonyJ')
     should.exist(record.created)
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: res.body.id }, raw: true })
@@ -38,7 +40,7 @@ module.exports = describe('create terms of use endpoint', () => {
     should.equal(res.body.typeId, 10)
     should.equal(res.body.title, 'title')
     should.equal(res.body.url, 'url')
-    should.equal(res.body.agreeabilityTypeId, 3)
+    should.equal(res.body.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     should.equal(res.body.createdBy, 'TonyJ')
     should.exist(res.body.created)
   })
@@ -46,14 +48,14 @@ module.exports = describe('create terms of use endpoint', () => {
   it('create terms of use without docusign template using m2m token success', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
-    data.agreeabilityTypeId = 3
+    data.agreeabilityTypeId = agreeabilityTypeIdsMapping[3]
     const res = await postRequest(url, data, token.m2mWrite)
     const record = await TermsOfUse.findOne({ where: { id: res.body.id, deletedAt: null }, raw: true })
     should.equal(record.text, 'text')
     should.equal(record.typeId, 10)
     should.equal(record.title, 'title')
     should.equal(record.url, 'url')
-    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     should.equal(record.createdBy, user.m2mWrite.sub)
     should.exist(record.created)
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: res.body.id }, raw: true })
@@ -62,7 +64,7 @@ module.exports = describe('create terms of use endpoint', () => {
     should.equal(res.body.typeId, 10)
     should.equal(res.body.title, 'title')
     should.equal(res.body.url, 'url')
-    should.equal(res.body.agreeabilityTypeId, 3)
+    should.equal(res.body.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     should.equal(res.body.createdBy, user.m2mWrite.sub)
     should.exist(res.body.created)
   })
@@ -75,7 +77,7 @@ module.exports = describe('create terms of use endpoint', () => {
     should.equal(record.typeId, 10)
     should.equal(record.title, 'title')
     should.equal(record.url, 'url')
-    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: res.body.id }, raw: true })
     should.equal(existed.length, 1)
     should.equal(existed[0].docusignTemplateId, 'test-template-1')
@@ -83,14 +85,14 @@ module.exports = describe('create terms of use endpoint', () => {
     should.equal(res.body.typeId, 10)
     should.equal(res.body.title, 'title')
     should.equal(res.body.url, 'url')
-    should.equal(res.body.agreeabilityTypeId, 4)
+    should.equal(res.body.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     should.equal(res.body.createdBy, 'TonyJ')
     should.exist(res.body.created)
   })
 
   it('failure - no terms of use agreeability type found', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
-    data.agreeabilityTypeId = 100
+    data.agreeabilityTypeId = agreeabilityTypeIdsMapping['not-exist']
     try {
       await postRequest(url, data, token.user1)
       throw new Error('should not throw error here')

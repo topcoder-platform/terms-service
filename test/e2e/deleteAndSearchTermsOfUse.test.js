@@ -6,6 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
+const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
+
 const { token, request } = require('../common/testData')
 const { getRequest, deleteRequest, clearLogs } = require('../common/testHelper')
 
@@ -37,26 +39,27 @@ module.exports = describe('delete and search terms of use', () => {
   })
 
   it('delete terms of use success', async () => {
-    const res = await deleteRequest(`${url}/30000`, token.user1)
+    const res = await deleteRequest(`${url}/${termsOfUseIdsMapping[30000]}`, token.user1)
     should.equal(res.status, 204)
-    const record = await TermsOfUse.findOne({ where: { id: 30000 }, raw: true })
+    const record = await TermsOfUse.findOne({ where: { id: termsOfUseIdsMapping[30000] }, raw: true })
     should.exist(record.deletedAt)
   })
 
   it('delete terms of use using m2m token success', async () => {
-    const res = await deleteRequest(`${url}/40000`, token.m2mWrite)
+    const res = await deleteRequest(`${url}/${termsOfUseIdsMapping[40000]}`, token.m2mWrite)
     should.equal(res.status, 204)
-    const record = await TermsOfUse.findOne({ where: { id: 40000 }, raw: true })
+    const record = await TermsOfUse.findOne({ where: { id: termsOfUseIdsMapping[40000] }, raw: true })
     should.exist(record.deletedAt)
   })
 
   it('failure - delete terms of use not found', async () => {
     try {
-      await deleteRequest(`${url}/20000`, token.user1)
+      await deleteRequest(`${url}/${termsOfUseIdsMapping['not-exist-1']}`, token.user1)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 404)
-      should.equal(_.get(err, 'response.body.message'), `TermsOfUse not found with id: 20000`)
+      should.equal(_.get(err, 'response.body.message'),
+        `TermsOfUse not found with id: ${termsOfUseIdsMapping['not-exist-1']}`)
     }
   })
 
@@ -112,7 +115,7 @@ module.exports = describe('delete and search terms of use', () => {
 
   it('failure - delete terms of use invalid token', async () => {
     try {
-      await deleteRequest(`${url}/30000`, 'invalid')
+      await deleteRequest(`${url}/${termsOfUseIdsMapping[30000]}`, 'invalid')
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 401)
@@ -122,7 +125,7 @@ module.exports = describe('delete and search terms of use', () => {
 
   it('failure - delete terms of use forbidden', async () => {
     try {
-      await deleteRequest(`${url}/30000`, token.user2)
+      await deleteRequest(`${url}/${termsOfUseIdsMapping[30000]}`, token.user2)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)
@@ -132,7 +135,7 @@ module.exports = describe('delete and search terms of use', () => {
 
   it('failure - delete terms of use using forbidden m2m token', async () => {
     try {
-      await deleteRequest(`${url}/30000`, token.m2mRead)
+      await deleteRequest(`${url}/${termsOfUseIdsMapping[30000]}`, token.m2mRead)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 403)

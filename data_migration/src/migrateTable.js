@@ -6,6 +6,7 @@ const config = require('config')
 const models = require('./models')
 const logger = require('./common/logger')
 const { executeQueryAsync } = require('./common/informixWrapper')
+const { resolveTermsOfUseId, resolveAgreeabilityTypeId } = require('./common/utils')
 
 const limit = config.BATCH_COUNT
 const filePath = path.join(__dirname, '../progress/progress.json')
@@ -28,36 +29,36 @@ const fieldsMapping = {
     isCompleted: 'is_completed'
   },
   TermsOfUse: {
-    id: 'terms_of_use_id',
+    legacyId: 'terms_of_use_id',
     text: 'terms_text',
     typeId: 'terms_of_use_type_id',
     title: 'title',
     url: 'url',
-    agreeabilityTypeId: 'terms_of_use_agreeability_type_id',
+    agreeabilityTypeId: resolveAgreeabilityTypeId('terms_of_use_agreeability_type_id'),
     created: 'create_date',
     updated: 'modify_date'
   },
   TermsOfUseAgreeabilityType: {
-    id: 'terms_of_use_agreeability_type_id',
+    legacyId: 'terms_of_use_agreeability_type_id',
     name: 'name',
     description: 'description'
   },
   TermsOfUseDependency: {
-    dependencyTermsOfUseId: 'dependency_terms_of_use_id',
-    dependentTermsOfUseId: 'dependent_terms_of_use_id'
+    dependencyTermsOfUseId: resolveTermsOfUseId('dependency_terms_of_use_id'),
+    dependentTermsOfUseId: resolveTermsOfUseId('dependent_terms_of_use_id')
   },
   TermsOfUseDocusignTemplateXref: {
-    termsOfUseId: 'terms_of_use_id',
+    termsOfUseId: resolveTermsOfUseId('terms_of_use_id'),
     docusignTemplateId: 'docusign_template_id'
   },
   UserTermsOfUseBanXref: {
     userId: 'user_id',
-    termsOfUseId: 'terms_of_use_id',
+    termsOfUseId: resolveTermsOfUseId('terms_of_use_id'),
     created: 'create_date'
   },
   UserTermsOfUseXref: {
     userId: 'user_id',
-    termsOfUseId: 'terms_of_use_id',
+    termsOfUseId: resolveTermsOfUseId('terms_of_use_id'),
     created: 'create_date'
   }
 }
@@ -74,29 +75,35 @@ async function process (informixTableName, modelName, lastSkip) {
   const model = models[modelName]
   let skip = lastSkip
   while (true) {
-    const data = await executeQueryAsync(databaseName, `select skip ${skip} limit ${limit} * from ${informixTableName} ${oderByClause[informixTableName]}`)
+    const data = await executeQueryAsync(databaseName,
+      `select skip ${skip} limit ${limit} * from ${informixTableName} ${oderByClause[informixTableName]}`)
     if (data.length === 0) {
       break
     }
     let entities = []
     for (const element of data) {
-      const entity = {}
-      if (extraFieldValues[modelName]) {
-        _.assign(entity, extraFieldValues[modelName])
-      }
-      _.each(fieldsMapping[modelName], (value, key) => {
-        if (!_.isNil(element[value])) {
-          if (key === 'created' || key === 'updated') {
-            entity[key] = new Date(element[value])
-          } else {
-            entity[key] = element[value]
-          }
+      let entity = _.mapValues(fieldsMapping[modelName], (value, key) => {
+        if (_.isFunction(value)) {
+          return Promise.resolve(value(element))
         } else {
-          if (key === 'created' || key === 'updated') {
-            entity[key] = new Date()
+          if (!_.isNil(element[value])) {
+            if (key === 'created' || key === 'updated') {
+              return Promise.resolve(new Date(element[value]))
+            } else {
+              return Promise.resolve(element[value])
+            }
+          } else {
+            if (key === 'created' || key === 'updated') {
+              return Promise.resolve(new Date())
+            }
           }
         }
       })
+      entity = _.zipObject(_.keys(entity), await Promise.all(_.values(entity)))
+      if (extraFieldValues[modelName]) {
+        _.assign(entity, extraFieldValues[modelName])
+      }
+
       entities.push(entity)
     }
     // handle entities
@@ -104,7 +111,8 @@ async function process (informixTableName, modelName, lastSkip) {
     skip += data.length
 
     // write skip to file
-    logger.info(`migrate from ${informixTableName} to ${modelName} ${skip - data.length + 1} ${skip}`)
+    logger.info(
+      `migrate from ${informixTableName} to ${modelName} ${skip - data.length + 1} ${skip}`)
     await fs.writeFileAsync(filePath, JSON.stringify({ modelName, skip }, null, 4))
   }
 

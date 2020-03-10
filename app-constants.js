@@ -15,7 +15,7 @@ const models = require('./src/models')
  * tabs Arrays of objects which have tabLabel and tabValue parameters.
  * transaction the transaction object
  */
-const termsOfUseHandler = (termsOfUseId = 0) => async (userId, tabs, transaction) => {
+const termsOfUseHandler = (termsOfUseId = '0') => async (userId, tabs, transaction) => {
   try {
     const termsOfUse = await models.TermsOfUse.findByPk(termsOfUseId, { raw: true })
     if (_.isNull(termsOfUse)) {
@@ -85,7 +85,7 @@ const Scopes = {
 
 module.exports = {
   Templates,
-  AGREE_FOR_DOCUSIGN_TEMPLATE: 4,
+  AGREE_FOR_DOCUSIGN_TEMPLATE: config.AGREE_FOR_DOCUSIGN_TEMPLATE,
   ELECT_AGREEABLE: 'Electronically-agreeable',
   TEMPLATE_ID_INVALID: 'TEMPLATE_ID_INVALID',
   UserRoles,

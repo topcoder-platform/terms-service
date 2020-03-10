@@ -72,7 +72,7 @@ createTermsForResource.schema = {
     reference: Joi.string().required(),
     referenceId: Joi.string().required(),
     tag: Joi.string().required(),
-    termsOfUseIds: Joi.array().items(Joi.numberId()).unique().min(1).required()
+    termsOfUseIds: Joi.array().items(Joi.string().guid()).unique().min(1).required()
   }).required()
 }
 
@@ -134,7 +134,7 @@ partiallyUpdateTermsForResource.schema = {
     reference: Joi.string(),
     referenceId: Joi.string(),
     tag: Joi.string(),
-    termsOfUseIds: Joi.array().items(Joi.numberId()).unique().min(1)
+    termsOfUseIds: Joi.array().items(Joi.string().guid()).unique().min(1)
   }).required()
 }
 
