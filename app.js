@@ -14,8 +14,15 @@ const logger = require('./src/common/logger')
 const docusignListener = require('./src/common/docusignListener')
 const interceptor = require('express-interceptor')
 
+const YAML = require('yamljs')
+const swaggerUi = require('swagger-ui-express')
+const challengeAPISwaggerDoc = YAML.load('./docs/swagger.yaml')
+
 // setup express app
 const app = express()
+
+// serve challenge V5 API swagger definition
+app.use('/v5/terms/docs', swaggerUi.serve, swaggerUi.setup(challengeAPISwaggerDoc))
 
 app.use(cors())
 app.use(bodyParser.json())
