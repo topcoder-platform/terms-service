@@ -2,6 +2,8 @@
  * Test data to be used in tests
  */
 
+const {termsOfUseIdsMapping, agreeabilityTypeIdsMapping} = require('../../src/test-data')
+
 const token = {
   user1: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIiwiQ29ubmVjdCBTdXBwb3J0IiwiYWRtaW5pc3RyYXRvciIsInRlc3RSb2xlIiwiYWFhIiwidG9ueV90ZXN0XzEiLCJDb25uZWN0IE1hbmFnZXIiLCJDb25uZWN0IEFkbWluIiwiY29waWxvdCIsIkNvbm5lY3QgQ29waWxvdCBNYW5hZ2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJUb255SiIsImV4cCI6MTU4NTY4MTkyMCwidXNlcklkIjoiODU0Nzg5OSIsImlhdCI6MTU1NTY4MTMyMCwiZW1haWwiOiJhamVmdHNAdG9wY29kZXIuY29tIiwianRpIjoiMTlhMDkzNzAtMjk4OC00N2I4LTkxODktMGRhODVjNjM0ZWQyIn0.iz-6i97loCCkr5k_BQ974U0yYVJJ6fRaDTrQkfIk8SI',
   user2: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJjYWxsbWVrYXRvb3RpZSIsImV4cCI6MTU4NTY4MTkyMCwidXNlcklkIjoiMjMxMjQzMjkiLCJpYXQiOjE1NTU2ODEzMjAsImVtYWlsIjoiY2FsbG1la2F0b290aWVAdG9wY29kZXIuY29tIiwianRpIjoiMTlhMDkzNzAtMjk4OC00N2I4LTkxODktMGRhODVjNjM0ZWQyIn0.3qNoXuKfi_z017BhZOokjmHvDsUfuszZmhRQIl6c41M',
@@ -89,10 +91,10 @@ const user = {
     iat: 1556095963,
     exp: 1566182363,
     azp: 'enjw1810eDz3XTwSO2Rn2Y9cQTrspn3B',
-    scope: 'terms:read',
+    scope: 'read:terms',
     gty: 'client-credentials',
     userId: null,
-    scopes: [ 'terms:read' ],
+    scopes: [ 'read:terms' ],
     isMachine: true
   },
   m2mWrite: {
@@ -102,10 +104,10 @@ const user = {
     iat: 1556095963,
     exp: 1566182363,
     azp: 'enjw1810eDz3XTwSO2Rn2Y9cQTrspn3B',
-    scope: 'terms:write',
+    scope: 'write:terms',
     gty: 'client-credentials',
     userId: null,
-    scopes: [ 'terms:write' ],
+    scopes: [ 'write:terms' ],
     isMachine: true
   }
 }
@@ -118,7 +120,7 @@ const request = {
       typeId: 10,
       title: 'title',
       url: 'url',
-      agreeabilityTypeId: 4,
+      agreeabilityTypeId: agreeabilityTypeIdsMapping[4],
       docusignTemplateId: 'test-template-1'
     }
   },
@@ -129,7 +131,7 @@ const request = {
       typeId: 11,
       title: 'update-title',
       url: 'update-url',
-      agreeabilityTypeId: 4,
+      agreeabilityTypeId: agreeabilityTypeIdsMapping[4],
       docusignTemplateId: 'update-test-template-1'
     }
   },
@@ -137,38 +139,37 @@ const request = {
     response: {
       result: [
         {
-          id: 20754,
+          id: termsOfUseIdsMapping[21306],
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           text: 'text',
           agreeabilityType: 'Electronically-agreeable'
         },
         {
-          id: 21303,
+          id: termsOfUseIdsMapping[21307],
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           text: 'text',
           agreeabilityType: 'Electronically-agreeable'
         },
         {
-          id: 21304,
+          id: termsOfUseIdsMapping[21303],
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
-          text: 'another text',
-          docusignTemplateId: '100',
-          agreeabilityType: 'Docusign-template'
+          text: 'text',
+          agreeabilityType: 'Electronically-agreeable'
         },
         {
-          id: 21305,
-          title: 'Standard Terms for Topcoder Competitions v2.2',
-          url: '',
-          text: 'failure test case',
-          agreeabilityType: 'Docusign-template'
+          id: termsOfUseIdsMapping[40001],
+          title: 'title',
+          url: 'url',
+          text: 'text',
+          agreeabilityType: 'Electronically-agreeable'
         },
         {
-          id: 21306,
-          title: 'Standard Terms for Topcoder Competitions v2.2',
-          url: '',
+          id: termsOfUseIdsMapping[40002],
+          title: 'title',
+          url: 'url',
           text: 'text',
           agreeabilityType: 'Electronically-agreeable'
         }
@@ -181,7 +182,7 @@ const request = {
       reference: 'challenge',
       referenceId: '12346',
       tag: 'copilot',
-      termsOfUseIds: [21307]
+      termsOfUseIds: [termsOfUseIdsMapping[21307]]
     }
   },
   updateTermsForResource: {
@@ -190,7 +191,7 @@ const request = {
       reference: 'new-reference',
       referenceId: '11111',
       tag: 'tester',
-      termsOfUseIds: [21303, 21304]
+      termsOfUseIds: [termsOfUseIdsMapping[21303], termsOfUseIdsMapping[21304]]
     }
   },
   searchTermsForResource: {
@@ -202,7 +203,7 @@ const request = {
           referenceId: '12345',
           tag: 'manager',
           termsOfUseIds: [
-            '21307'
+            termsOfUseIdsMapping[21307]
           ],
           createdBy: 'admin'
         },
@@ -212,7 +213,7 @@ const request = {
           referenceId: '12345',
           tag: 'copilot',
           termsOfUseIds: [
-            '21307'
+            termsOfUseIdsMapping[21307]
           ],
           createdBy: 'admin'
         },
@@ -222,8 +223,8 @@ const request = {
           referenceId: '12345',
           tag: 'submitter',
           termsOfUseIds: [
-            '21303',
-            '21304'
+            termsOfUseIdsMapping[21303],
+            termsOfUseIdsMapping[21304]
           ],
           createdBy: 'admin'
         }
@@ -239,7 +240,7 @@ const request = {
             allAgreed: false,
             unAgreedTerms: [
               {
-                id: 21304,
+                id: termsOfUseIdsMapping[21304],
                 title: 'Standard Terms for Topcoder Competitions v2.2',
                 url: '',
                 text: 'another text',
@@ -260,7 +261,7 @@ const request = {
             allAgreed: false,
             unAgreedTerms: [
               {
-                id: 21303,
+                id: termsOfUseIdsMapping[21303],
                 title: 'Standard Terms for Topcoder Competitions v2.2',
                 url: '',
                 text: 'text',
@@ -268,7 +269,7 @@ const request = {
                 agreeabilityType: 'Electronically-agreeable'
               },
               {
-                id: 21304,
+                id: termsOfUseIdsMapping[21304],
                 title: 'Standard Terms for Topcoder Competitions v2.2',
                 url: '',
                 text: 'another text',

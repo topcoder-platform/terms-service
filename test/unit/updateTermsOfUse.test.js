@@ -6,6 +6,8 @@ const _ = require('lodash')
 const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
+const {termsOfUseIdsMapping, agreeabilityTypeIdsMapping} = require('../../src/test-data')
+
 const { user, request } = require('../common/testData')
 const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
@@ -17,9 +19,9 @@ module.exports = describe('update terms of use', () => {
     clearLogs()
   })
 
-  const id1 = 30000
-  const id2 = 30001
-  const id3 = 30002
+  const id1 = termsOfUseIdsMapping[30000]
+  const id2 = termsOfUseIdsMapping[30001]
+  const id3 = termsOfUseIdsMapping[30002]
 
   it('fully update terms of use using m2m token success', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
@@ -31,7 +33,7 @@ module.exports = describe('update terms of use', () => {
     should.equal(record.typeId, 11)
     should.equal(record.title, 'm2m-title')
     should.equal(record.url, 'update-url')
-    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     should.equal(record.updatedBy, user.m2mWrite.sub)
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)
@@ -46,7 +48,7 @@ module.exports = describe('update terms of use', () => {
     should.equal(record.typeId, 11)
     should.equal(record.title, 'update-title')
     should.equal(record.url, 'update-url')
-    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)
     should.equal(existed[0].docusignTemplateId, 'update-test-template-1')
@@ -61,7 +63,7 @@ module.exports = describe('update terms of use', () => {
     should.equal(record.typeId, 11)
     should.equal(record.title, 'update-title')
     should.equal(record.url, 'update-url')
-    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)
     should.equal(existed[0].docusignTemplateId, 'new-template-id')
@@ -70,14 +72,14 @@ module.exports = describe('update terms of use', () => {
   it('fully update terms of use, removing docusign template success', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     data = _.omit(data, 'text', 'url', 'docusignTemplateId')
-    data.agreeabilityTypeId = 3
+    data.agreeabilityTypeId = agreeabilityTypeIdsMapping[3]
     await service.fullyUpdateTermsOfUse(user.user1, id1, data)
     const record = await TermsOfUse.findOne({ where: { id: id1, deletedAt: null }, raw: true })
     should.not.exist(record.text)
     should.equal(record.typeId, 11)
     should.equal(record.title, 'update-title')
     should.not.exist(record.url)
-    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 0)
   })
@@ -96,11 +98,11 @@ module.exports = describe('update terms of use', () => {
   it('failure - fully update terms of use not found', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     try {
-      await service.fullyUpdateTermsOfUse(user.user1, 20000, data)
+      await service.fullyUpdateTermsOfUse(user.user1, termsOfUseIdsMapping['not-exist-1'], data)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'NotFoundError')
-      assertError(err, `TermsOfUse not found with id: 20000`)
+      assertError(err, `TermsOfUse not found with id: ${termsOfUseIdsMapping['not-exist-1']}`)
     }
   })
 
@@ -120,11 +122,11 @@ module.exports = describe('update terms of use', () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     data = _.omit(data, 'agreeabilityTypeId')
     try {
-      await service.partiallyUpdateTermsOfUse(user.user1, 20000, data)
+      await service.partiallyUpdateTermsOfUse(user.user1, termsOfUseIdsMapping['not-exist-1'], data)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'NotFoundError')
-      assertError(err, `TermsOfUse not found with id: 20000`)
+      assertError(err, `TermsOfUse not found with id: ${termsOfUseIdsMapping['not-exist-1']}`)
     }
   })
 
@@ -135,7 +137,7 @@ module.exports = describe('update terms of use', () => {
     should.equal(record.typeId, 11)
     should.equal(record.title, 'update-title')
     should.equal(record.url, 'm2m-url')
-    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     should.equal(record.updatedBy, user.m2mWrite.sub)
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 0)
@@ -150,24 +152,24 @@ module.exports = describe('update terms of use', () => {
     should.equal(record.typeId, 11)
     should.equal(record.title, 'update-title')
     should.equal(record.url, 'update-url')
-    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)
     should.equal(existed[0].docusignTemplateId, 'update-test-template-1')
   })
 
   it('partially update terms of use, changing agreeabilityTypeId into docusign success', async () => {
-    await service.partiallyUpdateTermsOfUse(user.user1, id3, { agreeabilityTypeId: 4 })
+    await service.partiallyUpdateTermsOfUse(user.user1, id3, { agreeabilityTypeId: agreeabilityTypeIdsMapping[4] })
     const record = await TermsOfUse.findOne({ where: { id: id3, deletedAt: null }, raw: true })
-    should.equal(record.agreeabilityTypeId, 4)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[4])
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)
   })
 
   it('partially update terms of use, changing agreeabilityTypeId into electronically success', async () => {
-    await service.partiallyUpdateTermsOfUse(user.user1, id2, { agreeabilityTypeId: 3 })
+    await service.partiallyUpdateTermsOfUse(user.user1, id2, { agreeabilityTypeId: agreeabilityTypeIdsMapping[3] })
     const record = await TermsOfUse.findOne({ where: { id: id2, deletedAt: null }, raw: true })
-    should.equal(record.agreeabilityTypeId, 3)
+    should.equal(record.agreeabilityTypeId, agreeabilityTypeIdsMapping[3])
     // docusign template xref is not deleted under partially update
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)

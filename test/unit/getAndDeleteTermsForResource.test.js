@@ -5,6 +5,7 @@
 const should = require('should')
 const service = require('../../src/services/TermsForResourceService')
 const models = require('../../src/models')
+const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
 const { assertError, clearLogs } = require('../common/testHelper')
 
 const TermsForResource = models.TermsForResource
@@ -24,7 +25,7 @@ module.exports = describe('get and delete terms for resource', () => {
     should.equal(record.referenceId, '11111')
     should.equal(record.tag, 'tester')
     should.equal(record.termsOfUseIds.length, 1)
-    should.equal(record.termsOfUseIds[0], 21305)
+    should.equal(record.termsOfUseIds[0], termsOfUseIdsMapping[21305])
     should.equal(record.createdBy, 'admin')
     should.exist(record.created)
     should.equal(record.updatedBy, 'TonyJ')

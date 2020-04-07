@@ -36,13 +36,15 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^5.3.0",
     "superagent": "^5.0.2",
-    "tc-core-library-js": "appirio-tech/tc-core-library-js.git#v2.6.1",
+    "swagger-ui-express": "^4.1.4",
     "tc-bus-api-wrapper": "topcoder-platform/tc-bus-api-wrapper.git",
+    "tc-core-library-js": "appirio-tech/tc-core-library-js.git#v2.6.1",
     "topcoder-healthcheck-dropin": "^1.0.3",
     "uuid": "^3.3.2",
     "winston": "^3.2.1",
     "xmldom": "^0.1.27",
-    "xpath": "0.0.27"
+    "xpath": "0.0.27",
+    "yamljs": "^0.3.0"
   },
   "engines": {
     "node": "^10"

@@ -7,6 +7,7 @@ const uuid = require('uuid/v4')
 const models = require('./models')
 const logger = require('./common/logger')
 const { executeQueryAsync } = require('./common/informixWrapper')
+const { resolveTermsOfUseId } = require('./common/utils')
 
 const limit = config.BATCH_COUNT
 const filePath = path.join(__dirname, '../progress/progress.json')
@@ -19,7 +20,7 @@ async function persistTermsForResource (records) {
     reference: 'challenge',
     referenceId: records[0].project_id,
     tag: records[0].resource_role_id,
-    termsOfUseIds: _.uniq(_.map(records, 'terms_of_use_id')),
+    termsOfUseIds: _.uniq(await Promise.all(_.map(records, resolveTermsOfUseId('terms_of_use_id')))),
     created: new Date(),
     createdBy: 'admin'
   })

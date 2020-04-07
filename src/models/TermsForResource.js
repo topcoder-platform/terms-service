@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     reference: { type: DataTypes.STRING, allowNull: false },
     referenceId: { type: DataTypes.STRING, allowNull: false },
     tag: { type: DataTypes.STRING, allowNull: false },
-    termsOfUseIds: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: false },
+    termsOfUseIds: { type: DataTypes.ARRAY(DataTypes.UUID), allowNull: false },
     created: { type: DataTypes.DATE, allowNull: false },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     updated: { type: DataTypes.DATE, allowNull: true },

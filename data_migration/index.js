@@ -6,7 +6,6 @@ const migrateTable = require('./src/migrateTable')
 const models = require('./src/models')
 const logger = require('./src/common/logger')
 
-const step = ['TermsForResource']
 const progressInfo = require('./progress/progress.json')
 
 const informixTableNames = {
