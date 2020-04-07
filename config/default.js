@@ -26,6 +26,12 @@ module.exports = {
   KAFKA_MESSAGE_ORIGINATOR: process.env.KAFKA_MESSAGE_ORIGINATOR || 'resources-api',
   TERMS_CREATE_TOPIC: process.env.TERMS_CREATE_TOPIC || 'terms.notification.created',
   TERMS_UPDATE_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'terms.notification.updated',
+  TERMS_DELETE_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'terms.notification.deleted',
+  RESOURCE_TERMS_CREATE_TOPIC: process.env.RESOURCE_TERMS_CREATE_TOPIC || 'terms.notification.resource.created',
+  RESOURCE_TERMS_UPDATE_TOPIC: process.env.RESOURCE_TERMS_UPDATE_TOPIC || 'terms.notification.resource.updated',
+  RESOURCE_TERMS_DELETE_TOPIC: process.env.RESOURCE_TERMS_DELETE_TOPIC || 'terms.notification.resource.deleted',
+  USER_AGREED_TERMS_TOPIC: process.env.USER_AGREED_TERMS_TOPIC || 'terms.notification.user.agreed',
+  DOCUSIGN_ENVELOPE_CREATE_TOPIC: process.env.DOCUSIGN_ENVELOPE_CREATE_TOPIC || 'terms.notification.docusign.envelop.created',
   TERMS_EMAIL_SUPPORT_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'terms.action.email.support',
 
   DOCUSIGN: {

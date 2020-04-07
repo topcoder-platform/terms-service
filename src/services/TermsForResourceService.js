@@ -61,7 +61,7 @@ async function createTermsForResource (currentUser, termsForResource) {
   termsForResource.createdBy = currentUser.handle || currentUser.sub
   await TermsForResource.create(termsForResource)
 
-  await helper.postEvent(config.TERMS_CREATE_TOPIC, _.omit(termsForResource, 'createdBy'))
+  await helper.postEvent(config.RESOURCE_TERMS_CREATE_TOPIC, _.omit(termsForResource, 'createdBy'))
 
   return termsForResource
 }
@@ -94,7 +94,8 @@ async function updateTermsForResource (currentUser, termsForResourceId, data) {
 
   data.updated = new Date()
   data.updatedBy = currentUser.handle || currentUser.sub
-  await termsForResource.update(data)
+  const updatedTermsForResource = await termsForResource.update(data)
+  await helper.postEvent(config.RESOURCE_TERMS_UPDATE_TOPIC, updatedTermsForResource)
 
   return _.assign(termsForResource.dataValues, data)
 }
@@ -158,7 +159,9 @@ getTermsForResource.schema = {
  */
 async function deleteTermsForResource (termsForResourceId) {
   const entity = await helper.ensureExists(TermsForResource, { id: termsForResourceId }, false)
+  const deletedEntity = _.cloneDeep(entity)
   await entity.destroy()
+  await helper.postEvent(config.RESOURCE_TERMS_DELETE_TOPIC, deletedEntity)
 }
 
 deleteTermsForResource.schema = getTermsForResource.schema
