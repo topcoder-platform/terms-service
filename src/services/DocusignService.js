@@ -206,12 +206,15 @@ async function generateDocusignViewURL (currentUser, data) {
         throw new errors.InternalServerError('Requesting Signature via template failed.')
       }
 
-      await DocusignEnvelope.create({
+      const envelopeData = {
         id: envelopeId,
         docusignTemplateId: data.templateId,
         userId: currentUser.userId,
         isCompleted: 0
-      }, { transaction })
+      }
+
+      await DocusignEnvelope.create(envelopeData, { transaction })
+      await helper.postEvent(config.DOCUSIGN_ENVELOPE_CREATE_TOPIC, envelopeData)
     } else {
       envelopeId = docuEnvelope.id
     }
