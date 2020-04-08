@@ -1,4 +1,4 @@
 {
-    "modelName": "TermsForResource",
-    "finishStep": true
+    "modelName": "UserTermsOfUseXref",
+    "skip": 5000
 }

@@ -11,7 +11,7 @@
 
 var EventEmitter = require('events').EventEmitter
 var java = require('java')
-var sys = require('sys')
+var sys = require('util')
 var _ = require('underscore')
 
 var connectionPool = {}

@@ -15,7 +15,7 @@ const oderByClause = {
   'terms_of_use': 'order by terms_of_use_id asc',
   'terms_of_use_agreeability_type_lu': 'order by terms_of_use_agreeability_type_id asc',
   'terms_of_use_dependency': 'order by dependency_terms_of_use_id asc, dependent_terms_of_use_id asc',
-  'docusign_envelope': 'order by docusign_envelope_id asc',
+  'docusign_envelope': 'where is_completed = 1 order by docusign_envelope_id asc',
   'terms_of_use_docusign_template_xref': 'order by terms_of_use_id asc',
   'user_terms_of_use_ban_xref': 'order by terms_of_use_id asc, user_id asc',
   'user_terms_of_use_xref': 'order by terms_of_use_id asc, user_id asc'
@@ -107,7 +107,7 @@ async function process (informixTableName, modelName, lastSkip) {
       entities.push(entity)
     }
     // handle entities
-    await model.bulkCreate(entities)
+    await model.bulkCreate(entities, {raw: true})
     skip += data.length
 
     // write skip to file
