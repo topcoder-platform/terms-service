@@ -54,7 +54,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
 
   // get terms of use
   const result = await TermsOfUse.findAll({
-    attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId'],
+    attributes: ['id', 'title', 'url', 'agreeabilityTypeId'],
     include,
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
