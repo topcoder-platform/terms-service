@@ -54,7 +54,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
 
   // get terms of use
   const result = await TermsOfUse.findAll({
-    attributes: ['id', 'title', 'url', 'agreeabilityTypeId'],
+    attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId'],
     include,
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
@@ -359,7 +359,7 @@ async function searchTermsOfUses (criteria) {
 
   const result = await TermsOfUse.findAll({
     order: [['id', 'ASC']],
-    attributes: ['id', 'legacyId', 'title', 'url', 'text', 'agreeabilityTypeId'],
+    attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId'],
     include: [
       {
         model: TermsOfUseAgreeabilityType,
