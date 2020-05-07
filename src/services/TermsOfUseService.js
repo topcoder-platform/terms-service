@@ -353,7 +353,7 @@ deleteTermsOfUse.schema = {
 async function searchTermsOfUses (criteria) {
   const countResult = await TermsOfUse.findOne({
     attributes: [[models.Sequelize.fn('COUNT', models.Sequelize.col('id')), 'total']],
-    where: { deletedAt: null },
+    where: _.assign({ deletedAt: null }, _.omit(criteria, ['perPage', 'page'])),
     raw: true
   })
 
