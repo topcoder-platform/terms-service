@@ -172,6 +172,12 @@ paths:
             type: string
           description: The flag indicate this request contain authorization information or not.
           example: 'true'
+        - in: query
+          name: userId
+          required: false
+          schema:
+            type: string
+          description: The user ID to use if the endpoint is being called using and M2M/admin token. This is optional for admin tokens but required for M2M tokens
       responses:
         '200':
           description: OK

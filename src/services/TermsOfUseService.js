@@ -9,7 +9,7 @@ const helper = require('../common/helper')
 const logger = require('../common/logger')
 const errors = require('../common/errors')
 const models = require('../models')
-const { AGREE_FOR_DOCUSIGN_TEMPLATE, ELECT_AGREEABLE } = require('../../app-constants')
+const { AGREE_FOR_DOCUSIGN_TEMPLATE, ELECT_AGREEABLE, UserRoles } = require('../../app-constants')
 
 const TermsOfUse = models.TermsOfUse
 const UserTermsOfUseXref = models.UserTermsOfUseXref
@@ -27,10 +27,20 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
  */
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
   const noauth = query.noauth === 'true'
-  if (!noauth && (!currentUser || currentUser.isMachine)) {
-    // since we can get terms of use anonymous, we can accept any valid m2m token.
-    // however it should be consider as anonymous, so noauth query parameter should be true
+  if (!noauth && !currentUser) {
     throw new errors.UnauthorizedError('Authentication credential was missing.')
+  }
+
+  let userId = currentUser.userId
+  if (currentUser.isMachine || current) {
+    if (!query.userId) {
+      throw new errors.BadRequestError('For calls with an M2M token, the userId parameter is required')
+    }
+    userId = query.userId
+  } else if (currentUser.roles.includes(UserRoles.Admin)) {
+    if (query.userId) {
+      userId = query.userId
+    }
   }
 
   const include = [
@@ -46,7 +56,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
   if (!noauth) {
     include.push({
       model: UserTermsOfUseXref,
-      where: { userId: currentUser.userId },
+      where: { userId },
       attributes: ['userId'],
       required: false
     })
@@ -98,7 +108,8 @@ getTermsOfUse.schema = {
   currentUser: Joi.any(),
   termsOfUseId: Joi.string().guid(),
   query: Joi.object().keys({
-    noauth: Joi.string()
+    noauth: Joi.string(),
+    userId: Joi.number()
   })
 }
 
