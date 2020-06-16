@@ -53,7 +53,8 @@ module.exports = {
     get: {
       controller: 'TermsOfUseController',
       method: 'getTermsOfUse',
-      optionalAuth: 'jwt'
+      optionalAuth: 'jwt',
+      scopes: [constants.Scopes.Terms.Read]
     },
     put: {
       controller: 'TermsOfUseController',
