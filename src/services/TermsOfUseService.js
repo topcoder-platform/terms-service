@@ -31,7 +31,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     throw new errors.UnauthorizedError('Authentication credential was missing.')
   }
 
-  let userId = currentUser.userId
+  let userId = _.get(currentUser, 'userId')
   if (currentUser.isMachine && !noauth) {
     if (!query.userId) {
       throw new errors.BadRequestError('For calls with an M2M token, the userId parameter is required')
