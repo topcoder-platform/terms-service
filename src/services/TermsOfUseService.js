@@ -37,7 +37,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
       throw new errors.BadRequestError('For calls with an M2M token, the userId parameter is required')
     }
     userId = query.userId
-  } else if (currentUser.roles.includes(UserRoles.Admin)) {
+  } else if (_.get(currentUser, 'roles').includes(UserRoles.Admin)) {
     if (query.userId) {
       userId = query.userId
     }
