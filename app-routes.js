@@ -45,11 +45,11 @@ module.exports = (app) => {
             if (req.authUser.isMachine) {
               // M2M
               if (!def.optionalAuth && (!def.scopes || (!req.authUser.scopes || !helper.checkIfExists(def.scopes, req.authUser.scopes)))) {
-                next(new errors.ForbiddenError('You are not allowed to perform this action!'))
+                throw new errors.ForbiddenError('You are not allowed to perform this action!')
               }
             } else {
               if (def.access && (!req.authUser.roles || !helper.checkIfExists(def.access, req.authUser.roles))) {
-                next(new errors.ForbiddenError('You are not allowed to perform this action!'))
+                throw new errors.ForbiddenError('You are not allowed to perform this action!')
               }
             }
           }
