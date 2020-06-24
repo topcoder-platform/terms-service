@@ -175,6 +175,7 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
   const body = {
     userId: currentUser.userId,
     termsOfUseId,
+    legacyId: _.get(result, '[0].legacyId'),
     created: new Date()
   }
   await UserTermsOfUseXref.create(body)
@@ -354,7 +355,7 @@ fullyUpdateTermsOfUse.schema = {
 async function deleteTermsOfUse (termsOfUseId) {
   const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
   await termsOfUse.update({ deletedAt: new Date() })
-  await helper.postEvent(config.TERMS_DELETE_TOPIC, { termsOfUseId })
+  await helper.postEvent(config.TERMS_DELETE_TOPIC, { termsOfUseId, legacyId: termsOfUse.legacyId })
 }
 
 deleteTermsOfUse.schema = {
