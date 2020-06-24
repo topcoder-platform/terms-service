@@ -179,7 +179,12 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
   }
   await UserTermsOfUseXref.create(body)
 
-  await helper.postEvent(config.USER_AGREED_TERMS_TOPIC, body)
+  try {
+    await helper.postEvent(config.USER_AGREED_TERMS_TOPIC, body)
+  } catch (e) {
+    logger.error('Failed to post event to the BUS API')
+    logger.logFullError(e)
+  }
 
   return { success: true }
 }
