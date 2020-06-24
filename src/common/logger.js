@@ -49,7 +49,7 @@ logger.logFullError = (err, signature) => {
 const _sanitizeObject = (obj) => {
   try {
     return JSON.parse(JSON.stringify(obj, (name, value) => {
-      const removeFields = ['currentUser']
+      const removeFields = ['currentUser', 'text']
       if (_.includes(removeFields, name)) {
         return '<removed>'
       }
