@@ -2,6 +2,7 @@ node_modules
 coverage
 env.sh
 .env
+.env.*
 data_migration/.env
 .nyc_output
 .idea
