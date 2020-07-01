@@ -44,7 +44,7 @@ async function sendEmail (params) {
  * @returns {Object} the result message
  */
 async function docusignCallback (data) {
-  logger.debug(`Docusign Callback. Data: ${JSON.stringify(data)}`)
+  logger.debug(`Docusign Service Callback. Data: ${JSON.stringify(data)}`)
   if (data.connectKey !== config.DOCUSIGN.CALLBACK_CONNECT_KEY) {
     throw new errors.NotFoundError('Connect Key is missing or invalid.')
   }
@@ -232,6 +232,7 @@ async function generateDocusignViewURL (currentUser, data) {
       userName: `${user.firstName} ${user.lastName}`,
       authenticationMethod: 'none'
     }
+    logger.debug(`docusign request body ${JSON.stringify(body)}`)
     let recipientViewUrl
     try {
       const res = await helper.postRequest(url, body)

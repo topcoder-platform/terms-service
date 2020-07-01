@@ -2,6 +2,7 @@
  * Controller for Docusign endpoints
  */
 const service = require('../services/DocusignService')
+const logger = require('../common/logger')
 
 /**
  * Docusign callback
@@ -9,6 +10,7 @@ const service = require('../services/DocusignService')
  * @param res the response
  */
 async function docusignCallback (req, res) {
+  logger.debug(`Docusign Callback. Query: ${JSON.stringify(req.query)}, Body: ${JSON.stringify(req.body)}`)
   res.send(await service.docusignCallback(req.body))
 }
 
