@@ -44,6 +44,7 @@ async function sendEmail (params) {
  * @returns {Object} the result message
  */
 async function docusignCallback (data) {
+  logger.debug(`Docusign Callback. Data: ${JSON.stringify(data)}`)
   if (data.connectKey !== config.DOCUSIGN.CALLBACK_CONNECT_KEY) {
     throw new errors.NotFoundError('Connect Key is missing or invalid.')
   }
