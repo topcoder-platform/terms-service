@@ -12,6 +12,10 @@ module.exports = {
     }
   },
   '/terms/docusignCallback': {
+    get: {
+      controller: 'DocusignController',
+      method: 'docusignCallback'
+    },
     post: {
       controller: 'DocusignController',
       method: 'docusignCallback'
