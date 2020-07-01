@@ -175,9 +175,11 @@ async function generateDocusignViewURL (currentUser, data) {
     if (_.isNull(docuEnvelope)) {
       let textTabs = []
       // Set the default tab values if provided
-      for (let i = 0; i < data.tabs.length; i++) {
-        const tab = data.tabs[i].split('||')
-        textTabs.push({ tabLabel: tab[0], value: tab[1] })
+      if (data.tabs && data.tabs.length > 0) {
+        for (let i = 0; i < data.tabs.length; i++) {
+          const tab = data.tabs[i].split('||')
+          textTabs.push({ tabLabel: tab[0], value: tab[1] })
+        }
       }
 
       textTabs.push({ tabLabel: 'TopCoder Handle', value: user.handle })
