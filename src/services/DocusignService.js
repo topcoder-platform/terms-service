@@ -152,6 +152,7 @@ async function getUser (userId) {
  * @returns {Object} the recipient view url and envelop id
  */
 async function generateDocusignViewURL (currentUser, data) {
+  logger.debug(`generateDocusignViewURL ${JSON.stringify(currentUser)} ${JSON.stringify(data)}`)
   let baseUrl
   try {
     const res = await helper.getRequest(`${config.DOCUSIGN.SERVER_URL}/login_information`)
@@ -199,6 +200,7 @@ async function generateDocusignViewURL (currentUser, data) {
           }
         }]
       }
+      logger.debug(`docusign envelope request body ${JSON.stringify(body)}`)
       try {
         const res = await helper.postRequest(`${baseUrl}/envelopes`, body)
         envelopeId = res.body.envelopeId
@@ -225,17 +227,17 @@ async function generateDocusignViewURL (currentUser, data) {
     // Request recipient view
     const url = `${baseUrl}/envelopes/${envelopeId}/views/recipient`
     // Request body
-    const body = {
+    const envelopeBody = {
       clientUserId: config.DOCUSIGN.CLIENT_USER_ID,
       email: userEmail,
       returnUrl: _.template(data.returnUrl || config.DOCUSIGN.RETURN_URL)({ envelopeId }),
       userName: `${user.firstName} ${user.lastName}`,
       authenticationMethod: 'none'
     }
-    logger.debug(`docusign request body ${JSON.stringify(body)}`)
+    logger.debug(`docusign request body ${JSON.stringify(envelopeBody)}`)
     let recipientViewUrl
     try {
-      const res = await helper.postRequest(url, body)
+      const res = await helper.postRequest(url, envelopeBody)
       recipientViewUrl = res.body.url
     } catch (err) {
       logger.logFullError(err)
