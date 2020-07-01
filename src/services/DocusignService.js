@@ -44,11 +44,17 @@ async function sendEmail (params) {
  * @returns {Object} the result message
  */
 async function docusignCallback (data) {
+  /* example returned data
+    data: {
+      "envelopeId": "56cf1d2b-43fc-43b5-9e60-f028fba8bf2a",
+      "event": "signing_complete"
+    }
+  */
   logger.debug(`Docusign Service Callback. Data: ${JSON.stringify(data)}`)
-  if (data.connectKey !== config.DOCUSIGN.CALLBACK_CONNECT_KEY) {
-    throw new errors.NotFoundError('Connect Key is missing or invalid.')
-  }
-  if (data.envelopeStatus !== 'Completed') {
+  // if (data.connectKey !== config.DOCUSIGN.CALLBACK_CONNECT_KEY) {
+  //   throw new errors.NotFoundError('Connect Key is missing or invalid.')
+  // }
+  if (data.event !== 'signing_complete') {
     logger.info('Status is not completed.')
     return { message: 'success' }
   }
@@ -57,7 +63,7 @@ async function docusignCallback (data) {
     return { message: 'success' }
   }
 
-  let envelop
+  let envelope
   // start transaction
   const transaction = await models.sequelize.transaction()
 
@@ -75,20 +81,21 @@ async function docusignCallback (data) {
       // still return success
       return { message: 'success' }
     }
-    envelop = result[0]
+    envelope = result[0]
     // Update the envelop
-    await envelop.update({ isCompleted: 1 }, { transaction })
+    await envelope.update({ isCompleted: 1 }, { transaction })
     // Find the template for the envelope
-    const template = _.find(Templates, { templateId: envelop.docusignTemplateId })
+    logger.debug(`finding Template for docusignTemplateId ${envelope.docusignTemplateId}`)
+    const template = _.find(Templates, { templateId: envelope.docusignTemplateId })
     if (_.isUndefined(template)) {
-      logger.warn(`No Template was found for template id: ${envelop.docusignTemplateId}`)
+      logger.warn(`No Template was found for template id: ${envelope.docusignTemplateId}`)
       await transaction.commit()
       // still return success
       return { message: 'success' }
     }
     // Call the handlers for the template, one after the other
     for (let i = 0; i < template.handlers.length; i++) {
-      await template.handlers[i](envelop.userId, data.tabs, transaction)
+      await template.handlers[i](envelope.userId, data.tabs, transaction)
     }
 
     // commit
@@ -101,9 +108,9 @@ async function docusignCallback (data) {
       subject: config.DOCUSIGN.CALLBACK_FAILED_EMAIL_SUBJECT,
       toAddress: config.DOCUSIGN.CALLBACK_FAILED_SUPPORT_EMAIL_ADDRESS,
       fromAddress: config.DOCUSIGN.CALLBACK_FAILED_FROM_EMAIL_ADDRESS,
-      userId: envelop.userId,
-      templateId: envelop.docusignTemplateId,
-      envelopeId: envelop.id,
+      userId: envelope.userId,
+      templateId: envelope.docusignTemplateId,
+      envelopeId: envelope.id,
       message: err.message
     })
 
