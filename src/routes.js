@@ -15,11 +15,11 @@ module.exports = {
     get: {
       controller: 'DocusignController',
       method: 'docusignCallback'
-    },
-    post: {
-      controller: 'DocusignController',
-      method: 'docusignCallback'
     }
+    // post: {
+    //   controller: 'DocusignController',
+    //   method: 'docusignCallback'
+    // }
   },
   '/terms/reference': {
     post: {

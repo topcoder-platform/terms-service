@@ -128,13 +128,13 @@ async function docusignCallback (data) {
 
 docusignCallback.schema = {
   data: Joi.object().keys({
-    envelopeStatus: Joi.string().required(),
-    envelopeId: Joi.string().required(),
-    tabs: Joi.array().items(Joi.object().keys({
-      tabLabel: Joi.string().required(),
-      tabValue: Joi.string().allow('').required()
-    })).required(),
-    connectKey: Joi.string().required()
+    event: Joi.string().required(),
+    envelopeId: Joi.string().required()
+    // tabs: Joi.array().items(Joi.object().keys({
+    //   tabLabel: Joi.string().required(),
+    //   tabValue: Joi.string().allow('').required()
+    // })).required(),
+    // connectKey: Joi.string().required()
   }).required()
 }
 
