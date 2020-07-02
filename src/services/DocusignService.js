@@ -135,7 +135,7 @@ docusignCallback.schema = {
     //   tabValue: Joi.string().allow('').required()
     // })).required(),
     // connectKey: Joi.string().required()
-  }).required()
+  }).unknown(true).required()
 }
 
 /**
