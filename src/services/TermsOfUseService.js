@@ -26,13 +26,8 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
  * @returns {Object} the terms of use
  */
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
-  const noauth = query.noauth === 'true'
-  if (!noauth && !currentUser) {
-    throw new errors.UnauthorizedError('Authentication credential was missing.')
-  }
-
   let userId = _.get(currentUser, 'userId')
-  if (_.get(currentUser, 'isMachine', false) && !noauth) {
+  if (_.get(currentUser, 'isMachine', false)) {
     if (!query.userId) {
       throw new errors.BadRequestError('For calls with an M2M token, the userId parameter is required')
     }
@@ -53,7 +48,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
       attributes: ['docusignTemplateId']
     }
   ]
-  if (!noauth) {
+  if (currentUser && userId) {
     include.push({
       model: UserTermsOfUseXref,
       where: { userId },
@@ -73,7 +68,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
   }
   const termsOfUse = result[0]
-  if (!noauth) {
+  if (currentUser && userId) {
     termsOfUse.agreed = !_.isNull(termsOfUse['UserTermsOfUseXrefs.userId'])
     delete termsOfUse['UserTermsOfUseXrefs.userId']
   }
@@ -108,7 +103,6 @@ getTermsOfUse.schema = {
   currentUser: Joi.any(),
   termsOfUseId: Joi.string().guid(),
   query: Joi.object().keys({
-    noauth: Joi.string(),
     userId: Joi.number()
   })
 }
