@@ -39,8 +39,8 @@ module.exports = describe('Get terms of use endpoint', () => {
     should.equal(res.body.agreeabilityType, 'Electronically-agreeable')
   })
 
-  it(`get terms of use`, async () => {
-    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`)
+  it(`get terms of use noauth`, async () => {
+    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21303]}?noauth=true`)
     should.equal(res.status, 200)
     should.equal(res.body.id, termsOfUseIdsMapping[21303])
     should.equal(res.body.title, 'Standard Terms for Topcoder Competitions v2.2')
@@ -50,8 +50,8 @@ module.exports = describe('Get terms of use endpoint', () => {
     should.equal(res.body.agreeabilityType, 'Electronically-agreeable')
   })
 
-  it(`get terms of use using m2m token`, async () => {
-    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`, token.m2mWrite)
+  it(`get terms of use noauth using m2m token`, async () => {
+    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21303]}?noauth=true`, token.m2mWrite)
     should.equal(res.status, 200)
     should.equal(res.body.id, termsOfUseIdsMapping[21303])
     should.equal(res.body.title, 'Standard Terms for Topcoder Competitions v2.2')
@@ -61,8 +61,8 @@ module.exports = describe('Get terms of use endpoint', () => {
     should.equal(res.body.agreeabilityType, 'Electronically-agreeable')
   })
 
-  it(`get terms of use is false with user`, async () => {
-    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`, token.user1)
+  it(`get terms of use noauth is false with user`, async () => {
+    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21303]}?noauth=false`, token.user1)
     should.equal(res.status, 200)
     should.equal(res.body.id, termsOfUseIdsMapping[21303])
     should.equal(res.body.title, 'Standard Terms for Topcoder Competitions v2.2')
@@ -73,7 +73,7 @@ module.exports = describe('Get terms of use endpoint', () => {
   })
 
   it(`get terms of use with docusignTemplateId`, async () => {
-    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21304]}`)
+    const res = await getRequest(`${url}/${termsOfUseIdsMapping[21304]}?noauth=true`)
     should.equal(res.status, 200)
     should.equal(res.body.id, termsOfUseIdsMapping[21304])
     should.equal(res.body.title, 'Standard Terms for Topcoder Competitions v2.2')
@@ -86,7 +86,7 @@ module.exports = describe('Get terms of use endpoint', () => {
 
   it('failure - get terms of use missing Docusign template', async () => {
     try {
-      await getRequest(`${url}/${termsOfUseIdsMapping[21305]}`)
+      await getRequest(`${url}/${termsOfUseIdsMapping[21305]}?noauth=true`)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 500)
@@ -96,7 +96,7 @@ module.exports = describe('Get terms of use endpoint', () => {
 
   it(`failure - invalid parameter termsOfUseId`, async () => {
     try {
-      await getRequest(`${url}/334`)
+      await getRequest(`${url}/334?noauth=true`)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 400)
@@ -106,7 +106,7 @@ module.exports = describe('Get terms of use endpoint', () => {
 
   it('failure - get terms of use not found', async () => {
     try {
-      await getRequest(`${url}/${termsOfUseIdsMapping['not-exist-1']}`)
+      await getRequest(`${url}/${termsOfUseIdsMapping['not-exist-1']}?noauth=true`)
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 404)

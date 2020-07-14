@@ -155,7 +155,7 @@ paths:
       tags:
         - TermsOfUse
       description: |
-        Get terms of use. The Bearer Authorization header is optional
+        Get terms of use. If noauth is 'true', no need to provide authorization header.
       security:
         - bearerAuth: []
       parameters:
@@ -165,6 +165,13 @@ paths:
           required: true
           schema:
             type: string
+        - in: query
+          name: noauth
+          required: false
+          schema:
+            type: string
+          description: The flag indicate this request contain authorization information or not.
+          example: 'true'
         - in: query
           name: userId
           required: false

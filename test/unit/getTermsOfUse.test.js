@@ -34,8 +34,8 @@ module.exports = describe('get terms of use', () => {
     should.equal(result.agreeabilityType, 'Electronically-agreeable')
   })
 
-  it(`get terms of use`, async () => {
-    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303])
+  it(`get terms of use noauth`, async () => {
+    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303], { noauth: 'true' })
     should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -44,8 +44,8 @@ module.exports = describe('get terms of use', () => {
     should.equal(result.agreeabilityType, 'Electronically-agreeable')
   })
 
-  it(`get terms of use using m2m token`, async () => {
-    const result = await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303])
+  it(`get terms of use noauth using m2m token`, async () => {
+    const result = await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303], { noauth: 'true' })
     should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -54,8 +54,8 @@ module.exports = describe('get terms of use', () => {
     should.equal(result.agreeabilityType, 'Electronically-agreeable')
   })
 
-  it(`get terms of use is false with user`, async () => {
-    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping[21303])
+  it(`get terms of use noauth is false with user`, async () => {
+    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping[21303], { noauth: 'false' })
     should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -65,7 +65,7 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use with docusignTemplateId`, async () => {
-    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21304])
+    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21304], { noauth: 'true' })
     should.equal(result.id, termsOfUseIdsMapping[21304])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -77,7 +77,7 @@ module.exports = describe('get terms of use', () => {
 
   it('failure - get terms of use missing Docusign template', async () => {
     try {
-      await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305])
+      await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305], { noauth: 'true' })
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'InternalServerError')
@@ -87,7 +87,7 @@ module.exports = describe('get terms of use', () => {
 
   it(`failure - invalid parameter termsOfUseId`, async () => {
     try {
-      await service.getTermsOfUse(undefined, 123)
+      await service.getTermsOfUse(undefined, 123, { noauth: 'true' })
       throw new Error('should not throw error here')
     } catch (err) {
       assertValidationError(err, `"termsOfUseId" must be a string`)
@@ -96,7 +96,7 @@ module.exports = describe('get terms of use', () => {
 
   it('failure - get terms of use not found', async () => {
     try {
-      await service.getTermsOfUse(undefined, termsOfUseIdsMapping['not-exist-1'])
+      await service.getTermsOfUse(undefined, termsOfUseIdsMapping['not-exist-1'], { noauth: 'true' })
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'NotFoundError')

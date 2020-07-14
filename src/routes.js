@@ -11,6 +11,16 @@ module.exports = {
       auth: 'jwt'
     }
   },
+  '/terms/docusignCallback': {
+    get: {
+      controller: 'DocusignController',
+      method: 'docusignCallback'
+    }
+    // post: {
+    //   controller: 'DocusignController',
+    //   method: 'docusignCallback'
+    // }
+  },
   '/terms/reference': {
     post: {
       controller: 'TermsForResourceController',

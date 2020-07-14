@@ -8,10 +8,135 @@ const Joi = require('joi')
 const helper = require('../common/helper')
 const logger = require('../common/logger')
 const errors = require('../common/errors')
-const { TEMPLATE_ID_INVALID } = require('../../app-constants')
+const { Templates, TEMPLATE_ID_INVALID } = require('../../app-constants')
 const models = require('../models')
 
 const DocusignEnvelope = models.DocusignEnvelope
+
+/**
+ * Send an email
+ * @param {Object} params the parameters, include from address, to address, subject and etc.
+ */
+async function sendEmail (params) {
+  let eventMessage = {
+    data: params,
+    version: 'v3',
+    recipients: [params.toAddress],
+    from: {
+      name: 'Terms service',
+      email: params.fromAddress
+    }
+  }
+  helper.postEvent(config.TERMS_EMAIL_SUPPORT_TOPIC, { payload: eventMessage }).then(() => {
+    logger.info(`Successfully sent ${config.TERMS_EMAIL_SUPPORT_TOPIC} event` +
+      ` with body ${JSON.stringify(eventMessage)} to bus api`)
+  }).catch((err) => {
+    logger.error(`Failed to send ${config.TERMS_EMAIL_SUPPORT_TOPIC} event` +
+      `; error: ${err.message}` +
+      `; with body ${JSON.stringify(eventMessage)} to bus api`)
+    logger.logFullError(err)
+  })
+}
+
+/**
+ * Docusign callback
+ * @param {Object} data the input data
+ * @returns {Object} the result message
+ */
+async function docusignCallback (data) {
+  /* example returned data
+    data: {
+      "envelopeId": "56cf1d2b-43fc-43b5-9e60-f028fba8bf2a",
+      "event": "signing_complete"
+    }
+  */
+  logger.debug(`Docusign Service Callback. Data: ${JSON.stringify(data)}`)
+  // if (data.connectKey !== config.DOCUSIGN.CALLBACK_CONNECT_KEY) {
+  //   throw new errors.NotFoundError('Connect Key is missing or invalid.')
+  // }
+  if (data.event !== 'signing_complete') {
+    logger.info('Status is not completed.')
+    return { message: 'success' }
+  }
+  if (/^[\s\xa0]*$/.test(data.envelopeId)) {
+    logger.error('envelopeId is null or empty')
+    return { message: 'success' }
+  }
+
+  let envelope
+  // start transaction
+  const transaction = await models.sequelize.transaction()
+
+  try {
+    const result = await DocusignEnvelope.findAll({
+      where: { [models.Sequelize.Op.or]: [
+        models.sequelize.where(models.sequelize.fn('lower', models.sequelize.col('id')), data.envelopeId),
+        models.sequelize.where(models.sequelize.fn('upper', models.sequelize.col('id')), data.envelopeId)
+      ] },
+      transaction
+    })
+    if (result.length === 0) {
+      logger.error(`No enevelope with id: ${data.envelopeId} was found.`)
+      await transaction.commit()
+      // still return success
+      return { message: 'success' }
+    }
+    envelope = result[0]
+    // Update the envelop
+    await envelope.update({ isCompleted: 1 }, { transaction })
+    // Find the template for the envelope
+    logger.debug(`finding Template for docusignTemplateId ${envelope.docusignTemplateId}`)
+    const template = _.find(Templates, { templateId: envelope.docusignTemplateId })
+    if (_.isUndefined(template)) {
+      logger.warn(`No Template was found for template id: ${envelope.docusignTemplateId}`)
+      await transaction.commit()
+      // still return success
+      return { message: 'success' }
+    }
+    // Call the handlers for the template, one after the other
+    for (let i = 0; i < template.handlers.length; i++) {
+      await template.handlers[i](envelope.userId, data.tabs, transaction)
+    }
+
+    // commit
+    await transaction.commit()
+
+    return { message: 'success' }
+  } catch (err) {
+    // All errors need to be communicated to the support staff
+    await sendEmail({
+      subject: config.DOCUSIGN.CALLBACK_FAILED_EMAIL_SUBJECT,
+      toAddress: config.DOCUSIGN.CALLBACK_FAILED_SUPPORT_EMAIL_ADDRESS,
+      fromAddress: config.DOCUSIGN.CALLBACK_FAILED_FROM_EMAIL_ADDRESS,
+      userId: envelope.userId,
+      templateId: envelope.docusignTemplateId,
+      envelopeId: envelope.id,
+      message: err.message
+    })
+
+    // roll back
+    await transaction.rollback()
+
+    // Only temporary errors are to return 500, otherwise 200
+    if (err.temporary === true) {
+      throw new errors.InternalServerError(err.message, err)
+    } else {
+      return { message: err.message }
+    }
+  }
+}
+
+docusignCallback.schema = {
+  data: Joi.object().keys({
+    event: Joi.string().required(),
+    envelopeId: Joi.string().required()
+    // tabs: Joi.array().items(Joi.object().keys({
+    //   tabLabel: Joi.string().required(),
+    //   tabValue: Joi.string().allow('').required()
+    // })).required(),
+    // connectKey: Joi.string().required()
+  }).unknown(true).required()
+}
 
 /**
  * Get user by user id
@@ -148,6 +273,7 @@ generateDocusignViewURL.schema = {
 }
 
 module.exports = {
+  docusignCallback,
   generateDocusignViewURL
 }
 
