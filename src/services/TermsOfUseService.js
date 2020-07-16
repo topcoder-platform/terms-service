@@ -115,7 +115,7 @@ getTermsOfUse.schema = {
  */
 async function agreeTermsOfUse (currentUser, termsOfUseId) {
   // get terms of use
-  const result = await TermsOfUse.findAll({
+  const result = await TermsOfUse.findOne({
     include: [{
       model: TermsOfUseAgreeabilityType,
       attributes: [['name', 'agreeabilityType']]
@@ -187,6 +187,56 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
 agreeTermsOfUse.schema = {
   currentUser: Joi.any(),
   termsOfUseId: Joi.string().guid()
+}
+
+/**
+ * Delete agree terms of use
+ * Used by admin to remove agreement
+ * @param {Object} currentUser the user who perform this operation.
+ * @param {String} termsOfUseId the terms of use id
+ * @returns {Object} successful message if user agree terms of use successfully
+ */
+async function deleteAgreeTermsOfUse (termsOfUseId, userId) {
+  // get terms of use
+  const term = await TermsOfUse.findOne({
+    include: [{
+      model: TermsOfUseAgreeabilityType,
+      attributes: [['name', 'agreeabilityType']]
+    }],
+    where: { id: termsOfUseId, deletedAt: null },
+    raw: true
+  })
+  if (!term) {
+    throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
+  }
+  // if (term['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
+  //   throw new errors.BadRequestError('The term is not electronically agreeable.')
+  // }
+
+  // check whether user has agreed before
+  const existingTerms = await UserTermsOfUseXref.findOne({
+    where: { userId, termsOfUseId }
+  })
+  if (!existingTerms) {
+    throw new errors.BadRequestError('You have NOT agreed to this terms of use before.')
+  }
+
+  logger.warn(`Deleting Terms of Use Signature user ${JSON.stringify(existingTerms)}`)
+  await existingTerms.destroy()
+
+  // try {
+  //   await helper.postEvent(config.USER_AGREED_TERMS_TOPIC, body)
+  // } catch (e) {
+  //   logger.error('Failed to post event to the BUS API')
+  //   logger.logFullError(e)
+  // }
+
+  return { success: true }
+}
+
+deleteAgreeTermsOfUse.schema = {
+  termsOfUseId: Joi.string().guid(),
+  userId: Joi.number()
 }
 
 /**
@@ -410,6 +460,7 @@ searchTermsOfUses.schema = {
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
+  deleteAgreeTermsOfUse,
   createTermsOfUse,
   partiallyUpdateTermsOfUse,
   fullyUpdateTermsOfUse,

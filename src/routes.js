@@ -77,6 +77,13 @@ module.exports = {
       controller: 'TermsOfUseController',
       method: 'agreeTermsOfUse',
       auth: 'jwt'
+    },
+    delete: {
+      controller: 'TermsOfUseController',
+      method: 'deleteAgreeTermsOfUse',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     }
   },
   '/terms/reference/:termsForResourceId': {
