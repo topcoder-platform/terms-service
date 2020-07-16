@@ -26,16 +26,13 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
  * @returns {Object} the terms of use
  */
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
-  let userId = _.get(currentUser, 'userId')
+  let userId = false
   if (_.get(currentUser, 'isMachine', false)) {
-    if (!query.userId) {
-      throw new errors.BadRequestError('For calls with an M2M token, the userId parameter is required')
-    }
-    userId = query.userId
+    userId = query.userId || false
   } else if (_.get(currentUser, 'roles', []).includes(UserRoles.Admin)) {
-    if (query.userId) {
-      userId = query.userId
-    }
+    userId = query.userId || false
+  } else {
+    userId = _.get(currentUser, 'userId')
   }
 
   const include = [
@@ -48,7 +45,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
       attributes: ['docusignTemplateId']
     }
   ]
-  if (currentUser && userId) {
+  if (userId) {
     include.push({
       model: UserTermsOfUseXref,
       where: { userId },
@@ -58,16 +55,16 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
   }
 
   // get terms of use
-  const result = await TermsOfUse.findAll({
+  const termsOfUse = await TermsOfUse.findOne({
     attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId', 'typeId', 'legacyId'],
     include,
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
-  if (result.length === 0) {
+  if (!termsOfUse) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
   }
-  const termsOfUse = result[0]
+
   if (currentUser && userId) {
     termsOfUse.agreed = !_.isNull(termsOfUse['UserTermsOfUseXrefs.userId'])
     delete termsOfUse['UserTermsOfUseXrefs.userId']
