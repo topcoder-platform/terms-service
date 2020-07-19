@@ -120,10 +120,10 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
-  if (result.length === 0) {
+  if (!result) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
   }
-  if (result[0]['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
+  if (result['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
     throw new errors.BadRequestError('The term is not electronically agreeable.')
   }
 
@@ -166,9 +166,10 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
   const body = {
     userId: currentUser.userId,
     termsOfUseId,
-    legacyId: _.get(result, '[0].legacyId'),
+    legacyId: _.get(result, 'legacyId'),
     created: new Date()
   }
+  logger.debug(`Terms of Use Body: ${JSON.stringify(body)}`)
   await UserTermsOfUseXref.create(body)
 
   try {
