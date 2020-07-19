@@ -151,4 +151,4 @@ module.exports = {
   generateDocusignViewURL
 }
 
-logger.buildService(module.exports)
+// logger.buildService(module.exports)
