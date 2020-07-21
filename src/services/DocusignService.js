@@ -104,6 +104,8 @@ async function generateDocusignViewURL (currentUser, data) {
       await helper.postEvent(config.DOCUSIGN_ENVELOPE_CREATE_TOPIC, envelopeData)
     } else {
       envelopeId = docuEnvelope.id
+      // envelope existed. Check if it's already signed
+      logger.debug(`Docusign Envelope Found ${JSON.stringify(docuEnvelope)}`)
     }
 
     // Request recipient view
