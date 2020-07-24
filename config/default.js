@@ -31,7 +31,7 @@ module.exports = {
   RESOURCE_TERMS_UPDATE_TOPIC: process.env.RESOURCE_TERMS_UPDATE_TOPIC || 'terms.notification.resource.updated',
   RESOURCE_TERMS_DELETE_TOPIC: process.env.RESOURCE_TERMS_DELETE_TOPIC || 'terms.notification.resource.deleted',
   USER_AGREED_TERMS_TOPIC: process.env.USER_AGREED_TERMS_TOPIC || 'terms.notification.user.agreed',
-  DOCUSIGN_ENVELOPE_CREATE_TOPIC: process.env.DOCUSIGN_ENVELOPE_CREATE_TOPIC || 'terms.notification.docusign.envelop.created',
+  DOCUSIGN_ENVELOPE_CREATE_TOPIC: process.env.DOCUSIGN_ENVELOPE_CREATE_TOPIC || 'terms.notification.docusign.envelope.created',
   TERMS_EMAIL_SUPPORT_TOPIC: process.env.TERMS_UPDATE_TOPIC || 'terms.action.email.support',
   AGREE_FOR_DOCUSIGN_TEMPLATE: process.env.AGREE_FOR_DOCUSIGN_TEMPLATE || '999a26ad-b334-453c-8425-165d4cf496d7',
   AGREE_ELECTRONICALLY: process.env.AGREE_ELECTRONICALLY || '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
