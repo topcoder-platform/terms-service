@@ -12,9 +12,9 @@ const sequelize = new Sequelize(config.get('POSTGRES_URL'), {
   logging: false
 })
 
-const SYNC_START_DATE = '2020-01-01'
+// const SYNC_START_DATE = '2020-01-01'
 
-async function migrateUserTerms () {
+async function migrateUserTerms (startDate) {
   const informixTableName = 'user_terms_of_use_xref'
   const databaseName = 'common_oltp'
   let running = true
@@ -29,7 +29,7 @@ async function migrateUserTerms () {
     if (data.length < 1) running = false
     for (let i = 0; i < data.length; i += 1) {
       const termsOfUseId = data[i].terms_of_use_id
-      const userQuery = `select * from ${informixTableName} WHERE terms_of_use_id = ${termsOfUseId} AND create_date > DATE("${SYNC_START_DATE}") order by user_id asc`
+      const userQuery = `select * from ${informixTableName} WHERE terms_of_use_id = ${termsOfUseId} AND create_date > DATE("${startDate}") order by user_id asc`
       // logger.debug(`userQuery ${JSON.stringify(userQuery)}`)
       const userData = await executeQueryAsync(databaseName, userQuery)
       const oldIds = userData.map(r => r.user_id)
@@ -42,7 +42,7 @@ async function migrateUserTerms () {
 
         const postgresTermsOfUseQuery = `select ux.*, tu."legacyId" from ${config.DB_SCHEMA_NAME}."UserTermsOfUseXref" ux
           left join ${config.DB_SCHEMA_NAME}."TermsOfUse" tu on ux."termsOfUseId" = tu.id
-          where ux.created > '${SYNC_START_DATE}' AND tu."legacyId" = ${termsOfUseId}`
+          where ux.created > '${startDate}' AND tu."legacyId" = ${termsOfUseId}`
 
         // logger.debug(`postgres ${JSON.stringify(postgresTermsOfUseQuery)}`)
         // const newUserTerms = await UserTermsOfUseXref.findAll(postgresTermsOfUseQuery)
@@ -66,6 +66,11 @@ async function migrateUserTerms () {
             // logger.debug(`Finding ${JSON.stringify({ user_id: id })} in ${JSON.stringify(userData)}`)
             const obj = find(userData, { user_id: id })
             // logger.debug(`Found ${JSON.stringify(obj.create_date)}`)
+            logger.debug(`Creating Entry: ${JSON.stringify({
+              userId: id,
+              termsOfUseId: infoResult[0].id,
+              created: obj.create_date
+            })}`)
             await UserTermsOfUseXref.create({
               userId: id,
               termsOfUseId: infoResult[0].id,
@@ -78,8 +83,8 @@ async function migrateUserTerms () {
       } else {
         logger.debug(`No Records, Skipping id: ${data[i].terms_of_use_id}`)
       }
+    // running = false
     }
-
     skip += data.length
   }
 }

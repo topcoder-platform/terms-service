@@ -27,8 +27,9 @@ const steps = ['DocusignEnvelope', 'UserTermsOfUseXref']
 
 async function sync () {
   logger.debug('Run Sync!!!')
-  await syncService.migrateUserTerms()
-  // await syncService.migrateDocusignEnvelopes()
+  const startDate = '2000-01-01'
+  await syncService.migrateUserTerms(startDate)
+  // await syncService.migrateDocusignEnvelopes(startDate)
   //get ids from UserTermsOfUseXref
   // look up in postres
   // if not, add
