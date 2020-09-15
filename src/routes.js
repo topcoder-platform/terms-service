@@ -37,10 +37,7 @@ module.exports = {
     },
     get: {
       controller: 'TermsOfUseController',
-      method: 'searchTermsOfUses',
-      auth: 'jwt',
-      access: [constants.UserRoles.Admin],
-      scopes: [constants.Scopes.Terms.Read]
+      method: 'searchTermsOfUses'
     }
   },
   '/terms/:termsOfUseId': {
