@@ -24,6 +24,15 @@ async function agreeTermsOfUse (req, res) {
 }
 
 /**
+ * Delete agree terms of use
+ * @param req the request
+ * @param res the response
+ */
+async function deleteAgreeTermsOfUse (req, res) {
+  res.send(await service.deleteAgreeTermsOfUse(req.params.termsOfUseId, req.query.userId))
+}
+
+/**
  * Create terms of use
  * @param req the request
  * @param res the response
@@ -74,6 +83,7 @@ async function searchTermsOfUses (req, res) {
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
+  deleteAgreeTermsOfUse,
   createTermsOfUse,
   partiallyUpdateTermsOfUse,
   fullyUpdateTermsOfUse,

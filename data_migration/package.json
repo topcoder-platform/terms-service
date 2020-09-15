@@ -7,6 +7,7 @@
     "clean": "node index.js clean",
     "restart": "node index.js force",
     "start": "node index.js",
+    "sync": "node sync.js",
     "test-data": "node test/testData.js"
   },
   "author": "TCSCODER",
@@ -14,11 +15,11 @@
   "dependencies": {
     "bluebird": "^3.5.5",
     "config": "^3.2.0",
-    "informix-wrapper": "git+https://github.com/appirio-tech/informix-wrapper.git",
+    "informix-wrapper": "git+https://github.com/appirio-tech/informix-wrapper.git#less-logs",
     "lodash": "^4.17.14",
     "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^5.3.0",
+    "sequelize": "^5.15.1",
     "uuid": "^3.3.2",
     "winston": "^3.2.0"
   }

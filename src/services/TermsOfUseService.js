@@ -26,21 +26,13 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
  * @returns {Object} the terms of use
  */
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
-  const noauth = query.noauth === 'true'
-  if (!noauth && !currentUser) {
-    throw new errors.UnauthorizedError('Authentication credential was missing.')
-  }
-
-  let userId = _.get(currentUser, 'userId')
-  if (_.get(currentUser, 'isMachine', false) && !noauth) {
-    if (!query.userId) {
-      throw new errors.BadRequestError('For calls with an M2M token, the userId parameter is required')
-    }
-    userId = query.userId
+  let userId = false
+  if (_.get(currentUser, 'isMachine', false)) {
+    userId = query.userId || false
   } else if (_.get(currentUser, 'roles', []).includes(UserRoles.Admin)) {
-    if (query.userId) {
-      userId = query.userId
-    }
+    userId = query.userId || false
+  } else {
+    userId = _.get(currentUser, 'userId')
   }
 
   const include = [
@@ -53,7 +45,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
       attributes: ['docusignTemplateId']
     }
   ]
-  if (!noauth) {
+  if (userId) {
     include.push({
       model: UserTermsOfUseXref,
       where: { userId },
@@ -63,17 +55,17 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
   }
 
   // get terms of use
-  const result = await TermsOfUse.findAll({
+  const termsOfUse = await TermsOfUse.findOne({
     attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId', 'typeId', 'legacyId'],
     include,
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
-  if (result.length === 0) {
+  if (!termsOfUse) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
   }
-  const termsOfUse = result[0]
-  if (!noauth) {
+
+  if (currentUser && userId) {
     termsOfUse.agreed = !_.isNull(termsOfUse['UserTermsOfUseXrefs.userId'])
     delete termsOfUse['UserTermsOfUseXrefs.userId']
   }
@@ -108,7 +100,6 @@ getTermsOfUse.schema = {
   currentUser: Joi.any(),
   termsOfUseId: Joi.string().guid(),
   query: Joi.object().keys({
-    noauth: Joi.string(),
     userId: Joi.number()
   })
 }
@@ -121,7 +112,7 @@ getTermsOfUse.schema = {
  */
 async function agreeTermsOfUse (currentUser, termsOfUseId) {
   // get terms of use
-  const result = await TermsOfUse.findAll({
+  const result = await TermsOfUse.findOne({
     include: [{
       model: TermsOfUseAgreeabilityType,
       attributes: [['name', 'agreeabilityType']]
@@ -129,10 +120,10 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
-  if (result.length === 0) {
+  if (!result) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
   }
-  if (result[0]['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
+  if (result['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
     throw new errors.BadRequestError('The term is not electronically agreeable.')
   }
 
@@ -175,9 +166,10 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
   const body = {
     userId: currentUser.userId,
     termsOfUseId,
-    legacyId: _.get(result, '[0].legacyId'),
+    legacyId: _.get(result, 'legacyId'),
     created: new Date()
   }
+  logger.debug(`Terms of Use Body: ${JSON.stringify(body)}`)
   await UserTermsOfUseXref.create(body)
 
   try {
@@ -193,6 +185,56 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
 agreeTermsOfUse.schema = {
   currentUser: Joi.any(),
   termsOfUseId: Joi.string().guid()
+}
+
+/**
+ * Delete agree terms of use
+ * Used by admin to remove agreement
+ * @param {Object} currentUser the user who perform this operation.
+ * @param {String} termsOfUseId the terms of use id
+ * @returns {Object} successful message if user agree terms of use successfully
+ */
+async function deleteAgreeTermsOfUse (termsOfUseId, userId) {
+  // get terms of use
+  const term = await TermsOfUse.findOne({
+    include: [{
+      model: TermsOfUseAgreeabilityType,
+      attributes: [['name', 'agreeabilityType']]
+    }],
+    where: { id: termsOfUseId, deletedAt: null },
+    raw: true
+  })
+  if (!term) {
+    throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
+  }
+  // if (term['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
+  //   throw new errors.BadRequestError('The term is not electronically agreeable.')
+  // }
+
+  // check whether user has agreed before
+  const existingTerms = await UserTermsOfUseXref.findOne({
+    where: { userId, termsOfUseId }
+  })
+  if (!existingTerms) {
+    throw new errors.BadRequestError('You have NOT agreed to this terms of use before.')
+  }
+
+  logger.warn(`Deleting Terms of Use Signature user ${JSON.stringify(existingTerms)}`)
+  await existingTerms.destroy()
+
+  // try {
+  //   await helper.postEvent(config.USER_AGREED_TERMS_TOPIC, body)
+  // } catch (e) {
+  //   logger.error('Failed to post event to the BUS API')
+  //   logger.logFullError(e)
+  // }
+
+  return { success: true }
+}
+
+deleteAgreeTermsOfUse.schema = {
+  termsOfUseId: Joi.string().guid(),
+  userId: Joi.number()
 }
 
 /**
@@ -416,6 +458,7 @@ searchTermsOfUses.schema = {
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
+  deleteAgreeTermsOfUse,
   createTermsOfUse,
   partiallyUpdateTermsOfUse,
   fullyUpdateTermsOfUse,
@@ -423,4 +466,4 @@ module.exports = {
   searchTermsOfUses
 }
 
-logger.buildService(module.exports)
+// logger.buildService(module.exports)

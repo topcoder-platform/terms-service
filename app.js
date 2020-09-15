@@ -11,18 +11,17 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const HttpStatus = require('http-status-codes')
 const logger = require('./src/common/logger')
-const docusignListener = require('./src/common/docusignListener')
 const interceptor = require('express-interceptor')
 
 const YAML = require('yamljs')
 const swaggerUi = require('swagger-ui-express')
-const challengeAPISwaggerDoc = YAML.load('./docs/swagger.yaml')
+const termsSwagger = YAML.load('./docs/swagger.yaml')
 
 // setup express app
 const app = express()
 
 // serve challenge V5 API swagger definition
-app.use('/v5/terms/docs', swaggerUi.serve, swaggerUi.setup(challengeAPISwaggerDoc))
+app.use('/v5/terms/docs', swaggerUi.serve, swaggerUi.setup(termsSwagger))
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -70,8 +69,6 @@ app.use('/v5/terms/health', (req, res) => {
     res.status(HttpStatus.SERVICE_UNAVAILABLE).json({ message: 'The service is unavailable.' })
   }
 })
-
-app.post(config.DOCUSIGN_LISTENER_PATH, docusignListener)
 
 // Register routes
 require('./app-routes')(app)

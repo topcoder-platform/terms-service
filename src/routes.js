@@ -11,16 +11,6 @@ module.exports = {
       auth: 'jwt'
     }
   },
-  '/terms/docusignCallback': {
-    get: {
-      controller: 'DocusignController',
-      method: 'docusignCallback'
-    }
-    // post: {
-    //   controller: 'DocusignController',
-    //   method: 'docusignCallback'
-    // }
-  },
   '/terms/reference': {
     post: {
       controller: 'TermsForResourceController',
@@ -88,6 +78,13 @@ module.exports = {
       method: 'agreeTermsOfUse',
       auth: 'jwt'
     }
+    // delete: {
+    //   controller: 'TermsOfUseController',
+    //   method: 'deleteAgreeTermsOfUse',
+    //   auth: 'jwt',
+    //   access: [constants.UserRoles.Admin],
+    //   scopes: [constants.Scopes.Terms.Write]
+    // }
   },
   '/terms/reference/:termsForResourceId': {
     get: {
