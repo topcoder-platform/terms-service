@@ -91,7 +91,6 @@ function convertRawData (termsOfUse, throwError = true) {
   } else {
     delete termsOfUse.docusignTemplateId
   }
-  delete termsOfUse.agreeabilityTypeId
 
   return _.omitBy(termsOfUse, _.isNull)
 }
