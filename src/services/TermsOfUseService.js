@@ -409,8 +409,8 @@ deleteTermsOfUse.schema = {
  * @returns {Object} the search result, contain total/page/perPage and result array
  */
 async function searchTermsOfUses (criteria) {
-  const page = criteria.page || 1
-  const perPage = criteria.perPage || 20
+  const page = criteria.page > 0 ? criteria.page : 1
+  const perPage = criteria.perPage > 0 ? criteria.perPage : 20
 
   const countResult = await TermsOfUse.findOne({
     attributes: [[models.Sequelize.fn('COUNT', models.Sequelize.col('id')), 'total']],
@@ -418,7 +418,7 @@ async function searchTermsOfUses (criteria) {
     raw: true
   })
 
-  const result = await TermsOfUse.findAll({
+  const query = {
     order: [['id', 'ASC']],
     attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId'],
     include: [
@@ -435,7 +435,10 @@ async function searchTermsOfUses (criteria) {
     limit: perPage,
     offset: (page - 1) * perPage,
     raw: true
-  })
+  }
+  const result = await TermsOfUse.findAll(query)
+
+  logger.debug(`Query: ${JSON.stringify(query)}`)
 
   for (const element of result) {
     convertRawData(element, false)
