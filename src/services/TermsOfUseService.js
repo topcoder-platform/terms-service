@@ -409,6 +409,9 @@ deleteTermsOfUse.schema = {
  * @returns {Object} the search result, contain total/page/perPage and result array
  */
 async function searchTermsOfUses (criteria) {
+  const page = criteria.page || 1
+  const perPage = criteria.perPage || 20
+
   const countResult = await TermsOfUse.findOne({
     attributes: [[models.Sequelize.fn('COUNT', models.Sequelize.col('id')), 'total']],
     where: _.assign({ deletedAt: null }, _.omit(criteria, ['perPage', 'page'])),
@@ -429,8 +432,8 @@ async function searchTermsOfUses (criteria) {
       }
     ],
     where: _.assign({ deletedAt: null }, _.omit(criteria, ['perPage', 'page'])),
-    limit: criteria.perPage,
-    offset: (criteria.page - 1) * criteria.perPage,
+    limit: perPage,
+    offset: (page - 1) * perPage,
     raw: true
   })
 
@@ -440,8 +443,8 @@ async function searchTermsOfUses (criteria) {
 
   return {
     total: countResult.total,
-    page: criteria.page,
-    perPage: criteria.perPage,
+    page,
+    perPage,
     result: helper.clearObject(result)
   }
 }
