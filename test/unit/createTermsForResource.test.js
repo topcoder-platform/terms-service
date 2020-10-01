@@ -28,7 +28,7 @@ module.exports = describe('create terms for resource', () => {
     should.equal(record.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(record.createdBy, 'TonyJ')
     should.exist(record.created)
-    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
+    assertInfoMessage(`Publish event to Kafka topic ${config.RESOURCE_TERMS_CREATE_TOPIC}`)
   })
 
   it('create terms for resource success 2', async () => {
@@ -42,7 +42,7 @@ module.exports = describe('create terms for resource', () => {
     should.equal(record.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(record.createdBy, user.m2mWrite.sub)
     should.exist(record.created)
-    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
+    assertInfoMessage(`Publish event to Kafka topic ${config.RESOURCE_TERMS_CREATE_TOPIC}`)
   })
 
   it('failure - create terms for resource again, duplicate', async () => {

@@ -6,9 +6,10 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
-
+const { AGREE_FOR_DOCUSIGN_TEMPLATE } = require('../../app-constants')
 const { token } = require('../common/testData')
 const { getRequest, clearLogs } = require('../common/testHelper')
+const TermsOfUse = require('../../src/models').TermsOfUse
 
 const url = `http://localhost:${config.PORT}/terms`
 
@@ -80,17 +81,27 @@ module.exports = describe('Get terms of use endpoint', () => {
     should.equal(res.body.url, '')
     should.equal(res.body.text, 'another text')
     should.not.exist(res.body.agreed)
-    should.equal(res.body.docusignTemplateId, '100')
+    if (res.body.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
+      should.equal(res.body.docusignTemplateId, '100')
+    }
     should.equal(res.body.agreeabilityType, 'Docusign-template')
   })
 
   it('failure - get terms of use missing Docusign template', async () => {
-    try {
-      await getRequest(`${url}/${termsOfUseIdsMapping[21305]}`)
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 500)
-      should.equal(_.get(err, 'response.body.message'), 'Docusign template id is missing.')
+    const record = await TermsOfUse.findOne({
+      where: {
+        id: termsOfUseIdsMapping[21305]
+      }
+    })
+
+    if (record.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
+      try {
+        await getRequest(`${url}/${termsOfUseIdsMapping[21305]}`)
+        throw new Error('should not throw error here')
+      } catch (err) {
+        should.equal(err.status, 500)
+        should.equal(_.get(err, 'response.body.message'), 'Docusign template id is missing.')
+      }
     }
   })
 
@@ -115,25 +126,27 @@ module.exports = describe('Get terms of use endpoint', () => {
     }
   })
 
-  it('failure - missing authentication', async () => {
-    try {
-      await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`)
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 401)
-      should.equal(_.get(err, 'response.body.message'), `Authentication credential was missing.`)
-    }
-  })
+  // NOTE: no longer need as auth is optional
+  // it('failure - missing authentication', async () => {
+  //   try {
+  //     await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`)
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.status, 401)
+  //     should.equal(_.get(err, 'response.body.message'), `Authentication credential was missing.`)
+  //   }
+  // })
 
-  it('failure - missing authentication(using m2m token)', async () => {
-    try {
-      await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`, token.m2mRead)
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 401)
-      should.equal(_.get(err, 'response.body.message'), `Authentication credential was missing.`)
-    }
-  })
+  // NOTE: no longer need as auth is optional
+  // it('failure - missing authentication(using m2m token)', async () => {
+  //   try {
+  //     await getRequest(`${url}/${termsOfUseIdsMapping[21303]}`, token.m2mRead)
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.status, 401)
+  //     should.equal(_.get(err, 'response.body.message'), `Authentication credential was missing.`)
+  //   }
+  // })
 
   it('failure - invalid token', async () => {
     try {

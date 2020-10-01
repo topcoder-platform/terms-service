@@ -66,7 +66,7 @@ module.exports = (app) => {
   // Check if the route is not found or HTTP method is not supported
   app.use('*', (req, res) => {
     let url = req.baseUrl
-    if (url.indexOf(config.get('BASE_PATH')) == 0) {
+    if (url.indexOf(config.get('BASE_PATH')) === 0) {
       url = url.substring(config.get('BASE_PATH').length)
     }
     const route = routes[url]

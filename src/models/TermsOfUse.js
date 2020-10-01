@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     TermsOfUse.belongsTo(models.TermsOfUseAgreeabilityType, { foreignKey: 'agreeabilityTypeId' })
     TermsOfUse.hasOne(models.TermsOfUseDocusignTemplateXref, { foreignKey: 'termsOfUseId' })
     TermsOfUse.hasMany(models.UserTermsOfUseXref, { foreignKey: 'termsOfUseId' })
+    TermsOfUse.belongsTo(models.TermsOfUseType, { foreignKey: 'typeId' })
   }
 
   return TermsOfUse

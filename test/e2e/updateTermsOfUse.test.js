@@ -6,7 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
-const {termsOfUseIdsMapping, agreeabilityTypeIdsMapping} = require('../../src/test-data')
+const { termsOfUseIdsMapping, agreeabilityTypeIdsMapping } = require('../../src/test-data')
+const { AGREE_FOR_DOCUSIGN_TEMPLATE } = require('../../app-constants')
 
 const { user, token, request } = require('../common/testData')
 const { putRequest, patchRequest, clearLogs } = require('../common/testHelper')
@@ -117,6 +118,7 @@ module.exports = describe('update terms of use endpoint', () => {
   it('failure - fully update terms of use, docusign template missing', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
+    data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
     try {
       await putRequest(`${url}/${id1}`, data, token.user1)
       throw new Error('should not throw error here')
@@ -141,6 +143,7 @@ module.exports = describe('update terms of use endpoint', () => {
   it('failure - partially update terms of use, docusign template missing', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
+    data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
     try {
       await patchRequest(`${url}/${id1}`, data, token.user1)
       throw new Error('should not throw error here')

@@ -111,8 +111,8 @@ describe('Topcoder - Topcoder Terms API E2E Test', () => {
 
   describe('Docusign Unit endpoints', () => {
     require('./generateDocusignViewUrl.test')
-    require('./docusignCallback.test')
-    require('./docusignCallbackListener.test')
+    // require('./docusignCallback.test')
+    // require('./docusignCallbackListener.test')
   })
 
   describe('Fail routes Tests', () => {
@@ -134,6 +134,29 @@ describe('Topcoder - Topcoder Terms API E2E Test', () => {
         should.equal(err.status, 404)
         should.equal(_.get(err, 'response.body.message'), 'The requested resource cannot be found.')
       }
+    })
+  })
+
+  describe('New features', () => {
+    before(async () => {
+      await initDB()
+      await insertData()
+    })
+    after(async () => {
+      await initDB()
+    })
+
+    describe('Get Terms of Use Types Unit Test', () => {
+      require('./getTermsOfUseType.test')
+    })
+
+    describe('Filter Terms of Use Unit Test', () => {
+      require('./searchTermsOfUseFilter.test')
+    })
+
+    describe('Get Terms of Use Users Unit Test', () => {
+      require('./getTermsOfUseUsers.test')
+      require('./signAndUnsignTermsOfUse.test')
     })
   })
 })

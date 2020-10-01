@@ -30,11 +30,11 @@ async function sync () {
   const startDate = '2000-01-01'
   await syncService.migrateUserTerms(startDate)
   // await syncService.migrateDocusignEnvelopes(startDate)
-  //get ids from UserTermsOfUseXref
+  // get ids from UserTermsOfUseXref
   // look up in postres
   // if not, add
 
-  //get ids from DocusignEnvelope
+  // get ids from DocusignEnvelope
   // await syncService.docusignEnvelopes()
   // look up in postgres
   // if not, add

@@ -6,7 +6,8 @@ const _ = require('lodash')
 const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
-const {termsOfUseIdsMapping, agreeabilityTypeIdsMapping} = require('../../src/test-data')
+const { termsOfUseIdsMapping, agreeabilityTypeIdsMapping } = require('../../src/test-data')
+const { AGREE_FOR_DOCUSIGN_TEMPLATE } = require('../../app-constants')
 
 const { user, request } = require('../common/testData')
 const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
@@ -86,6 +87,7 @@ module.exports = describe('update terms of use', () => {
 
   it('failure - fully update terms of use, docusign template missing', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
     data = _.omit(data, 'docusignTemplateId')
     try {
       await service.fullyUpdateTermsOfUse(user.user1, id1, data)
@@ -108,6 +110,7 @@ module.exports = describe('update terms of use', () => {
 
   it('failure - partially update terms of use, docusign template missing', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
     data = _.omit(data, 'docusignTemplateId')
     try {
       await service.partiallyUpdateTermsOfUse(user.user1, id1, data)

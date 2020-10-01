@@ -1,11 +1,12 @@
 /**
  * Unit test of TermsOfUseService - get terms of use.
  */
-
 const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const { user } = require('../common/testData')
 const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
+const { AGREE_FOR_DOCUSIGN_TEMPLATE } = require('../../app-constants')
+const TermsOfUse = require('../../src/models').TermsOfUse
 
 const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
@@ -71,17 +72,27 @@ module.exports = describe('get terms of use', () => {
     should.equal(result.url, '')
     should.equal(result.text, 'another text')
     should.not.exist(result.agreed)
-    should.equal(result.docusignTemplateId, '100')
+    if (result.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
+      should.equal(result.docusignTemplateId, '100')
+    }
     should.equal(result.agreeabilityType, 'Docusign-template')
   })
 
   it('failure - get terms of use missing Docusign template', async () => {
-    try {
-      await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305])
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.name, 'InternalServerError')
-      assertError(err, 'Docusign template id is missing.')
+    const record = await TermsOfUse.findOne({
+      where: {
+        id: termsOfUseIdsMapping[21305]
+      }
+    })
+
+    if (record.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
+      try {
+        await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305])
+        throw new Error('should not throw error here')
+      } catch (err) {
+        should.equal(err.name, 'InternalServerError')
+        assertError(err, 'Docusign template id is missing.')
+      }
     }
   })
 
@@ -104,23 +115,25 @@ module.exports = describe('get terms of use', () => {
     }
   })
 
-  it(`failure - missing authentication(using m2m token)`, async () => {
-    try {
-      await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303], {})
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.name, 'UnauthorizedError')
-      assertError(err, `Authentication credential was missing.`)
-    }
-  })
+  // NOTE: no longer need as auth is optional
+  // it(`failure - missing authentication(using m2m token)`, async () => {
+  //   try {
+  //     await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303], {})
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.name, 'UnauthorizedError')
+  //     assertError(err, `Authentication credential was missing.`)
+  //   }
+  // })
 
-  it('failure - missing authentication', async () => {
-    try {
-      await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303], {})
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.name, 'UnauthorizedError')
-      assertError(err, `Authentication credential was missing.`)
-    }
-  })
+  // NOTE: no longer need as auth is optional
+  // it('failure - missing authentication', async () => {
+  //   try {
+  //     await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303], {})
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.name, 'UnauthorizedError')
+  //     assertError(err, `Authentication credential was missing.`)
+  //   }
+  // })
 })

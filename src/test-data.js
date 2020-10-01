@@ -14,6 +14,7 @@ const UserTermsOfUseBanXref = models.UserTermsOfUseBanXref
 const TermsOfUseDependency = models.TermsOfUseDependency
 const DocusignEnvelope = models.DocusignEnvelope
 const TermsForResource = models.TermsForResource
+const TermsOfUseType = models.TermsOfUseType
 
 logger.info('Insert test data into database.')
 
@@ -36,14 +37,27 @@ const termsOfUseIdsMapping = {
 }
 
 const agreeabilityTypeIdsMapping = {
-  1 : '2285af84-61f4-11ea-9a2c-3c15c2e2c206',
-  2 : '282f857c-61f4-11ea-a4ef-3c15c2e2c206',
-  3 : '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-  4 : '301a36ec-61f4-11ea-bc96-3c15c2e2c206',
+  1: '2285af84-61f4-11ea-9a2c-3c15c2e2c206',
+  2: '282f857c-61f4-11ea-a4ef-3c15c2e2c206',
+  3: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
+  4: '301a36ec-61f4-11ea-bc96-3c15c2e2c206',
+  5: '999a26ad-b334-453c-8425-165d4cf496d7',
   'not-exist': 'ceba3d90-61f6-11ea-99b6-3c15c2e2c206'
 }
 
 const insertData = async () => {
+  await TermsOfUseType.create({ id: 1, name: 'High School Web Site Terms' })
+  await TermsOfUseType.create({ id: 2, name: 'Corp Site Terms of Use' })
+  await TermsOfUseType.create({ id: 3, name: 'General Product Terms of Use' })
+  await TermsOfUseType.create({ id: 4, name: 'Product Terms of Use' })
+  await TermsOfUseType.create({ id: 5, name: 'Contest' })
+  await TermsOfUseType.create({ id: 6, name: 'Reviewer Terms' })
+  await TermsOfUseType.create({ id: 7, name: 'Testing Tool NDA' })
+  await TermsOfUseType.create({ id: 8, name: 'Site Terms of Use' })
+  await TermsOfUseType.create({ id: 9, name: 'Download Submission Terms of Use' })
+  await TermsOfUseType.create({ id: 10, name: 'data-test-typeId 10' })
+  await TermsOfUseType.create({ id: 11, name: 'data-test-typeId 11' })
+
   await TermsOfUseAgreeabilityType.create({
     id: agreeabilityTypeIdsMapping[3],
     legacyId: 3,
@@ -53,6 +67,12 @@ const insertData = async () => {
   await TermsOfUseAgreeabilityType.create({
     id: agreeabilityTypeIdsMapping[4],
     legacyId: 4,
+    name: 'Docusign-template',
+    description: 'Docusign-template'
+  })
+  await TermsOfUseAgreeabilityType.create({
+    id: agreeabilityTypeIdsMapping[5],
+    legacyId: 5,
     name: 'Docusign-template',
     description: 'Docusign-template'
   })
@@ -98,7 +118,7 @@ const insertData = async () => {
   })
   await TermsOfUseDocusignTemplateXref.create({
     termsOfUseId: termsOfUseIdsMapping[21304],
-    docusignTemplateId: "100"
+    docusignTemplateId: '100'
   })
   await TermsOfUseDocusignTemplateXref.create({
     termsOfUseId: termsOfUseIdsMapping[20754],
@@ -145,7 +165,7 @@ const insertData = async () => {
   await UserTermsOfUseXref.create({
     userId: 23124329,
     termsOfUseId: termsOfUseIdsMapping[21306],
-    created: new Date()
+    created: new Date('2020-09-24T00:00:00.000Z')
   })
   await UserTermsOfUseXref.create({
     userId: 23124329,
@@ -155,7 +175,7 @@ const insertData = async () => {
   await UserTermsOfUseXref.create({
     userId: 151743,
     termsOfUseId: termsOfUseIdsMapping[21306],
-    created: new Date()
+    created: new Date('2020-09-26T00:00:00.000Z')
   })
   await UserTermsOfUseXref.create({
     userId: 151743,
@@ -165,7 +185,7 @@ const insertData = async () => {
   await UserTermsOfUseXref.create({
     userId: 16096823,
     termsOfUseId: termsOfUseIdsMapping[21306],
-    created: new Date()
+    created: new Date('2020-09-28T00:00:00.000Z')
   })
   await UserTermsOfUseBanXref.create({
     userId: 151743,
