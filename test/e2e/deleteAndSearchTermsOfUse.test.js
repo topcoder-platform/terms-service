@@ -63,45 +63,45 @@ module.exports = describe('delete and search terms of use', () => {
     }
   })
 
-  it('failure - search terms of use no token', async () => {
-    try {
-      await getRequest(`${url}?page=1&perPage=5`)
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 401)
-      should.equal(_.get(err, 'response.body.message'), 'No token provided.')
-    }
-  })
+  // it('failure - search terms of use no token', async () => { // Search is no longer need auth
+  //   try {
+  //     await getRequest(`${url}?page=1&perPage=5`)
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.status, 401)
+  //     should.equal(_.get(err, 'response.body.message'), 'No token provided.')
+  //   }
+  // })
 
-  it('failure - search terms of use invalid token', async () => {
-    try {
-      await getRequest(`${url}?page=1&perPage=5`, 'invalid')
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 401)
-      should.equal(_.get(err, 'response.body.message'), 'Invalid Token.')
-    }
-  })
+  // it('failure - search terms of use invalid token', async () => { // Search is no longer need auth
+  //   try {
+  //     await getRequest(`${url}?page=1&perPage=5`, 'invalid')
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.status, 401)
+  //     should.equal(_.get(err, 'response.body.message'), 'Invalid Token.')
+  //   }
+  // })
 
-  it('failure - search terms of use forbidden', async () => {
-    try {
-      await getRequest(`${url}?page=1&perPage=5`, token.user2)
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 403)
-      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
-    }
-  })
+  // it('failure - search terms of use forbidden', async () => { // Search is no longer need auth
+  //   try {
+  //     await getRequest(`${url}?page=1&perPage=5`, token.user2)
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.status, 403)
+  //     should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+  //   }
+  // })
 
-  it('failure - search terms of use using forbidden m2m token', async () => {
-    try {
-      await getRequest(`${url}?page=1&perPage=5`, token.m2mWrite)
-      throw new Error('should not throw error here')
-    } catch (err) {
-      should.equal(err.status, 403)
-      should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
-    }
-  })
+  // it('failure - search terms of use using forbidden m2m token', async () => { // Search is no longer need auth
+  //   try {
+  //     await getRequest(`${url}?page=1&perPage=5`, token.m2mWrite)
+  //     throw new Error('should not throw error here')
+  //   } catch (err) {
+  //     should.equal(err.status, 403)
+  //     should.equal(_.get(err, 'response.body.message'), `You are not allowed to perform this action!`)
+  //   }
+  // })
 
   it('failure - delete terms of use no token', async () => {
     try {

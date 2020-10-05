@@ -107,7 +107,7 @@ async function process (informixTableName, modelName, lastSkip) {
       entities.push(entity)
     }
     // handle entities
-    await model.bulkCreate(entities, {raw: true})
+    await model.bulkCreate(entities, { raw: true })
     skip += data.length
 
     // write skip to file

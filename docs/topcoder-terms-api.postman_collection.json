@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f63f8d76-a914-4362-a32c-638718ed6d2c",
+		"_postman_id": "63d48d8a-4d44-4721-897e-28684ee7f3c2",
 		"name": "topcoder-terms-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -131,7 +131,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "59a37182-f882-4cd7-86d6-89255dd874d7",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -158,7 +158,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [21307]\n}"
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21307}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference",
@@ -179,7 +179,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "2f11fbaa-571e-4486-87a9-ce57fc081943",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -206,7 +206,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"manager\",\n    \"termsOfUseIds\": [21307]\n}"
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"manager\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21307}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference",
@@ -227,7 +227,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "342c53e2-45f6-402a-a471-5bc2de9d3fa8",
 								"exec": [
 									""
 								],
@@ -251,7 +251,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"manager\",\n    \"termsOfUseIds\": [21307]\n}"
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"manager\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21307}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference",
@@ -272,7 +272,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "86299868-7893-40dc-80d6-530d7ece85fb",
 								"exec": [
 									""
 								],
@@ -296,7 +296,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [10000, 21307]\n}"
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12346\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [\"2b392e3c-6134-11ea-85f1-3c15c2e2c206\", \"{{TERM_LEGACY_ID_21307}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference",
@@ -317,7 +317,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "a0a65f38-3a51-42ed-9875-aa927df456e9",
 								"exec": [
 									""
 								],
@@ -341,7 +341,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12345\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [21304]\n}"
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12345\",\n    \"tag\": \"copilot\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21304}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference",
@@ -362,7 +362,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "fdab7132-240b-4822-aa60-0023737daaa1",
 								"exec": [
 									""
 								],
@@ -386,7 +386,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"m2m-update\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [21303, 21304]\n}"
+							"raw": "{\n\t\"reference\": \"m2m-update\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21303}}\", \"{{TERM_LEGACY_ID_21304}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
@@ -408,7 +408,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "9857a1d7-0baa-4459-bbb1-30d71bbb840d",
 								"exec": [
 									""
 								],
@@ -432,7 +432,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [21303, 21304]\n}"
+							"raw": "{\n\t\"reference\": \"challenge\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21303}}\", \"{{TERM_LEGACY_ID_21304}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
@@ -454,7 +454,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "ff598b0f-898d-4133-84ab-e21e96df4d95",
 								"exec": [
 									""
 								],
@@ -478,7 +478,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"reference\": \"m2m-update\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [21303, 21304]\n}"
+							"raw": "{\n\t\"reference\": \"m2m-update\",\n    \"referenceId\": \"12347\",\n    \"tag\": \"submitter\",\n    \"termsOfUseIds\": [\"{{TERM_LEGACY_ID_21303}}\", \"{{TERM_LEGACY_ID_21304}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/terms/reference/{{TERMS_RESOURCE_ID}}",
@@ -500,7 +500,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "11c7778d-5292-4b7f-9d30-08da2faffee6",
 								"exec": [
 									""
 								],
@@ -546,7 +546,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "eaca2bcb-5fd2-4524-b958-7919b4bc09ac",
 								"exec": [
 									""
 								],
@@ -592,7 +592,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "c2c03197-5430-40fe-b4ef-3dfaf5cb2163",
 								"exec": [
 									""
 								],
@@ -638,7 +638,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "ebff3187-9aa0-42d6-b24c-b04440e97e7f",
 								"exec": [
 									""
 								],
@@ -684,7 +684,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "df3508c1-cfdc-4690-83ec-1671b70a99a7",
 								"exec": [
 									""
 								],
@@ -730,7 +730,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc30b0bd-ab57-4eeb-a476-ff2bee1e2ff5",
+								"id": "17cdec1c-dffe-4abd-bd9d-c39707bb8702",
 								"exec": [
 									""
 								],
@@ -974,7 +974,8 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "terms of use",
@@ -988,7 +989,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e2736494-7b96-498f-85a0-0e558587b520",
+										"id": "14ab24ac-fb15-42e1-a7ef-05ef87a09001",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
@@ -1016,7 +1017,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": 3\n}"
+									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_3}}\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms",
@@ -1036,7 +1037,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e2736494-7b96-498f-85a0-0e558587b520",
+										"id": "d5d56eab-adc7-4ac0-acb8-d0e658d9aeb9",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
@@ -1064,7 +1065,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": 3\n}"
+									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_3}}\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms",
@@ -1084,7 +1085,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e2736494-7b96-498f-85a0-0e558587b520",
+										"id": "8f3fe5a9-0e9c-4160-b2d2-d523ace0c9a7",
 										"exec": [
 											""
 										],
@@ -1109,7 +1110,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": 3\n}"
+									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_3}}\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms",
@@ -1124,6 +1125,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -1229,6 +1231,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -1252,7 +1255,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": 3\n}"
+									"raw": "{\n\t\"text\": \"text\",\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"url\": \"url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_3}}\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms/{{TERMS_ID}}",
@@ -1285,7 +1288,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"new-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": 4,\n    \"docusignTemplateId\": \"template-1\"\n}"
+									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"new-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_4}}\",\n    \"docusignTemplateId\": \"template-1\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms/{{TERMS_ID}}",
@@ -1318,7 +1321,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"m2m-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": 4,\n    \"docusignTemplateId\": \"template-1\"\n}"
+									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"m2m-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_4}}\",\n    \"docusignTemplateId\": \"template-1\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms/{{TERMS_ID}}",
@@ -1351,7 +1354,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"m2m-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": 4,\n    \"docusignTemplateId\": \"template-1\"\n}"
+									"raw": "{\n\t\"text\": \"new-text\",\n    \"typeId\": 11,\n    \"title\": \"m2m-title\",\n    \"url\": \"new-url\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_4}}\",\n    \"docusignTemplateId\": \"template-1\"\n}"
 								},
 								"url": {
 									"raw": "{{URL}}/terms/{{TERMS_ID}}",
@@ -1367,6 +1370,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -1439,7 +1443,7 @@
 							"response": []
 						},
 						{
-							"name": "search terms of use with forbidden m2m token",
+							"name": "can search terms of use with forbidden m2m token",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -1472,6 +1476,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -1562,6 +1567,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -1588,13 +1594,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/21303/agree",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303",
+										"{{TERM_LEGACY_ID_21303}}",
 										"agree"
 									]
 								}
@@ -1622,13 +1628,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/21303/agree",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303",
+										"{{TERM_LEGACY_ID_21303}}",
 										"agree"
 									]
 								}
@@ -1656,13 +1662,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/21303/agree",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303",
+										"{{TERM_LEGACY_ID_21303}}",
 										"agree"
 									]
 								}
@@ -1690,13 +1696,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/21303/agree",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303",
+										"{{TERM_LEGACY_ID_21303}}",
 										"agree"
 									]
 								}
@@ -1724,13 +1730,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/21303/agree",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303",
+										"{{TERM_LEGACY_ID_21303}}",
 										"agree"
 									]
 								}
@@ -1758,13 +1764,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/121303/agree",
+									"raw": "{{URL}}/terms/2b392e3c-6134-11ea-85f1-3c15c2e2c206/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"121303",
+										"2b392e3c-6134-11ea-85f1-3c15c2e2c206",
 										"agree"
 									]
 								}
@@ -1792,13 +1798,13 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{URL}}/terms/21304/agree",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21304}}/agree",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21304",
+										"{{TERM_LEGACY_ID_21304}}",
 										"agree"
 									]
 								}
@@ -1806,6 +1812,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -1828,13 +1835,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21303",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303"
+										"{{TERM_LEGACY_ID_21303}}"
 									]
 								}
 							},
@@ -1857,13 +1864,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21303",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303"
+										"{{TERM_LEGACY_ID_21303}}"
 									]
 								}
 							},
@@ -1886,13 +1893,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21303?noauth=true",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}?noauth=true",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303"
+										"{{TERM_LEGACY_ID_21303}}"
 									],
 									"query": [
 										{
@@ -1922,13 +1929,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21303?noauth=false",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}?noauth=false",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303"
+										"{{TERM_LEGACY_ID_21303}}"
 									],
 									"query": [
 										{
@@ -1952,13 +1959,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21304?noauth=true",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21304}}?noauth=true",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21304"
+										"{{TERM_LEGACY_ID_21304}}"
 									],
 									"query": [
 										{
@@ -1982,13 +1989,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21305?noauth=true",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21305}}?noauth=true",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21305"
+										"{{TERM_LEGACY_ID_21305}}"
 									],
 									"query": [
 										{
@@ -2017,13 +2024,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21303",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303"
+										"{{TERM_LEGACY_ID_21303}}"
 									]
 								}
 							},
@@ -2046,13 +2053,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{URL}}/terms/21303?noauth=true",
+									"raw": "{{URL}}/terms/{{TERM_LEGACY_ID_21303}}?noauth=true",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"terms",
-										"21303"
+										"{{TERM_LEGACY_ID_21303}}"
 									],
 									"query": [
 										{
@@ -2065,9 +2072,11 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "docusign callback",
@@ -2204,7 +2213,8 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "generate docusign view url",
@@ -2215,7 +2225,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"id": "8372cf94-eacf-4dd1-a2a9-8d63c3efc447",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -2268,7 +2278,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"id": "7da810c3-5c36-4dee-a300-4f01e8cc173b",
 								"exec": [
 									""
 								],
@@ -2318,7 +2328,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"id": "0b5a416d-dc46-40fa-b220-5a4517316e72",
 								"exec": [
 									""
 								],
@@ -2368,7 +2378,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"id": "5a101ce0-27b7-4eeb-9eb9-69a06a8f9f2b",
 								"exec": [
 									""
 								],
@@ -2418,7 +2428,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "42bf3e41-796e-445c-afc5-dada3d7dec49",
+								"id": "bc6289ce-f548-47cb-bb8d-0b1ffaf5d0e0",
 								"exec": [
 									""
 								],
@@ -2462,7 +2472,431 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "new features",
+			"item": [
+				{
+					"name": "filter terms of uses by title",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/terms?page=1&perPage=20&title=test",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "20"
+								},
+								{
+									"key": "title",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter terms of uses by userId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/terms?page=1&perPage=20&userId=23124329",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "20"
+								},
+								{
+									"key": "userId",
+									"value": "23124329"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{USER1_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/type",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"type"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{USER1_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?page=1&perPage=10",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users with user id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?userId=23124329",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "23124329"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users with 2 user ids",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?userId=23124329,151743",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "23124329,151743"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users with not sign user id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?userId=11111151743",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "11111151743"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users from date",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?signedAtFrom=2020-09-25T00:00:00.000Z",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "signedAtFrom",
+									"value": "2020-09-25T00:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users to date",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?signedAtTo=2020-09-27T00:00:00.000Z",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "signedAtTo",
+									"value": "2020-09-27T00:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms of use users between dates",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users?signedAtFrom=2020-09-25T00:00:00.000Z&signedAtTo=2020-09-27T00:00:00.000Z",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							],
+							"query": [
+								{
+									"key": "signedAtFrom",
+									"value": "2020-09-25T00:00:00.000Z"
+								},
+								{
+									"key": "signedAtTo",
+									"value": "2020-09-27T00:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign a user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 11111151743\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsign a user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{USER1_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/0181d416-6131-11ea-b3fb-3c15c2e2c206/users/11111151743",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"0181d416-6131-11ea-b3fb-3c15c2e2c206",
+								"users",
+								"11111151743"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

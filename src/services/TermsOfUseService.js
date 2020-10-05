@@ -17,6 +17,7 @@ const UserTermsOfUseBanXref = models.UserTermsOfUseBanXref
 const TermsOfUseDependency = models.TermsOfUseDependency
 const TermsOfUseAgreeabilityType = models.TermsOfUseAgreeabilityType
 const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
+const TermsOfUseType = models.TermsOfUseType
 
 /**
  * Get terms of use by id
@@ -28,9 +29,9 @@ const TermsOfUseDocusignTemplateXref = models.TermsOfUseDocusignTemplateXref
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
   let userId = false
   if (_.get(currentUser, 'isMachine', false)) {
-    userId = query.userId || false
+    userId = _.get(query, 'userId', false)
   } else if (_.get(currentUser, 'roles', []).includes(UserRoles.Admin)) {
-    userId = query.userId || false
+    userId = _.get(query, 'userId', false)
   } else {
     userId = _.get(currentUser, 'userId')
   }
@@ -412,30 +413,55 @@ async function searchTermsOfUses (criteria) {
   const page = criteria.page > 0 ? criteria.page : 1
   const perPage = criteria.perPage > 0 ? criteria.perPage : 20
 
-  const countResult = await TermsOfUse.findOne({
-    attributes: [[models.Sequelize.fn('COUNT', models.Sequelize.col('id')), 'total']],
-    where: _.assign({ deletedAt: null }, _.omit(criteria, ['perPage', 'page'])),
+  const where = {
+    deletedAt: null
+  }
+
+  if (criteria.legacyId) {
+    where.legacyId = criteria.legacyId
+  }
+
+  if (criteria.title) {
+    where.title = { [models.Sequelize.Op.iLike]: '%' + criteria.title + '%' }
+  }
+
+  const include = [
+    {
+      model: TermsOfUseAgreeabilityType,
+      attributes: [['name', 'agreeabilityType']]
+    },
+    {
+      model: models.TermsOfUseDocusignTemplateXref,
+      attributes: ['docusignTemplateId']
+    }
+  ]
+
+  if (criteria.userId != null) {
+    include.push({
+      model: models.UserTermsOfUseXref,
+      attributes: [],
+      where: {
+        userId: criteria.userId
+      }
+    })
+  }
+
+  const countResult = await TermsOfUse.count({
+    include,
+    where,
     raw: true
   })
 
   const query = {
     order: [['id', 'ASC']],
     attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId'],
-    include: [
-      {
-        model: TermsOfUseAgreeabilityType,
-        attributes: [['name', 'agreeabilityType']]
-      },
-      {
-        model: models.TermsOfUseDocusignTemplateXref,
-        attributes: ['docusignTemplateId']
-      }
-    ],
-    where: _.assign({ deletedAt: null }, _.omit(criteria, ['perPage', 'page'])),
+    include,
+    where,
     limit: perPage,
     offset: (page - 1) * perPage,
     raw: true
   }
+
   const result = await TermsOfUse.findAll(query)
 
   logger.debug(`Query: ${JSON.stringify(query)}`)
@@ -445,7 +471,7 @@ async function searchTermsOfUses (criteria) {
   }
 
   return {
-    total: countResult.total,
+    total: countResult,
     page,
     perPage,
     result: helper.clearObject(result)
@@ -456,8 +482,117 @@ searchTermsOfUses.schema = {
   criteria: Joi.object().keys({
     page: Joi.page(),
     perPage: Joi.perPage(),
-    legacyId: Joi.numberId().optional()
+    legacyId: Joi.numberId().optional(),
+    userId: Joi.number(),
+    title: Joi.string()
   }).required()
+}
+
+/**
+ * Search all users signed a term of use
+ * @params {String} termsOfUseId
+ * @params {Object} query
+ * @returns {Object} Return the search result containing the result array and pagination info
+ */
+async function getTermsOfUseUsers (termsOfUseId, query) {
+  const { page, perPage } = query
+
+  let where = {}
+  if (query.userId) {
+    const userIds = query.userId.split(',').map(s => s.trim())
+    where.userId = { [models.Sequelize.Op.in]: userIds }
+  }
+
+  if (query.signedAtFrom && query.signedAtTo) {
+    where.created = {
+      [models.Sequelize.Op.and]: [
+        { [models.Sequelize.Op.gte]: query.signedAtFrom },
+        { [models.Sequelize.Op.lte]: query.signedAtTo }
+      ]
+    }
+  } else if (query.signedAtFrom) {
+    where.created = { [models.Sequelize.Op.gte]: query.signedAtFrom }
+  } else if (query.signedAtTo) {
+    where.created = { [models.Sequelize.Op.lte]: query.signedAtTo }
+  }
+
+  const termsOfUse = await TermsOfUse.findOne({
+    where: { id: termsOfUseId, deletedAt: null }
+  })
+
+  if (!termsOfUse) {
+    throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
+  }
+
+  const countResult = await termsOfUse.countUserTermsOfUseXrefs({
+    where
+  })
+
+  const users = await termsOfUse.getUserTermsOfUseXrefs({
+    attributes: ['userId'],
+    where,
+    limit: perPage,
+    offset: (page - 1) * perPage,
+    raw: true
+  })
+
+  return {
+    total: countResult,
+    page,
+    perPage,
+    result: users.map(user => user.userId)
+  }
+}
+
+getTermsOfUseUsers.schema = {
+  termsOfUseId: Joi.string().guid(),
+  query: Joi.object().keys({
+    page: Joi.page(),
+    perPage: Joi.perPage(),
+    userId: Joi.string(),
+    signedAtFrom: Joi.date(),
+    signedAtTo: Joi.date()
+  })
+}
+
+/**
+ * Sign a term for a user
+ * @params {String} termsOfUseId
+ * @params {Object} user
+ * @returns {Object} Return successful message
+ */
+async function signTermsOfUseUser (termsOfUseId, user) {
+  return agreeTermsOfUse(user, termsOfUseId)
+}
+
+signTermsOfUseUser.schema = {
+  termsOfUseId: Joi.string().guid(),
+  user: Joi.object().keys({
+    userId: Joi.number().required()
+  }).required()
+}
+
+/**
+ * Unsign a term for a user
+ * @params {String} termsOfUseId
+ * @params {Number} userId
+ * @returns {Object} Return successful message
+ */
+async function unsignTermsOfUseUser (termsOfUseId, userId) {
+  return deleteAgreeTermsOfUse(termsOfUseId, userId)
+}
+
+unsignTermsOfUseUser.schema = {
+  termsOfUseId: Joi.string().guid(),
+  userId: Joi.number()
+}
+
+/**
+ * List all terms of use types
+ * @returns {Array} Return an array of term types
+ */
+async function getTermsOfUseTypes () {
+  return TermsOfUseType.findAll({ raw: true })
 }
 
 module.exports = {
@@ -468,7 +603,11 @@ module.exports = {
   partiallyUpdateTermsOfUse,
   fullyUpdateTermsOfUse,
   deleteTermsOfUse,
-  searchTermsOfUses
+  searchTermsOfUses,
+  getTermsOfUseUsers,
+  signTermsOfUseUser,
+  unsignTermsOfUseUser,
+  getTermsOfUseTypes
 }
 
-// logger.buildService(module.exports)
+logger.buildService(module.exports)

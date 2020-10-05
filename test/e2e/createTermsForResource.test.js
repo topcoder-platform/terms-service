@@ -38,7 +38,7 @@ module.exports = describe('create terms for resource endpoint', () => {
     should.equal(res.body.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(res.body.createdBy, 'TonyJ')
     should.exist(res.body.created)
-    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
+    assertInfoMessage(`Publish event to Kafka topic ${config.RESOURCE_TERMS_CREATE_TOPIC}`)
   })
 
   it('create terms for resource using m2m token success', async () => {
@@ -60,7 +60,7 @@ module.exports = describe('create terms for resource endpoint', () => {
     should.equal(res.body.termsOfUseIds[0], termsOfUseIdsMapping[21307])
     should.equal(res.body.createdBy, user.m2mWrite.sub)
     should.exist(res.body.created)
-    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_CREATE_TOPIC}`)
+    assertInfoMessage(`Publish event to Kafka topic ${config.RESOURCE_TERMS_CREATE_TOPIC}`)
   })
 
   it('failure - create terms for resource again, duplicate', async () => {

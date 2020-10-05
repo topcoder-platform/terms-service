@@ -25,7 +25,7 @@ module.exports = describe('agree terms of use', () => {
     should.equal(result.success, true)
     records = await UserTermsOfUseXref.findAll({ where: { userId: 23124329, termsOfUseId: termsOfUseIdsMapping[21303] } })
     should.equal(records.length, 1)
-    assertInfoMessage(`Publish event to Kafka topic ${config.TERMS_UPDATE_TOPIC}`)
+    assertInfoMessage(`Publish event to Kafka topic ${config.USER_AGREED_TERMS_TOPIC}`)
   })
 
   it('failure - user has agreed terms of use before', async () => {

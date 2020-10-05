@@ -6,8 +6,8 @@ const _ = require('lodash')
 const should = require('should')
 const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
-const {termsOfUseIdsMapping, agreeabilityTypeIdsMapping} = require('../../src/test-data')
-
+const { termsOfUseIdsMapping, agreeabilityTypeIdsMapping } = require('../../src/test-data')
+const { AGREE_FOR_DOCUSIGN_TEMPLATE } = require('../../app-constants')
 const { user, request } = require('../common/testData')
 const { assertError, assertValidationError, clearLogs } = require('../common/testHelper')
 
@@ -86,6 +86,7 @@ module.exports = describe('create terms of use', () => {
   it('failure - docusign template is missing', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
+    data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
     try {
       await service.createTermsOfUse(user.user1, data)
       throw new Error('should not throw error here')

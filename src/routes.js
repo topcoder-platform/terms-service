@@ -27,6 +27,15 @@ module.exports = {
       scopes: [constants.Scopes.Terms.Read]
     }
   },
+  '/terms/type': {
+    get: {
+      controller: 'TermsOfUseController',
+      method: 'getTermsOfUseTypes',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
+    }
+  },
   '/terms': {
     post: {
       controller: 'TermsOfUseController',
@@ -120,6 +129,31 @@ module.exports = {
       auth: 'jwt',
       access: [constants.UserRoles.Admin],
       scopes: [constants.Scopes.Terms.Read]
+    }
+  },
+  '/terms/:termsOfUseId/users': {
+    get: {
+      controller: 'TermsOfUseController',
+      method: 'getTermsOfUseUsers',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
+    },
+    post: {
+      controller: 'TermsOfUseController',
+      method: 'signTermsOfUseUser',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
+    }
+  },
+  '/terms/:termsOfUseId/users/:userId': {
+    delete: {
+      controller: 'TermsOfUseController',
+      method: 'unsignTermsOfUseUser',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Write]
     }
   }
 }

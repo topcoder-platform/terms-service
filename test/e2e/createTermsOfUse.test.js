@@ -6,7 +6,8 @@ const _ = require('lodash')
 const config = require('config')
 const should = require('should')
 const models = require('../../src/models')
-const {agreeabilityTypeIdsMapping} = require('../../src/test-data')
+const { termsOfUseIdsMapping, agreeabilityTypeIdsMapping } = require('../../src/test-data')
+const { AGREE_FOR_DOCUSIGN_TEMPLATE } = require('../../app-constants')
 
 const { user, token, request } = require('../common/testData')
 const { postRequest, clearLogs } = require('../common/testHelper')
@@ -25,6 +26,8 @@ module.exports = describe('create terms of use endpoint', () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
     data.agreeabilityTypeId = agreeabilityTypeIdsMapping[3]
+    data.id = termsOfUseIdsMapping[40001]
+    data.legacyId = 40001
     const res = await postRequest(url, data, token.user1)
     const record = await TermsOfUse.findOne({ where: { id: res.body.id, deletedAt: null }, raw: true })
     should.equal(record.text, 'text')
@@ -49,6 +52,8 @@ module.exports = describe('create terms of use endpoint', () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
     data.agreeabilityTypeId = agreeabilityTypeIdsMapping[3]
+    data.id = termsOfUseIdsMapping[40002]
+    data.legacyId = 40002
     const res = await postRequest(url, data, token.m2mWrite)
     const record = await TermsOfUse.findOne({ where: { id: res.body.id, deletedAt: null }, raw: true })
     should.equal(record.text, 'text')
@@ -71,6 +76,8 @@ module.exports = describe('create terms of use endpoint', () => {
 
   it('create terms of use with docusign template success', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
+    data.id = termsOfUseIdsMapping[40003]
+    data.legacyId = 40003
     const res = await postRequest(url, data, token.user1)
     const record = await TermsOfUse.findOne({ where: { id: res.body.id, deletedAt: null }, raw: true })
     should.equal(record.text, 'text')
@@ -98,13 +105,14 @@ module.exports = describe('create terms of use endpoint', () => {
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.status, 400)
-      should.equal(_.get(err, 'response.body.message'), `TermsOfUseAgreeabilityType not found with id: 100`)
+      should.equal(_.get(err, 'response.body.message'), `TermsOfUseAgreeabilityType not found with id: ${agreeabilityTypeIdsMapping['not-exist']}`)
     }
   })
 
   it('failure - docusign template is missing', async () => {
     let data = _.cloneDeep(request.createTermsOfUse.reqBody)
     data = _.omit(data, 'docusignTemplateId')
+    data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
     try {
       await postRequest(url, data, token.user1)
       throw new Error('should not throw error here')

@@ -80,6 +80,44 @@ async function searchTermsOfUses (req, res) {
   res.send({ result: result.result })
 }
 
+/**
+ * Search users who signed the term
+ * @param req the request
+ * @param res the response
+ */
+async function getTermsOfUseUsers (req, res) {
+  const result = await service.getTermsOfUseUsers(req.params.termsOfUseId, req.query)
+  helper.setResHeaders(req, res, result)
+  res.send({ result: result.result })
+}
+
+/**
+ * Sign a term for a user
+ * @param req the request
+ * @param res the response
+ */
+async function signTermsOfUseUser (req, res) {
+  res.send(await service.signTermsOfUseUser(req.params.termsOfUseId, req.body))
+}
+
+/**
+ * Unsign a term for a user
+ * @param req the request
+ * @param res the response
+ */
+async function unsignTermsOfUseUser (req, res) {
+  res.send(await service.unsignTermsOfUseUser(req.params.termsOfUseId, req.params.userId))
+}
+
+/**
+ * Get all term of use types
+ * @param req the request
+ * @param res the response
+ */
+async function getTermsOfUseTypes (req, res) {
+  res.send(await service.getTermsOfUseTypes())
+}
+
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
@@ -88,5 +126,9 @@ module.exports = {
   partiallyUpdateTermsOfUse,
   fullyUpdateTermsOfUse,
   deleteTermsOfUse,
-  searchTermsOfUses
+  searchTermsOfUses,
+  getTermsOfUseUsers,
+  signTermsOfUseUser,
+  unsignTermsOfUseUser,
+  getTermsOfUseTypes
 }

@@ -73,6 +73,29 @@ describe('Topcoder - Terms API Unit Test', () => {
 
   describe('Docusign Unit Test', () => {
     require('./generateDocusignViewUrl.test')
-    require('./docusignCallback.test')
+    // require('./docusignCallback.test')
+  })
+
+  describe('New features', () => {
+    before(async () => {
+      await initDB()
+      await insertData()
+    })
+    after(async () => {
+      await initDB()
+    })
+
+    describe('Get Terms of Use Types Unit Test', () => {
+      require('./getTermsOfUseType.test')
+    })
+
+    describe('Filter Terms of Use Unit Test', () => {
+      require('./searchTermsOfUseFilter.test')
+    })
+
+    describe('Get Terms of Use Users Unit Test', () => {
+      require('./getTermsOfUseUsers.test')
+      require('./signAndUnsignTermsOfUse.test')
+    })
   })
 })

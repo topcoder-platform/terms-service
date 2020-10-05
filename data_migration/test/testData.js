@@ -63,33 +63,33 @@ async function generateTermsOfUseDependency () {
 
 async function generateDocusignEnvelope () {
   for (let i = 0; i < 9998; i++) {
-    let docusign_envelope_id = uuid()
-    let docusign_template_id = uuid()
-    let user_id = Math.floor(Math.random() * 1000) + 300000000
-    let is_completed = Math.round(Math.random())
-    await executeQueryAsync('informixoltp', `insert into docusign_envelope(docusign_envelope_id, docusign_template_id, user_id, is_completed) values("${docusign_envelope_id}", "${docusign_template_id}", ${user_id}, ${is_completed})`)
+    let docusignEnvelopeId = uuid()
+    let docusignTemplateId = uuid()
+    let userId = Math.floor(Math.random() * 1000) + 300000000
+    let isCompleted = Math.round(Math.random())
+    await executeQueryAsync('informixoltp', `insert into docusign_envelope(docusign_envelope_id, docusign_template_id, user_id, is_completed) values("${docusignEnvelopeId}", "${docusignTemplateId}", ${userId}, ${isCompleted})`)
   }
 }
 
 async function generateDocusignTemplateXref () {
   for (let i = 30001; i <= 30100; i += 5) {
-    let docusign_template_id = uuid()
-    await executeQueryAsync('common_oltp', `insert into terms_of_use_docusign_template_xref(terms_of_use_id, docusign_template_id) values(${i}, "${docusign_template_id}")`)
+    let docusignTemplateId = uuid()
+    await executeQueryAsync('common_oltp', `insert into terms_of_use_docusign_template_xref(terms_of_use_id, docusign_template_id) values(${i}, "${docusignTemplateId}")`)
   }
 }
 
 async function generateUserTerms () {
-  for (let user_id = 300000000; user_id <= 300001000; user_id++) {
-    await executeQueryAsync('common_oltp', `insert into user(user_id, handle, status) values(${user_id}, "handle${user_id}", "A")`)
+  for (let userId = 300000000; userId <= 300001000; userId++) {
+    await executeQueryAsync('common_oltp', `insert into user(user_id, handle, status) values(${userId}, "handle${userId}", "A")`)
   }
   for (let i = 30001; i <= 30200; i++) {
     const leap1 = Math.round(Math.random() * 9) + 10
-    for (let user_id = 300000000; user_id <= 300001000; user_id += leap1) {
-      await executeQueryAsync('common_oltp', `insert into user_terms_of_use_xref(user_id, terms_of_use_id) values(${user_id}, ${i})`)
+    for (let userId = 300000000; userId <= 300001000; userId += leap1) {
+      await executeQueryAsync('common_oltp', `insert into user_terms_of_use_xref(user_id, terms_of_use_id) values(${userId}, ${i})`)
     }
     const leap2 = Math.round(Math.random() * 50) + 200
-    for (let user_id = 300000000; user_id <= 300001000; user_id += leap2) {
-      await executeQueryAsync('common_oltp', `insert into user_terms_of_use_ban_xref(user_id, terms_of_use_id) values(${user_id}, ${i})`)
+    for (let userId = 300000000; userId <= 300001000; userId += leap2) {
+      await executeQueryAsync('common_oltp', `insert into user_terms_of_use_ban_xref(user_id, terms_of_use_id) values(${userId}, ${i})`)
     }
   }
 }

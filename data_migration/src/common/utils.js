@@ -23,7 +23,6 @@ function resolveAgreeabilityTypeId (column) {
   }
 }
 
-
 module.exports = {
   resolveTermsOfUseId,
   resolveAgreeabilityTypeId
