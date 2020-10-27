@@ -84,6 +84,8 @@ function convertRawData (termsOfUse, throwError = true) {
   delete termsOfUse['TermsOfUseDocusignTemplateXref.docusignTemplateId']
   termsOfUse.agreeabilityType = termsOfUse['TermsOfUseAgreeabilityType.agreeabilityType']
   delete termsOfUse['TermsOfUseAgreeabilityType.agreeabilityType']
+  termsOfUse.type = termsOfUse['TermsOfUseType.type']
+  delete termsOfUse['TermsOfUseType.type']
   if (termsOfUse.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
     // check whether this is for docusign template and that template exists
     if (throwError && _.isNull(termsOfUse.docusignTemplateId)) {
