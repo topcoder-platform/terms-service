@@ -431,6 +431,10 @@ async function searchTermsOfUses (criteria) {
       attributes: [['name', 'agreeabilityType']]
     },
     {
+      model: TermsOfUseType,
+      attributes: [['name', 'type']]
+    },
+    {
       model: models.TermsOfUseDocusignTemplateXref,
       attributes: ['docusignTemplateId']
     }
