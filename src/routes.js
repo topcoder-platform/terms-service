@@ -27,10 +27,19 @@ module.exports = {
       scopes: [constants.Scopes.Terms.Read]
     }
   },
-  '/terms/type': {
+  '/terms/types': {
     get: {
       controller: 'TermsOfUseController',
       method: 'getTermsOfUseTypes',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
+    }
+  },
+  '/terms/agreeability-types': {
+    get: {
+      controller: 'TermsOfUseController',
+      method: 'getTermsOfUseAgreeabilityTypes',
       auth: 'jwt',
       access: [constants.UserRoles.Admin],
       scopes: [constants.Scopes.Terms.Read]

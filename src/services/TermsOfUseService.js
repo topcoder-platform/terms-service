@@ -602,6 +602,14 @@ async function getTermsOfUseTypes () {
   return TermsOfUseType.findAll({ raw: true })
 }
 
+/**
+ * List all terms of use types
+ * @returns {Array} Return an array of term types
+ */
+async function getTermsOfUseAgreeabilityTypes () {
+  return TermsOfUseAgreeabilityType.findAll({ raw: true })
+}
+
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
@@ -614,7 +622,8 @@ module.exports = {
   getTermsOfUseUsers,
   signTermsOfUseUser,
   unsignTermsOfUseUser,
+  getTermsOfUseAgreeabilityTypes,
   getTermsOfUseTypes
 }
 
-logger.buildService(module.exports)
+// logger.buildService(module.exports)
