@@ -502,7 +502,8 @@ searchTermsOfUses.schema = {
  * @returns {Object} Return the search result containing the result array and pagination info
  */
 async function getTermsOfUseUsers (termsOfUseId, query) {
-  const { page, perPage } = query
+  const page = query.page > 0 ? query.page : 1
+  const perPage = query.perPage > 0 ? query.perPage : 20
 
   let where = {}
   if (query.userId) {
