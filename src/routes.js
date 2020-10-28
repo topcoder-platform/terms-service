@@ -45,6 +45,15 @@ module.exports = {
       scopes: [constants.Scopes.Terms.Read]
     }
   },
+  '/terms/agreeability-types/:id': {
+    get: {
+      controller: 'TermsOfUseController',
+      method: 'getTermsOfUseAgreeabilityType',
+      auth: 'jwt',
+      access: [constants.UserRoles.Admin],
+      scopes: [constants.Scopes.Terms.Read]
+    }
+  },
   '/terms': {
     post: {
       controller: 'TermsOfUseController',

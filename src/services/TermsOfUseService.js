@@ -603,11 +603,25 @@ async function getTermsOfUseTypes () {
 }
 
 /**
- * List all terms of use types
+ * List all terms of use agreeability types
  * @returns {Array} Return an array of term types
  */
 async function getTermsOfUseAgreeabilityTypes () {
   return TermsOfUseAgreeabilityType.findAll({ raw: true })
+}
+
+/**
+ * Fetch one agreeability type
+ * @returns {Object} Return an array of term types
+ */
+async function getTermsOfUseAgreeabilityType (id) {
+  const obj = await TermsOfUseAgreeabilityType.findOne({ where: { id }, raw: true })
+
+  if (!obj) {
+    throw new errors.NotFoundError(`Agreeability Type id: ${id} doesn't exist.`)
+  }
+
+  return obj
 }
 
 module.exports = {
@@ -622,6 +636,7 @@ module.exports = {
   getTermsOfUseUsers,
   signTermsOfUseUser,
   unsignTermsOfUseUser,
+  getTermsOfUseAgreeabilityType,
   getTermsOfUseAgreeabilityTypes,
   getTermsOfUseTypes
 }
