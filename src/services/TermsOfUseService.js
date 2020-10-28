@@ -269,6 +269,7 @@ async function createTermsOfUse (currentUser, termsOfUse) {
   termsOfUse.createdBy = currentUser.handle || currentUser.sub
 
   let created = await TermsOfUse.create(_.omit(termsOfUse, 'docusignTemplateId'))
+  termsOfUse.id = created.id
 
   if (termsOfUse.docusignTemplateId) {
     await TermsOfUseDocusignTemplateXref.create({
