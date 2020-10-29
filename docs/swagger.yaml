@@ -1435,6 +1435,8 @@ components:
           type: string
         typeId:
           type: integer
+        legacyId:
+          type: integer
         title:
           type: string
         url:

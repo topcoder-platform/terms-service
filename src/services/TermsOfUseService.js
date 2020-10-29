@@ -308,7 +308,7 @@ createTermsOfUse.schema = {
  * @returns {Object} the updated terms of use
  */
 async function updateTermsOfUse (currentUser, termsOfUseId, data, isFull) {
-  await validateTermsOfUse(data, false)
+  await validateTermsOfUse(data)
 
   const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
   const docusignTemplateXref = await termsOfUse.getTermsOfUseDocusignTemplateXref()
@@ -369,6 +369,7 @@ partiallyUpdateTermsOfUse.schema = {
   data: Joi.object().keys({
     text: Joi.string(),
     typeId: Joi.optionalNumberId(),
+    legacyId: Joi.numberId().optional(),
     title: Joi.string(),
     url: Joi.string(),
     agreeabilityTypeId: Joi.string().uuid().optional(),
