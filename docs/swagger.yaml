@@ -1252,10 +1252,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /terms/type:
+  /terms/types:
     get:
       tags:
-        - TermsType
+        - Types
       description: |
         List all types of terms of uses.
       security:
@@ -1282,6 +1282,86 @@ paths:
                 $ref: '#/components/schemas/Error'
         403:
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /terms/agreeability-types:
+    get:
+      tags:
+        - Agreeability Types
+      description: |
+        List all agreeability types for terms of uses.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    legacyId:
+                      type: number
+                    name:
+                      type: string
+                    description:
+                      type: string
+        401:
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /terms/agreeability-types/:id:
+    get:
+      tags:
+        - Agreeability Types
+      description: |
+        Get One agreeability types by ID
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  legacyId:
+                    type: number
+                  name:
+                    type: string
+                  description:
+                    type: string
+        401:
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
           content:
             application/json:
               schema:
@@ -1354,6 +1434,8 @@ components:
         text:
           type: string
         typeId:
+          type: integer
+        legacyId:
           type: integer
         title:
           type: string

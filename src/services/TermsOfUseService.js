@@ -84,6 +84,8 @@ function convertRawData (termsOfUse, throwError = true) {
   delete termsOfUse['TermsOfUseDocusignTemplateXref.docusignTemplateId']
   termsOfUse.agreeabilityType = termsOfUse['TermsOfUseAgreeabilityType.agreeabilityType']
   delete termsOfUse['TermsOfUseAgreeabilityType.agreeabilityType']
+  termsOfUse.type = termsOfUse['TermsOfUseType.type']
+  delete termsOfUse['TermsOfUseType.type']
   if (termsOfUse.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
     // check whether this is for docusign template and that template exists
     if (throwError && _.isNull(termsOfUse.docusignTemplateId)) {
@@ -267,6 +269,7 @@ async function createTermsOfUse (currentUser, termsOfUse) {
   termsOfUse.createdBy = currentUser.handle || currentUser.sub
 
   let created = await TermsOfUse.create(_.omit(termsOfUse, 'docusignTemplateId'))
+  termsOfUse.id = created.id
 
   if (termsOfUse.docusignTemplateId) {
     await TermsOfUseDocusignTemplateXref.create({
@@ -305,7 +308,7 @@ createTermsOfUse.schema = {
  * @returns {Object} the updated terms of use
  */
 async function updateTermsOfUse (currentUser, termsOfUseId, data, isFull) {
-  await validateTermsOfUse(data, false)
+  await validateTermsOfUse(data)
 
   const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
   const docusignTemplateXref = await termsOfUse.getTermsOfUseDocusignTemplateXref()
@@ -366,6 +369,7 @@ partiallyUpdateTermsOfUse.schema = {
   data: Joi.object().keys({
     text: Joi.string(),
     typeId: Joi.optionalNumberId(),
+    legacyId: Joi.numberId().optional(),
     title: Joi.string(),
     url: Joi.string(),
     agreeabilityTypeId: Joi.string().uuid().optional(),
@@ -429,6 +433,10 @@ async function searchTermsOfUses (criteria) {
     {
       model: TermsOfUseAgreeabilityType,
       attributes: [['name', 'agreeabilityType']]
+    },
+    {
+      model: TermsOfUseType,
+      attributes: [['name', 'type']]
     },
     {
       model: models.TermsOfUseDocusignTemplateXref,
@@ -495,7 +503,8 @@ searchTermsOfUses.schema = {
  * @returns {Object} Return the search result containing the result array and pagination info
  */
 async function getTermsOfUseUsers (termsOfUseId, query) {
-  const { page, perPage } = query
+  const page = query.page > 0 ? query.page : 1
+  const perPage = query.perPage > 0 ? query.perPage : 20
 
   let where = {}
   if (query.userId) {
@@ -595,6 +604,28 @@ async function getTermsOfUseTypes () {
   return TermsOfUseType.findAll({ raw: true })
 }
 
+/**
+ * List all terms of use agreeability types
+ * @returns {Array} Return an array of term types
+ */
+async function getTermsOfUseAgreeabilityTypes () {
+  return TermsOfUseAgreeabilityType.findAll({ raw: true })
+}
+
+/**
+ * Fetch one agreeability type
+ * @returns {Object} Return an array of term types
+ */
+async function getTermsOfUseAgreeabilityType (id) {
+  const obj = await TermsOfUseAgreeabilityType.findOne({ where: { id }, raw: true })
+
+  if (!obj) {
+    throw new errors.NotFoundError(`Agreeability Type id: ${id} doesn't exist.`)
+  }
+
+  return obj
+}
+
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
@@ -607,7 +638,9 @@ module.exports = {
   getTermsOfUseUsers,
   signTermsOfUseUser,
   unsignTermsOfUseUser,
+  getTermsOfUseAgreeabilityType,
+  getTermsOfUseAgreeabilityTypes,
   getTermsOfUseTypes
 }
 
-logger.buildService(module.exports)
+// logger.buildService(module.exports)

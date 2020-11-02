@@ -118,6 +118,24 @@ async function getTermsOfUseTypes (req, res) {
   res.send(await service.getTermsOfUseTypes())
 }
 
+/**
+ * Get all term of use types
+ * @param req the request
+ * @param res the response
+ */
+async function getTermsOfUseAgreeabilityTypes (req, res) {
+  res.send(await service.getTermsOfUseAgreeabilityTypes())
+}
+
+/**
+ * Get all term of use types
+ * @param req the request
+ * @param res the response
+ */
+async function getTermsOfUseAgreeabilityType (req, res) {
+  res.send(await service.getTermsOfUseAgreeabilityType(req.params.id))
+}
+
 module.exports = {
   getTermsOfUse,
   agreeTermsOfUse,
@@ -130,5 +148,7 @@ module.exports = {
   getTermsOfUseUsers,
   signTermsOfUseUser,
   unsignTermsOfUseUser,
+  getTermsOfUseAgreeabilityType,
+  getTermsOfUseAgreeabilityTypes,
   getTermsOfUseTypes
 }
