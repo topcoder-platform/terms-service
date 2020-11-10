@@ -47,8 +47,10 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     }
   ]
   if (userId) {
+    logger.debug(`Getting Terms for User ${userId}`)
     include.push({
       model: UserTermsOfUseXref,
+      as: 'UserTermsOfUseXrefs',
       where: { userId },
       attributes: ['userId'],
       required: false
@@ -70,6 +72,8 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     termsOfUse.agreed = !_.isNull(termsOfUse['UserTermsOfUseXrefs.userId'])
     delete termsOfUse['UserTermsOfUseXrefs.userId']
   }
+
+  logger.debug(`Raw Returned Data: ${JSON.stringify(termsOfUse)}`)
 
   return convertRawData(termsOfUse)
 }
