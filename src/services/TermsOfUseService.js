@@ -47,7 +47,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     }
   ]
   if (userId) {
-    logger.debug(`Getting Terms for User ${userId}`)
+    // logger.debug(`Getting Terms for User ${userId}`)
     include.push({
       model: UserTermsOfUseXref,
       as: 'UserTermsOfUseXrefs',
@@ -73,7 +73,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
     delete termsOfUse['UserTermsOfUseXrefs.userId']
   }
 
-  logger.debug(`Raw Returned Data: ${JSON.stringify(termsOfUse)}`)
+  // logger.debug(`Raw Returned Data: ${JSON.stringify(termsOfUse)}`)
 
   return convertRawData(termsOfUse)
 }
@@ -466,7 +466,7 @@ async function searchTermsOfUses (criteria) {
 
   const query = {
     order: [['id', 'ASC']],
-    attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId'],
+    attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId', 'typeId'],
     include,
     where,
     limit: perPage,
@@ -476,7 +476,7 @@ async function searchTermsOfUses (criteria) {
 
   const result = await TermsOfUse.findAll(query)
 
-  logger.debug(`Query: ${JSON.stringify(query)}`)
+  // logger.debug(`Query: ${JSON.stringify(query)}`)
 
   for (const element of result) {
     convertRawData(element, false)
