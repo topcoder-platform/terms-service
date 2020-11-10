@@ -48,6 +48,7 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
   ]
   if (userId) {
     // logger.debug(`Getting Terms for User ${userId}`)
+    
     include.push({
       model: UserTermsOfUseXref,
       as: 'UserTermsOfUseXrefs',
