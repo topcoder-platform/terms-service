@@ -108,6 +108,45 @@ module.exports = describe('update terms of use', () => {
     }
   })
 
+  it(`fully update unpublished terms of use, adding docusign template success by admin`,
+    async () => {
+      let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+      await service.fullyUpdateTermsOfUse(user.user1, termsOfUseIdsMapping['not-published'], data)
+      const result = await TermsOfUse.findOne({ where: { id: termsOfUseIdsMapping['not-published'],
+        deletedAt: null },
+      raw: true })
+      should.equal(result.id, termsOfUseIdsMapping['not-published'])
+      should.equal(result.title, 'Unpublished term')
+      should.equal(result.url, 'test-url')
+      should.equal(result.text, 'test-for-unpublished-term')
+      const existed = await TermsOfUseDocusignTemplateXref.findAll(
+        { where: { termsOfUseId: termsOfUseIdsMapping['not-published'] }, raw: true })
+      should.equal(existed.length, 1)
+      should.equal(existed[0].docusignTemplateId, 'update-test-template-1')
+    })
+
+  it('failure - fully update unpublished terms of use by non-admin', async () => {
+    let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    try {
+      await service.fullyUpdateTermsOfUse(user.user2, termsOfUseIdsMapping['not-published'], data)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to update this terms of use.`)
+    }
+  })
+
+  it('failure - fully update unpublished terms of use by machine', async () => {
+    let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
+    try {
+      await service.fullyUpdateTermsOfUse(user.m2mRead, termsOfUseIdsMapping['not-published'], data)
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to update this terms of use.`)
+    }
+  })
+
   it('failure - partially update terms of use, docusign template missing', async () => {
     let data = _.cloneDeep(request.updateTermsOfUse.reqBody)
     data.agreeabilityTypeId = AGREE_FOR_DOCUSIGN_TEMPLATE
@@ -176,5 +215,44 @@ module.exports = describe('update terms of use', () => {
     // docusign template xref is not deleted under partially update
     const existed = await TermsOfUseDocusignTemplateXref.findAll({ where: { termsOfUseId: id1 }, raw: true })
     should.equal(existed.length, 1)
+  })
+
+  it(`partially update unpublished terms of use, adding docusign template success by admin`,
+    async () => {
+      await service.partiallyUpdateTermsOfUse(user.user1,
+        termsOfUseIdsMapping['not-published'], { url: 'updated-url' })
+      const result = await TermsOfUse.findOne({ where: { id: termsOfUseIdsMapping['not-published'],
+        deletedAt: null },
+      raw: true })
+      should.equal(result.id, termsOfUseIdsMapping['not-published'])
+      should.equal(result.title, 'Unpublished term')
+      should.equal(result.url, 'updated-url')
+      should.equal(result.text, 'test-for-unpublished-term')
+      const existed = await TermsOfUseDocusignTemplateXref.findAll(
+        { where: { termsOfUseId: termsOfUseIdsMapping['not-published'] }, raw: true })
+      should.equal(existed.length, 1)
+      should.equal(existed[0].docusignTemplateId, 'update-test-template-1')
+    })
+
+  it('failure - partially update unpublished terms of use by non-admin', async () => {
+    try {
+      await service.partiallyUpdateTermsOfUse(user.user2,
+        termsOfUseIdsMapping['not-published'], { url: 'updated-url' })
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to update this terms of use.`)
+    }
+  })
+
+  it('failure - partially update unpublished terms of use by machine', async () => {
+    try {
+      await service.partiallyUpdateTermsOfUse(user.m2mRead,
+        termsOfUseIdsMapping['not-published'], { url: 'updated-url' })
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to update this terms of use.`)
+    }
   })
 })

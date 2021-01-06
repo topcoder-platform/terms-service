@@ -16,7 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     createdBy: { type: DataTypes.STRING, allowNull: true },
     updated: { type: DataTypes.DATE, allowNull: true },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
-    deletedAt: { type: DataTypes.DATE, allowNull: true }
+    deletedAt: { type: DataTypes.DATE, allowNull: true },
+    key: { type: DataTypes.STRING, allowNull: true },
+    isPublished: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+    version: { type: DataTypes.STRING, allowNull: false, defaultValue: '1.0.0' }
   }, {
     schema: config.DB_SCHEMA_NAME,
     tableName: 'TermsOfUse',

@@ -139,12 +139,23 @@ const request = {
     response: {
       result: [
         {
+          id: termsOfUseIdsMapping['nda0'],
+          title: 'term with key',
+          url: 'test-url',
+          agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
+          typeId: 10,
+          agreeabilityType: 'Electronically-agreeable',
+          type: 'data-test-typeId 10'
+        },
+        {
           id: termsOfUseIdsMapping[21306],
           legacyId: 21306,
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-          agreeabilityType: 'Electronically-agreeable'
+          typeId: 10,
+          agreeabilityType: 'Electronically-agreeable',
+          type: 'data-test-typeId 10'
         },
         {
           id: termsOfUseIdsMapping[21307],
@@ -152,7 +163,9 @@ const request = {
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-          agreeabilityType: 'Electronically-agreeable'
+          typeId: 10,
+          agreeabilityType: 'Electronically-agreeable',
+          type: 'data-test-typeId 10'
         },
         {
           id: termsOfUseIdsMapping[21303],
@@ -160,23 +173,20 @@ const request = {
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-          agreeabilityType: 'Electronically-agreeable'
+          typeId: 10,
+          agreeabilityType: 'Electronically-agreeable',
+          type: 'data-test-typeId 10'
         },
         {
-          id: termsOfUseIdsMapping[40001],
-          legacyId: 40001,
-          title: 'title',
-          url: 'url',
-          agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-          agreeabilityType: 'Electronically-agreeable'
-        },
-        {
-          id: termsOfUseIdsMapping[40002],
-          legacyId: 40002,
-          title: 'title',
-          url: 'url',
-          agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-          agreeabilityType: 'Electronically-agreeable'
+          id: termsOfUseIdsMapping[21304],
+          legacyId: 21304,
+          title: 'Standard Terms for Topcoder Competitions v2.2',
+          url: '',
+          agreeabilityTypeId: '301a36ec-61f4-11ea-bc96-3c15c2e2c206',
+          typeId: 10,
+          agreeabilityType: 'Docusign-template',
+          type: 'data-test-typeId 10'
+
         }
       ]
     }
@@ -254,7 +264,9 @@ const request = {
                 typeId: 10,
                 // docusignTemplateId: '100', // NOTE: this field was deleted by convertRawData() as agreeabilityTypeId !== env.AGREE_FOR_DOCUSIGN_TEMPLATE
                 agreeabilityTypeId: '301a36ec-61f4-11ea-bc96-3c15c2e2c206',
-                agreeabilityType: 'Docusign-template'
+                agreeabilityType: 'Docusign-template',
+                isPublished: true,
+                type: undefined
               }
             ]
           }
@@ -277,7 +289,9 @@ const request = {
                 agreed: false,
                 typeId: 10,
                 agreeabilityTypeId: '2c78f834-61f4-11ea-bd4f-3c15c2e2c206',
-                agreeabilityType: 'Electronically-agreeable'
+                agreeabilityType: 'Electronically-agreeable',
+                isPublished: true,
+                type: undefined
               },
               {
                 id: termsOfUseIdsMapping[21304],
@@ -289,7 +303,9 @@ const request = {
                 typeId: 10,
                 // docusignTemplateId: '100', // NOTE: this field was deleted by convertRawData() as agreeabilityTypeId !== env.AGREE_FOR_DOCUSIGN_TEMPLATE
                 agreeabilityTypeId: '301a36ec-61f4-11ea-bc96-3c15c2e2c206',
-                agreeabilityType: 'Docusign-template'
+                agreeabilityType: 'Docusign-template',
+                isPublished: true,
+                type: undefined
               }
             ]
           },
@@ -311,7 +327,10 @@ const request = {
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-          agreeabilityType: 'Electronically-agreeable'
+          agreeabilityType: 'Electronically-agreeable',
+          typeId: 10,
+          type: 'data-test-typeId 10'
+
         },
         {
           id: termsOfUseIdsMapping[21307],
@@ -319,7 +338,25 @@ const request = {
           title: 'Standard Terms for Topcoder Competitions v2.2',
           url: '',
           agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-          agreeabilityType: 'Electronically-agreeable'
+          agreeabilityType: 'Electronically-agreeable',
+          typeId: 10,
+          type: 'data-test-typeId 10'
+
+        }
+      ]
+    }
+  },
+  searchTermsOfUseWithKey: {
+    response: {
+      result: [
+        {
+          id: termsOfUseIdsMapping['nda0'],
+          title: 'term with key',
+          url: 'test-url',
+          typeId: 10,
+          agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
+          agreeabilityType: 'Electronically-agreeable',
+          type: 'data-test-typeId 10'
         }
       ]
     }

@@ -7,7 +7,7 @@ const DocusignEnvelope = models.DocusignEnvelope
 // const sequelize = require('sequelize')
 const Sequelize = require('sequelize')
 const config = require('config')
-const { difference, find, extend } = require('lodash')
+const { difference, find } = require('lodash')
 const sequelize = new Sequelize(config.get('POSTGRES_URL'), {
   logging: false
 })
@@ -36,7 +36,7 @@ async function migrateUserTerms (startDate) {
       if (oldIds.length > 0) {
         const postgresTermsOfUseInfoQuery = `select "id", "legacyId" from ${config.DB_SCHEMA_NAME}."TermsOfUse" tu 
           where tu."legacyId" = ${termsOfUseId}`
-        const [infoResult, metadataResult] = await sequelize.query(postgresTermsOfUseInfoQuery)
+        const [infoResult] = await sequelize.query(postgresTermsOfUseInfoQuery)
 
         // logger.debug(`Checking ${JSON.stringify(infoResult)}`)
 
@@ -46,7 +46,7 @@ async function migrateUserTerms (startDate) {
 
         // logger.debug(`postgres ${JSON.stringify(postgresTermsOfUseQuery)}`)
         // const newUserTerms = await UserTermsOfUseXref.findAll(postgresTermsOfUseQuery)
-        const [results, metadata] = await sequelize.query(postgresTermsOfUseQuery)
+        const [results] = await sequelize.query(postgresTermsOfUseQuery)
         // logger.debug(`Old IDs: ${JSON.stringify(oldIds)}`)
         let idsToAdd = []
         if (results.length > 0) {

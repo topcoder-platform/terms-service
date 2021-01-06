@@ -7,7 +7,6 @@ const config = require('config')
 const Joi = require('joi')
 const uuid = require('uuid/v4')
 const helper = require('../common/helper')
-const logger = require('../common/logger')
 const errors = require('../common/errors')
 const models = require('../models')
 const termsOfUseService = require('./TermsOfUseService')
@@ -17,13 +16,21 @@ const TermsOfUse = models.TermsOfUse
 
 /**
  * Perform validation on terms ids
+ * @params {Object} user the user performing this action
  * @params {Array} ids an array of terms id
  */
-async function validatetemrsOfUseIds (ids) {
+async function validatetemrsOfUseIds (user, ids) {
+  const unpublishedTermsVisible = helper.areUnpublishedTermsVisible(user)
   const terms = await TermsOfUse.findAll({
     where: { id: { [models.Sequelize.Op.in]: ids }, deletedAt: null },
     raw: true
   })
+  if (!unpublishedTermsVisible) {
+    const unpublishedTerms = _.filter(terms, term => term.isPublished === false)
+    if (unpublishedTerms.length > 0) {
+      throw new errors.ForbiddenError(`You do not have permission for the following terms: ${helper.toString(unpublishedTerms)}`)
+    }
+  }
   const invalidIds = _.filter(ids, id => _.isUndefined(_.find(terms, { id })))
   if (invalidIds.length > 0) {
     throw new errors.BadRequestError(`The following terms doesn't exist: ${helper.toString(invalidIds)}`)
@@ -53,7 +60,7 @@ const identityFields = ['reference', 'referenceId', 'tag']
  * @returns {Object} the created terms for resource
  */
 async function createTermsForResource (currentUser, termsForResource) {
-  await validatetemrsOfUseIds(termsForResource.termsOfUseIds)
+  await validatetemrsOfUseIds(currentUser, termsForResource.termsOfUseIds)
   await checkDuplicate(_.pick(termsForResource, identityFields))
 
   termsForResource.id = uuid()
@@ -85,7 +92,7 @@ createTermsForResource.schema = {
  */
 async function updateTermsForResource (currentUser, termsForResourceId, data) {
   if (data.termsOfUseIds) {
-    await validatetemrsOfUseIds(data.termsOfUseIds)
+    await validatetemrsOfUseIds(currentUser, data.termsOfUseIds)
   }
 
   const termsForResource = await helper.ensureExists(TermsForResource, { id: termsForResourceId }, false)
