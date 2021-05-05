@@ -1,0 +1,26 @@
+[
+  {
+    "reference": "challenge-m2m",
+    "referenceId": "123456",
+    "tag": "copilote",
+    "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]",
+    "httpCode": 200,
+    "idLabel": "TERMS_FOR_REFERENCE_ID_4"
+  },
+  {
+    "reference": "challenge-m2m",
+    "referenceId": "1234567",
+    "tag": "copilote",
+    "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\", \"{{TERMS_OF_USE_ID_2}}\"]",
+    "httpCode": 200,
+    "idLabel": "TERMS_FOR_REFERENCE_ID_5"
+  },
+  {
+    "reference": "challenge-m2m",
+    "referenceId": "12345678",
+    "tag": "copilote",
+    "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\", \"{{TERMS_OF_USE_ID_3}}\"]",
+    "httpCode": 200,
+    "idLabel": "TERMS_FOR_REFERENCE_ID_6"
+  }
+]
