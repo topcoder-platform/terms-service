@@ -10,14 +10,11 @@
     "init-db": "node src/init-db.js",
     "test-data": "node src/test-data.js",
     "test": "nyc --reporter=html --reporter=text mocha test/unit/test.js --timeout 30000 --exit",
-    "test:init": "npm run init-db && npm run test-data",
-    "test:newman": "NODE_ENV=test node test/postman/newman.js"
+    "e2e": "nyc --reporter=html --reporter=text mocha test/e2e/test.js --timeout 30000 --exit"
   },
   "author": "TCSCODER",
   "license": "none",
   "devDependencies": {
-    "axios": "^0.21.1",
-    "newman": "^5.2.2",
     "mocha": "^5.2.0",
     "nyc": "^14.0.0",
     "should": "^13.2.3",
@@ -55,14 +52,19 @@
   "standard": {
     "env": [
       "mocha"
+    ],
+    "ignore": [
+      "/docusign_callback"
     ]
   },
   "nyc": {
     "exclude": [
       "src/init-db.js",
       "src/test-data.js",
+      "docusign_callback/*.js",
       "test/common/*.js",
-      "test/unit/*.js"
+      "test/unit/*.js",
+      "test/e2e/*.js"
     ]
   }
 }

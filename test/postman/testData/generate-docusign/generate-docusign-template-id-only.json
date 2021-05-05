@@ -1,7 +1,0 @@
-[
-  {
-    "jwtToken": "Bearer {{admin_token}}",
-    "templateId": "{{docusign_template_id}}",
-    "httpCode": 200
-  }
-]

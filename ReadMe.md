@@ -32,14 +32,7 @@ The following parameters can be set in config files or in env variables:
 - EMAIL: Contain configuration relate to a simple SMTP server(Host, Port, UserName, Password and etc, refer `config/default.js` for more information)
 
 Configuration for testing is at `config/test.js`, only add such new configurations different from `config/default.js`
-- WAIT_TIME: wait time used in test, default is 5000 or 5 seconds
-- AUTH_V2_URL: The auth v2 url
-- AUTH_V2_CLIENT_ID: The auth v2 client id
-- AUTH_V3_URL: The auth v3 url
-- ADMIN_CREDENTIALS_USERNAME: The user's username with admin role
-- ADMIN_CREDENTIALS_PASSWORD: The user's password with admin role
-- USER_CREDENTIALS_USERNAME: The user's username with user role
-- USER_CREDENTIALS_PASSWORD: The user's password with user role
+- WAIT_TIME: wait time used in test, default is 1500 or 1.5 second
 
 ## Local environment
 
@@ -49,6 +42,18 @@ Copy the `env.sh.sample` to `env.sh`, set the configuration variables and run `s
 Go to https://www.postgresql.org/ download and install the Postgres.
 Modify `POSTGRES_URL` under `config/default.js` to meet your environment.
 Run `npm run init-db` to create table
+
+## Docusign Callback Listener
+Docusign Connect Listener is a standalone service under docusign_callback folder.
+The standalone pure node.js listener that listens to incoming Docusign Connect xml messages
+It read the xml message, parses the appropriate content, and makes an equivalent POST in JSON to the v5 docusign callback endpoint
+Command:
+- `npm install` Install dependencies
+- `npm run lint` Run lint
+- `npm run lint:fix` Run lint fix
+For testing the listener, you need to start the app(refer next section `Local Deployment`) and listener(Run `npm start` in docusign_callback folder)
+Once App is running at `http://localhost:3000` and Listener is running at `http://localhost:8081`,
+run `npm run test` under docusign_callback folder
 
 ## Local Deployment
 
@@ -64,20 +69,7 @@ Run `npm run init-db` to create table
 ## Testing
 #### You need to `stop` the app and run command `source env.sh` before running unit or e2e tests.
 - Run `npm run test` to execute unit tests and generate coverage report.
-
-### Running E2E tests with Postman
-
-#### `Start` the app server before running postman tests. You may need to set the env variables by calling `source env.sh` before calling `NODE_ENV=test npm start`.
-
-- Make sure the db is started
-
-To run postman e2e tests.
-
-```bash
-source env.sh
-npm run test:init
-npm run test:newman
-```
+- RUN `npm run e2e` to execute e2e tests and generate coverage report.
 
 ## Verification
 Refer to the verification document `Verification.md`
