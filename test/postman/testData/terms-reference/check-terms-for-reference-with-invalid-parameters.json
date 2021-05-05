@@ -1,0 +1,50 @@
+[
+  {
+    "user_id": "151743",
+    "input": "referenceId=12345&tags=submitter&tags=copilot",
+    "httpCode": 400,
+    "message": "\"reference\" is required"
+  },
+  {
+    "user_id": "151743",
+    "input": "reference=&referenceId=12345&tags=submitter&tags=copilot",
+    "httpCode": 400,
+    "message": "\"reference\" is not allowed to be empty"
+  },
+  {
+    "user_id": "151743",
+    "input": "reference=challenge&tags=submitter&tags=copilot",
+    "httpCode": 400,
+    "message": "\"referenceId\" is required"
+  },
+  {
+    "user_id": "151743",
+    "input": "reference=challenge&referenceId=&tags=submitter&tags=copilot",
+    "httpCode": 400,
+    "message": "\"referenceId\" is not allowed to be empty"
+  },
+  {
+    "user_id": "151743",
+    "input": "reference=challenge&referenceId=12345&tags=",
+    "httpCode": 400,
+    "message": "\"tags\" is not allowed to be empty, \"tags\" must be an array"
+  },
+  {
+    "user_id": "151743",
+    "input": "reference=challenge&referenceId=12345&tags=submitter&tags=copilot&abc=1",
+    "httpCode": 400,
+    "message": "\"abc\" is not allowed"
+  },
+  {
+    "user_id": "151743",
+    "input": "reference=not_exist&referenceId=12345&tags=submitter&tags=copilot",
+    "httpCode": 400,
+    "message": "No terms for resouce exist with Reference(not_exist) and ReferenceId(12345) for the following tags: [ 'submitter', 'copilot' ]"
+  },
+  {
+    "user_id": "aaa",
+    "input": "referenceId=12345&tags=submitter&tags=copilot",
+    "httpCode": 400,
+    "message": "\"userId\" must be a number"
+  }
+]

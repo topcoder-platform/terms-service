@@ -1,0 +1,102 @@
+[
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "title": "term of use with only required fields fully updated",
+      "typeId": "{{TYPE_ID_3}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_2}}"
+    },
+    "expected": {
+      "title": "term of use with only required fields fully updated",
+      "typeId": "{{TYPE_ID_3}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_2}}"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "title": "term of use with only required fields and legacyId fully updated",
+      "legacyId": 7997878,
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}"
+    },
+    "expected": {
+      "title": "term of use with only required fields and legacyId fully updated",
+      "legacyId": 7997878,
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "title": "term of use with only required fields and text fully updated",
+      "text": "test text",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}"
+    },
+    "expected": {
+      "title": "term of use with only required fields and text fully updated",
+      "text": "test text",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "title": "term of use with only required fields and url fully updated",
+      "url": "http://urlonly.com",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}"
+    },
+    "expected": {
+      "title": "term of use with only required fields and url fully updated",
+      "url": "http://urlonly.com",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "title": "term of use with only required fields and docusignTemplateId fully updated",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}",
+      "docusignTemplateId": "template id test"
+    },
+    "expected": {
+      "title": "term of use with only required fields and docusignTemplateId fully updated",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}",
+      "docusignTemplateId": "template id test"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": {
+      "title": "term of use with all fields fully updated",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}",
+      "docusignTemplateId": "template id test",
+      "legacyId": 7997878,
+      "text": "full fields text",
+      "url": "http://fullfieldsurl.com"
+    },
+    "expected": {
+      "title": "term of use with all fields fully updated",
+      "typeId": "{{TYPE_ID_1}}",
+      "agreeabilityTypeId": "{{AGREEABILITY_TYPE_ID_1}}",
+      "docusignTemplateId": "template id test",
+      "legacyId": 7997878,
+      "text": "full fields text",
+      "url": "http://fullfieldsurl.com"
+    },
+    "httpCode": 200
+  }
+]
