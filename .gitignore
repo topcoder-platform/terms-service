@@ -8,3 +8,4 @@ data_migration/.env
 .idea
 .DS_Store
 data_migration/log
+newman/

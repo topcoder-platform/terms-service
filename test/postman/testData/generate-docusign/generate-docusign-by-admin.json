@@ -1,0 +1,17 @@
+[
+  {
+    "templateId": "{{docusign_template_id}}",
+    "tabs": "[\"testKey||testValue\"]",
+    "httpCode": 200
+  },
+  {
+    "templateId": "{{docusign_template_id}}",
+    "tabs": "[\"tag||challenge\"]",
+    "httpCode": 200
+  },
+  {
+    "templateId": "{{docusign_template_id}}",
+    "tabs": "[]",
+    "httpCode": 200
+  }
+]

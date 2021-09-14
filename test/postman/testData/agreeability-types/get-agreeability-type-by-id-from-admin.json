@@ -1,0 +1,20 @@
+[
+  {
+    "agreeability_type_id": "2c78f834-61f4-11ea-bd4f-3c15c2e2c206",
+    "legacyId": 3,
+    "name": "Electronically-agreeable",
+    "description": "Electronically-agreeable"
+  },
+  {
+    "agreeability_type_id": "301a36ec-61f4-11ea-bc96-3c15c2e2c206",
+    "legacyId": 4,
+    "name": "Docusign-template",
+    "description": "Docusign-template"
+  },
+  {
+    "agreeability_type_id": "999a26ad-b334-453c-8425-165d4cf496d7",
+    "legacyId": 5,
+    "name": "Docusign-template",
+    "description": "Docusign-template"
+  }
+]

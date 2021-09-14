@@ -67,6 +67,14 @@ module.exports = {
       method: 'searchTermsOfUses'
     }
   },
+  '/terms/internal/jobs/clean':{
+    post: {
+      controller: 'CleanUpController',
+      method: 'cleanUpTestData',
+      auth: 'jwt',
+      scopes: [constants.Scopes.Terms.Write]
+    }
+  },
   '/terms/:termsOfUseId': {
     get: {
       controller: 'TermsOfUseController',

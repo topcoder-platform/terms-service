@@ -10,21 +10,26 @@
     "init-db": "node src/init-db.js",
     "test-data": "node src/test-data.js",
     "test": "nyc --reporter=html --reporter=text mocha test/unit/test.js --timeout 30000 --exit",
-    "e2e": "nyc --reporter=html --reporter=text mocha test/e2e/test.js --timeout 30000 --exit"
+    "test:init": "npm run init-db && npm run test-data",
+    "test:newman": "NODE_ENV=test node test/postman/newman.js",
+    "test:newman:clear": "NODE_ENV=test node test/postman/clearTestData.js"
   },
   "author": "TCSCODER",
   "license": "none",
   "devDependencies": {
+    "axios": "^0.21.1",
     "mocha": "^5.2.0",
     "nyc": "^14.0.0",
     "should": "^13.2.3",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "tc-api-testing-lib": "github:topcoder-platform/api-automated-testing"
   },
   "dependencies": {
     "bluebird": "^3.5.4",
     "body-parser": "^1.18.3",
     "config": "^1.31.0",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-interceptor": "^1.2.0",
@@ -52,19 +57,14 @@
   "standard": {
     "env": [
       "mocha"
-    ],
-    "ignore": [
-      "/docusign_callback"
     ]
   },
   "nyc": {
     "exclude": [
       "src/init-db.js",
       "src/test-data.js",
-      "docusign_callback/*.js",
       "test/common/*.js",
-      "test/unit/*.js",
-      "test/e2e/*.js"
+      "test/unit/*.js"
     ]
   }
 }

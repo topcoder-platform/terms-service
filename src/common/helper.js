@@ -62,6 +62,22 @@ async function getM2Mtoken () {
 }
 
 /**
+ * Uses m2m to proxy post request
+ * @param {String} url the url
+ * @param {Object} data the query parameters, optional
+ * @returns {Object} the response
+ */
+ async function post (url, token, data) {
+   
+  return request
+    .post(url)
+    .set('Authorization', `Bearer ${token}`)
+    .set('Content-Type', 'application/json')
+    .set('Accept', 'application/json')
+    .send(data)
+}
+
+/**
  * Uses superagent to proxy post request
  * @param {String} url the url
  * @param {Object} body the body
@@ -260,5 +276,6 @@ module.exports = {
   getPageLink,
   setResHeaders,
   checkIfExists,
-  postEvent
+  postEvent,
+  post
 }
