@@ -1,6 +1,6 @@
 
 # Use the base image with Node.js 12.0.0
-FROM node:12.0.0
+FROM node:12.22.11
 
 # Copy the current directory into the Docker image
 RUN apt-get install -y curl
