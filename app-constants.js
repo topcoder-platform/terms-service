@@ -5,7 +5,8 @@
 const config = require('config')
 
 const UserRoles = {
-  Admin: 'Administrator'
+  Admin: 'Administrator',
+  TopGearAdmin: 'tgadmin'
 }
 
 const Scopes = {

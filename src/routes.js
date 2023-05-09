@@ -154,7 +154,10 @@ module.exports = {
       controller: 'TermsOfUseController',
       method: 'getTermsOfUseUsers',
       auth: 'jwt',
-      access: [constants.UserRoles.Admin],
+      access: [
+        constants.UserRoles.Admin,
+        constants.UserRoles.TopGearAdmin
+      ],
       scopes: [constants.Scopes.Terms.Read]
     },
     post: {
