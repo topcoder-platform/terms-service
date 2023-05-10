@@ -9,5 +9,7 @@ COPY . /terms-service
 WORKDIR /terms-service
 
 # Install the dependencies from package.json
+RUN npm config set unsafe-perm true
+RUN git config --global url."https://git@".insteadOf git://
 RUN npm install
 CMD npm start
