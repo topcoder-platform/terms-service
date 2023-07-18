@@ -90,6 +90,7 @@ async function generateDocusignViewURL (currentUser, data) {
         if (_.get(err, 'response.body.errorCode') === TEMPLATE_ID_INVALID) {
           throw new errors.NotFoundError('Template with given id was not found.')
         }
+        console.log(err)
         throw new errors.InternalServerError('Requesting Signature via template failed.')
       }
 
@@ -153,4 +154,4 @@ module.exports = {
   generateDocusignViewURL
 }
 
-// logger.buildService(module.exports)
+logger.buildService(module.exports)

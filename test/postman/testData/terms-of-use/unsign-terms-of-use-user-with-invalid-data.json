@@ -1,0 +1,26 @@
+[
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "userId": 22345,
+    "httpCode": 400,
+    "message": "You have NOT agreed to this terms of use before."
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "userId": "aaa",
+    "httpCode": 400,
+    "message": "\"userId\" must be a number"
+  },
+  {
+    "terms_id": "0181d416-6131-11ea-b3fb-3c15c2e2c296",
+    "userId": 123,
+    "httpCode": 404,
+    "message": "Terms of use with id: 0181d416-6131-11ea-b3fb-3c15c2e2c296 doesn't exists."
+  },
+  {
+    "terms_id": "0181d416-6131-1",
+    "userId": 123,
+    "httpCode": 400,
+    "message": "\"termsOfUseId\" must be a valid GUID"
+  }
+]

@@ -1,7 +1,7 @@
 /**
  * The configuration file.
  */
-
+require('dotenv').config()
 module.exports = {
   LOG_LEVEL: process.env.LOG_LEVEL || 'debug',
   PORT: process.env.PORT || 3000,

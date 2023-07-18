@@ -1,0 +1,8 @@
+[
+  {
+    "input": "page=1&perPage=10"
+  },
+  {
+    "input": "page=2&perPage=1"
+  }
+]

@@ -1,0 +1,55 @@
+[
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_2}}",
+    "input": {
+      "reference": "updated m2m reference"
+    },
+    "expected": {
+      "reference": "updated m2m reference"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_2}}",
+    "input": {
+      "referenceId": "updated m2m referenceId"
+    },
+    "expected": {
+      "referenceId": "updated m2m referenceId"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_2}}",
+    "input": {
+      "tag": "updated m2m tag"
+    },
+    "expected": {
+      "tag": "updated m2m tag"
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_2}}",
+    "input": {
+      "termsOfUseIds": ["{{TERMS_OF_USE_ID_1}}", "{{TERMS_OF_USE_ID_3}}"]
+    },
+    "expected": {
+      "termsOfUseIds": ["{{TERMS_OF_USE_ID_1}}", "{{TERMS_OF_USE_ID_3}}"]
+    },
+    "httpCode": 200
+  },
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_2}}",
+    "input": {
+      "reference": "updated all reference",
+      "tag": "updated all tag",
+      "referenceId": "updated all referenceId",
+      "termsOfUseIds": ["{{TERMS_OF_USE_ID_1}}"]
+    },
+    "expected": {
+      "termsOfUseIds": ["{{TERMS_OF_USE_ID_1}}"]
+    },
+    "httpCode": 200
+  }
+]
