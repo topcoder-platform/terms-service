@@ -1,7 +1,6 @@
 const _ = require('lodash')
 
 const models = require('../models')
-const logger = require('./logger')
 
 function resolveTermsOfUseId (column) {
   return async (element) => {

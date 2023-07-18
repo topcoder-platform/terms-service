@@ -1410,6 +1410,43 @@
 							"response": []
 						},
 						{
+							"name": "search terms of use - with key=nda param",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{USER1_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms?key=nda&page=2&perPage=5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "nda"
+										},
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "perPage",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "search terms of use with m2m token",
 							"request": {
 								"method": "GET",

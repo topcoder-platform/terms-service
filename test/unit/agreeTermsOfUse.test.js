@@ -86,4 +86,36 @@ module.exports = describe('agree terms of use', () => {
       assertValidationError(err, `"termsOfUseId" must be a string`)
     }
   })
+
+  it(`agree unpublished terms of use by admin success`, async () => {
+    let records = await UserTermsOfUseXref.findAll({ where: { userId: user.user1.userId,
+      termsOfUseId: termsOfUseIdsMapping['not-published'] } })
+    should.equal(records.length, 0)
+    const result = await service.agreeTermsOfUse(user.user1, termsOfUseIdsMapping['not-published'])
+    should.equal(result.success, true)
+    records = await UserTermsOfUseXref.findAll({ where: { userId: user.user1.userId,
+      termsOfUseId: termsOfUseIdsMapping['not-published'] } })
+    should.equal(records.length, 1)
+    assertInfoMessage(`Publish event to Kafka topic ${config.USER_AGREED_TERMS_TOPIC}`)
+  })
+
+  it('failure - agree unpublished terms of use by non-admin', async () => {
+    try {
+      await service.agreeTermsOfUse(user.user2, termsOfUseIdsMapping['not-published'])
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to agree with this terms of use.`)
+    }
+  })
+
+  it('failure - agree unpublished terms of use by machine', async () => {
+    try {
+      await service.agreeTermsOfUse(user.m2mRead, termsOfUseIdsMapping['not-published'])
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to agree with this terms of use.`)
+    }
+  })
 })

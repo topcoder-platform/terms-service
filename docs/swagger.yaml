@@ -96,6 +96,12 @@ paths:
           schema:
             type: string
           description: The search string
+        - in: query
+            name: key
+            required: false
+            schema:
+              type: string
+            description: Term key
 
       responses:
         '200':
@@ -1411,6 +1417,14 @@ components:
         updatedBy:
           type: string
           example: 'topcoder user'
+        key:
+          type: string
+          example: 'nda'
+        isPublished:
+          type: boolean
+        version:
+          type: string
+          example: '1.1.0'
     TermsOfUsePatchRequestBody:
       properties:
         text:
@@ -1425,6 +1439,10 @@ components:
           type: string
         docusignTemplateId:
           type: string
+        version:
+          type: string
+        isPublished:
+          type: boolean
     TermsOfUseRequestBody:
       required:
         - typeId
@@ -1445,6 +1463,11 @@ components:
           type: string
         docusignTemplateId:
           type: string
+        key:
+          type: string
+          example: 'nda'
+        isPublished:
+          type: boolean
     TermsForResource:
       required:
         - id

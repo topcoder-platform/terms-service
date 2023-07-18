@@ -75,7 +75,7 @@ async function deleteTermsOfUse (req, res) {
  * @param res the response
  */
 async function searchTermsOfUses (req, res) {
-  const result = await service.searchTermsOfUses(req.query)
+  const result = await service.searchTermsOfUses(req.authUser, req.query)
   helper.setResHeaders(req, res, result)
   res.send({ result: result.result })
 }

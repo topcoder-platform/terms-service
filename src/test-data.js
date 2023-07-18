@@ -33,7 +33,9 @@ const termsOfUseIdsMapping = {
   20754: 'db39ac76-612f-11ea-9c41-3c15c2e2c206',
   40000: 'a93ffa9e-6130-11ea-96a6-3c15c2e2c206',
   'not-exist-1': '2b392e3c-6134-11ea-85f1-3c15c2e2c206',
-  'not-exist-2': '316929f6-6134-11ea-9183-3c15c2e2c206'
+  'not-exist-2': '316929f6-6134-11ea-9183-3c15c2e2c206',
+  'not-published': '00000000-0000-0000-0000-000000000000',
+  'nda0': '00000000-0000-0000-0000-000000000001'
 }
 
 const agreeabilityTypeIdsMapping = {
@@ -84,7 +86,8 @@ const insertData = async () => {
     title: 'Standard Terms for Topcoder Competitions v2.2',
     url: '',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUse.create({
     id: termsOfUseIdsMapping[21303],
@@ -94,7 +97,8 @@ const insertData = async () => {
     title: 'Standard Terms for Topcoder Competitions v2.2',
     url: '',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUse.create({
     id: termsOfUseIdsMapping[21304],
@@ -104,7 +108,8 @@ const insertData = async () => {
     title: 'Standard Terms for Topcoder Competitions v2.2',
     url: '',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[4],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUse.create({
     id: termsOfUseIdsMapping[21305],
@@ -114,7 +119,8 @@ const insertData = async () => {
     title: 'Standard Terms for Topcoder Competitions v2.2',
     url: '',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[4],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUseDocusignTemplateXref.create({
     termsOfUseId: termsOfUseIdsMapping[21304],
@@ -132,7 +138,8 @@ const insertData = async () => {
     title: 'Standard Terms for Topcoder Competitions v2.2',
     url: '',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUse.create({
     id: termsOfUseIdsMapping[21307],
@@ -142,7 +149,8 @@ const insertData = async () => {
     title: 'Standard Terms for Topcoder Competitions v2.2',
     url: '',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUseDependency.create({
     dependentTermsOfUseId: termsOfUseIdsMapping[21303],
@@ -217,7 +225,8 @@ const insertData = async () => {
     title: 'test-title',
     url: 'test-url',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUse.create({
     id: termsOfUseIdsMapping[30001],
@@ -227,7 +236,8 @@ const insertData = async () => {
     title: 'test-title',
     url: 'test-url',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[4],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUseDocusignTemplateXref.create({
     termsOfUseId: termsOfUseIdsMapping[30001],
@@ -241,7 +251,8 @@ const insertData = async () => {
     title: 'test-title',
     url: 'test-url',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUse.create({
     id: termsOfUseIdsMapping[40000],
@@ -251,7 +262,8 @@ const insertData = async () => {
     title: 'test-title',
     url: 'test-url',
     agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
-    created: new Date()
+    created: new Date(),
+    isPublished: true
   })
   await TermsOfUseDocusignTemplateXref.create({
     termsOfUseId: termsOfUseIdsMapping[30002],
@@ -283,6 +295,30 @@ const insertData = async () => {
     termsOfUseIds: [termsOfUseIdsMapping[21307]],
     created: new Date(),
     createdBy: 'admin'
+  })
+  await TermsOfUse.create({
+    id: termsOfUseIdsMapping['not-published'],
+    text: 'test-for-unpublished-term',
+    typeId: 10,
+    title: 'Unpublished term',
+    url: 'test-url',
+    agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
+    created: new Date(),
+    key: 'nda',
+    isPublished: false,
+    version: '1.1.0'
+  })
+  await TermsOfUse.create({
+    id: termsOfUseIdsMapping['nda0'],
+    text: 'test-for-key-search',
+    typeId: 10,
+    title: 'term with key',
+    url: 'test-url',
+    agreeabilityTypeId: agreeabilityTypeIdsMapping[3],
+    created: new Date(),
+    key: 'nda',
+    isPublished: true,
+    version: '1.0.0'
   })
 }
 

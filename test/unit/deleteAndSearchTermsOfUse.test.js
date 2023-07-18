@@ -8,7 +8,7 @@ const service = require('../../src/services/TermsOfUseService')
 const models = require('../../src/models')
 const termsOfUseIdsMapping = require('../../src/test-data').termsOfUseIdsMapping
 
-const { request } = require('../common/testData')
+const { user, request } = require('../common/testData')
 const { assertError, clearLogs } = require('../common/testHelper')
 
 const TermsOfUse = models.TermsOfUse
@@ -19,10 +19,9 @@ module.exports = describe('delete and search terms of use', () => {
   })
 
   it('search terms of use success', async () => {
-    const ret = await service.searchTermsOfUses({ page: 1, perPage: 5 })
-    should.equal(ret.total, 13)
+    const ret = await service.searchTermsOfUses(user.user1, { page: 1, perPage: 5 })
+    should.equal(ret.total, 11)
     should.equal(ret.perPage, 5)
-    console.debug(request.searchTermsOfUse.response.result)
     should.equal(_.isEqual(ret.result, request.searchTermsOfUse.response.result), true)
   })
 

@@ -13,6 +13,7 @@ var EventEmitter = require('events').EventEmitter
 var java = require('java')
 var sys = require('util')
 var _ = require('underscore')
+const path = require('path')
 
 var connectionPool = {}
 
@@ -23,11 +24,11 @@ var defaultLog = function (msg) {
 
 // Class path configuration - Informix driver, JDBC Connection pool and
 // custom InformixWrapper class.
-java.classpath = java.classpath.concat([__dirname + '/../build/lib/ifxjdbc.jar',
-  __dirname + '/../build/lib/commons-logging-1.1.3.jar',
-  __dirname + '/../build/lib/DBPool-5.1.jar',
-  __dirname + '/../build/lib/gson-2.2.4.jar',
-  __dirname + '/../build/lib/informix-wrapper.jar'])
+java.classpath = java.classpath.concat([path.join(__dirname, '/../build/lib/ifxjdbc.jar'),
+  path.join(__dirname, '/../build/lib/commons-logging-1.1.3.jar'),
+  path.join(__dirname, '/../build/lib/DBPool-5.1.jar'),
+  path.join(__dirname, '/../build/lib/gson-2.2.4.jar'),
+  path.join(__dirname, '/../build/lib/informix-wrapper.jar')])
 
 // Leave signal handling to actionHero. JVM will ignore system singals.
 // See http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/java.html
@@ -36,6 +37,9 @@ java.options.push('-Xrs')
 
 // Register informix driver
 java.newInstance('com.informix.jdbc.IfxDriver', function (err, driver) {
+  if (err) {
+    console.trace(err)
+  }
   java.callStaticMethodSync('java.sql.DriverManager', 'registerDriver', driver)
 })
 
@@ -97,7 +101,8 @@ JDBCConn.prototype.connect = function (callback) {
   var self = this
   // console.log('Connecting ' + self._config.database);
   if (!connectionPool[self._config.database]) {
-    if (callback) callback('Connection pool not initialized')
+    const err = 'Connection pool not initialized'
+    if (callback) callback(err)
     return
   }
   connectionPool[self._config.database].getConnection(self._config.timeout, function (err, conn) {
@@ -174,15 +179,15 @@ JDBCConn.prototype.execute = function (params) {
         self._sql.toLowerCase().indexOf('delete') === 0 ||
         self._sql.toLowerCase().indexOf('create') === 0) {
     if (params !== null && undefined !== params) {
-      self.executePreparedUpdate(self._sql, self._callback, params)
+      self.executePreparedUpdate(self._sql, callback, params)
     } else {
-      self.executeUpdate(self._sql, self._callback)
+      self.executeUpdate(self._sql, callback)
     }
   } else {
     if (params !== null && undefined !== params) {
-      self.executePreparedQuery(self._sql, self._callback, params)
+      self.executePreparedQuery(self._sql, callback, params)
     } else {
-      self.executeQuery(self._sql, self._callback)
+      self.executeQuery(self._sql, callback)
     }
   }
 }

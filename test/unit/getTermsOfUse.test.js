@@ -36,7 +36,7 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use`, async () => {
-    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303])
+    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21303], {})
     should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -46,7 +46,7 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use using m2m token`, async () => {
-    const result = await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303])
+    const result = await service.getTermsOfUse(user.m2mWrite, termsOfUseIdsMapping[21303], {})
     should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -56,7 +56,7 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use is false with user`, async () => {
-    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping[21303])
+    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping[21303], {})
     should.equal(result.id, termsOfUseIdsMapping[21303])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -66,7 +66,7 @@ module.exports = describe('get terms of use', () => {
   })
 
   it(`get terms of use with docusignTemplateId`, async () => {
-    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21304])
+    const result = await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21304], {})
     should.equal(result.id, termsOfUseIdsMapping[21304])
     should.equal(result.title, 'Standard Terms for Topcoder Competitions v2.2')
     should.equal(result.url, '')
@@ -87,7 +87,7 @@ module.exports = describe('get terms of use', () => {
 
     if (record.agreeabilityTypeId === AGREE_FOR_DOCUSIGN_TEMPLATE) {
       try {
-        await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305])
+        await service.getTermsOfUse(undefined, termsOfUseIdsMapping[21305], {})
         throw new Error('should not throw error here')
       } catch (err) {
         should.equal(err.name, 'InternalServerError')
@@ -98,7 +98,7 @@ module.exports = describe('get terms of use', () => {
 
   it(`failure - invalid parameter termsOfUseId`, async () => {
     try {
-      await service.getTermsOfUse(undefined, 123)
+      await service.getTermsOfUse(undefined, 123, {})
       throw new Error('should not throw error here')
     } catch (err) {
       assertValidationError(err, `"termsOfUseId" must be a string`)
@@ -107,11 +107,39 @@ module.exports = describe('get terms of use', () => {
 
   it('failure - get terms of use not found', async () => {
     try {
-      await service.getTermsOfUse(undefined, termsOfUseIdsMapping['not-exist-1'])
+      await service.getTermsOfUse(undefined, termsOfUseIdsMapping['not-exist-1'], {})
       throw new Error('should not throw error here')
     } catch (err) {
       should.equal(err.name, 'NotFoundError')
       assertError(err, `Terms of use with id: ${termsOfUseIdsMapping['not-exist-1']} doesn't exists.`)
+    }
+  })
+
+  it(`get unpublished terms of use by admin`, async () => {
+    const result = await service.getTermsOfUse(user.user1, termsOfUseIdsMapping['not-published'], {})
+    should.equal(result.id, termsOfUseIdsMapping['not-published'])
+    should.equal(result.title, 'Unpublished term')
+    should.equal(result.url, 'test-url')
+    should.equal(result.text, 'test-for-unpublished-term')
+  })
+
+  it('failure - get unpublished terms of use by non-admin', async () => {
+    try {
+      await service.getTermsOfUse(user.user2, termsOfUseIdsMapping['not-published'], {})
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to see this terms of use.`)
+    }
+  })
+
+  it('failure - get unpublished terms of use by machine', async () => {
+    try {
+      await service.getTermsOfUse(user.m2mRead, termsOfUseIdsMapping['not-published'], {})
+      throw new Error('should not throw error here')
+    } catch (err) {
+      should.equal(err.name, 'ForbiddenError')
+      assertError(err, `Sorry, you are not allowed to see this terms of use.`)
     }
   })
 

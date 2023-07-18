@@ -9,7 +9,7 @@ module.exports = {
   AUTH_SECRET: process.env.AUTH_SECRET || 'mysecret',
   VALID_ISSUERS: process.env.VALID_ISSUERS || '["https://api.topcoder-dev.com", "https://api.topcoder.com", "https://topcoder-dev.auth0.com/"]',
 
-  POSTGRES_URL: process.env.POSTGRES_URL || 'postgres://postgres:@localhost:5432/postgres',
+  POSTGRES_URL: process.env.POSTGRES_URL || 'postgres://postgres:123456@localhost:5432/postgres',
   DB_SCHEMA_NAME: process.env.DB_SCHEMA_NAME || 'termsdb',
 
   AUTH0_URL: process.env.AUTH0_URL || 'https://topcoder-dev.auth0.com/oauth/token',

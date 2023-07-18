@@ -14,6 +14,7 @@ const m2m = m2mAuth(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_
 const busApi = require('tc-bus-api-wrapper')
 const busApiClient = busApi(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET', 'BUSAPI_URL', 'KAFKA_ERROR_TOPIC', 'AUTH0_PROXY_SERVER_URL']))
+const { UserRoles } = require('../../app-constants')
 
 const docuSignAuth = JSON.stringify({
   Username: config.DOCUSIGN.USERNAME,
@@ -248,6 +249,16 @@ async function postEvent (topic, payload) {
   await busApiClient.postEvent(message)
 }
 
+/**
+ * Check if unpublished terms are visible to a given user
+ * @params {Object} user the user
+ * @returns {Boolean} flag indicate whether unpublished terms are visible to this user
+ */
+function areUnpublishedTermsVisible (user) {
+  return !(_.get(user, 'isMachine', false) ||
+      !_.get(user, 'roles', []).includes(UserRoles.Admin))
+}
+
 module.exports = {
   wrapExpress,
   autoWrapExpress,
@@ -260,5 +271,6 @@ module.exports = {
   getPageLink,
   setResHeaders,
   checkIfExists,
-  postEvent
+  postEvent,
+  areUnpublishedTermsVisible
 }

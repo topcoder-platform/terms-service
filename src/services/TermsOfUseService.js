@@ -28,6 +28,7 @@ const TermsOfUseType = models.TermsOfUseType
  */
 async function getTermsOfUse (currentUser, termsOfUseId, query) {
   let userId = false
+  const unpublishedTermsVisible = helper.areUnpublishedTermsVisible(currentUser)
   if (_.get(currentUser, 'isMachine', false)) {
     userId = _.get(query, 'userId', false)
   } else if (_.get(currentUser, 'roles', []).includes(UserRoles.Admin)) {
@@ -48,7 +49,6 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
   ]
   if (userId) {
     // logger.debug(`Getting Terms for User ${userId}`)
-    
     include.push({
       model: UserTermsOfUseXref,
       as: 'UserTermsOfUseXrefs',
@@ -60,13 +60,16 @@ async function getTermsOfUse (currentUser, termsOfUseId, query) {
 
   // get terms of use
   const termsOfUse = await TermsOfUse.findOne({
-    attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId', 'typeId', 'legacyId'],
+    attributes: ['id', 'title', 'url', 'text', 'agreeabilityTypeId', 'typeId', 'legacyId', 'isPublished', 'version'],
     include,
     where: { id: termsOfUseId, deletedAt: null },
     raw: true
   })
   if (!termsOfUse) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
+  }
+  if (!unpublishedTermsVisible && !termsOfUse.isPublished) {
+    throw new errors.ForbiddenError('Sorry, you are not allowed to see this terms of use.')
   }
 
   if (currentUser && userId) {
@@ -118,6 +121,7 @@ getTermsOfUse.schema = {
  * @returns {Object} successful message if user agree terms of use successfully
  */
 async function agreeTermsOfUse (currentUser, termsOfUseId) {
+  const unpublishedTermsVisible = helper.areUnpublishedTermsVisible(currentUser)
   // get terms of use
   const result = await TermsOfUse.findOne({
     include: [{
@@ -129,6 +133,9 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
   })
   if (!result) {
     throw new errors.NotFoundError(`Terms of use with id: ${termsOfUseId} doesn't exists.`)
+  }
+  if (!unpublishedTermsVisible && !result.isPublished) {
+    throw new errors.ForbiddenError('Sorry, you are not allowed to agree with this terms of use.')
   }
   if (result['TermsOfUseAgreeabilityType.agreeabilityType'] !== ELECT_AGREEABLE) {
     throw new errors.BadRequestError('The term is not electronically agreeable.')
@@ -197,8 +204,8 @@ agreeTermsOfUse.schema = {
 /**
  * Delete agree terms of use
  * Used by admin to remove agreement
- * @param {Object} currentUser the user who perform this operation.
  * @param {String} termsOfUseId the terms of use id
+ * @param userId
  * @returns {Object} successful message if user agree terms of use successfully
  */
 async function deleteAgreeTermsOfUse (termsOfUseId, userId) {
@@ -315,7 +322,11 @@ createTermsOfUse.schema = {
 async function updateTermsOfUse (currentUser, termsOfUseId, data, isFull) {
   await validateTermsOfUse(data)
 
+  const unpublishedTermsVisible = helper.areUnpublishedTermsVisible(currentUser)
   const termsOfUse = await helper.ensureExists(TermsOfUse, { id: termsOfUseId, deletedAt: null }, false)
+  if (!unpublishedTermsVisible && !termsOfUse.isPublished) {
+    throw new errors.ForbiddenError('Sorry, you are not allowed to update this terms of use.')
+  }
   const docusignTemplateXref = await termsOfUse.getTermsOfUseDocusignTemplateXref()
 
   if (_.get(data, 'agreeabilityTypeId', termsOfUse.agreeabilityTypeId) === AGREE_FOR_DOCUSIGN_TEMPLATE &&
@@ -418,9 +429,13 @@ deleteTermsOfUse.schema = {
  * @params {Object} criteria the search criteria, only pagination and legacy Id currently
  * @returns {Object} the search result, contain total/page/perPage and result array
  */
-async function searchTermsOfUses (criteria) {
+async function searchTermsOfUses (currentUser, criteria) {
   const page = criteria.page > 0 ? criteria.page : 1
   const perPage = criteria.perPage > 0 ? criteria.perPage : 20
+  let limit = perPage
+  let offset = (page - 1) * perPage
+  let order = ['id', 'ASC']
+  const unpublishedTermsVisible = helper.areUnpublishedTermsVisible(currentUser)
 
   const where = {
     deletedAt: null
@@ -432,6 +447,24 @@ async function searchTermsOfUses (criteria) {
 
   if (criteria.title) {
     where.title = { [models.Sequelize.Op.iLike]: '%' + criteria.title + '%' }
+  }
+
+  if (criteria.key) {
+    where.key = criteria.key
+    // order on the version column
+    order = [
+      // This line basically does this: string_to_array(version, '.')::int[]
+      // This is ORDER BY array types. This is the same as ordering by each of the elements. And shorter arrays come
+      // before longer ones with identical leading part
+      models.Sequelize.literal(`string_to_array("TermsOfUse"."version", '.')::int[]`),
+      'desc'
+    ]
+    limit = 1
+    offset = 0
+  }
+
+  if (!unpublishedTermsVisible) {
+    where.isPublished = true
   }
 
   const include = [
@@ -466,12 +499,12 @@ async function searchTermsOfUses (criteria) {
   })
 
   const query = {
-    order: [['id', 'ASC']],
-    attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId', 'typeId'],
+    order: [order],
+    attributes: ['id', 'legacyId', 'title', 'url', 'agreeabilityTypeId', 'typeId', 'isPublished', 'version'],
     include,
     where,
-    limit: perPage,
-    offset: (page - 1) * perPage,
+    limit: limit,
+    offset: offset,
     raw: true
   }
 
@@ -497,7 +530,8 @@ searchTermsOfUses.schema = {
     perPage: Joi.perPage(),
     legacyId: Joi.numberId().optional(),
     userId: Joi.number(),
-    title: Joi.string()
+    title: Joi.string(),
+    key: Joi.string()
   }).required()
 }
 
