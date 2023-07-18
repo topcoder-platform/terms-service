@@ -1,0 +1,14 @@
+[
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_1}}",
+    "httpCode": 200
+  },
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_2}}",
+    "httpCode": 200
+  },
+  {
+    "terms_resource_id": "{{TERMS_FOR_REFERENCE_ID_3}}",
+    "httpCode": 200
+  }
+]

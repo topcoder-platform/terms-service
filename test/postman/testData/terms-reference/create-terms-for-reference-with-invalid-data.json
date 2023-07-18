@@ -1,0 +1,149 @@
+[
+  {
+    "input": {
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"reference\" is required"
+  },
+  {
+    "input": {
+      "reference": "",
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"reference\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "reference": 123,
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"reference\" must be a string"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"referenceId\" is required"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"referenceId\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": 123,
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"referenceId\" must be a string"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"tag\" is required"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"tag\" is not allowed to be empty"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": 123,
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "\"tag\" must be a string"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "copilote"
+    },
+    "httpCode": 400,
+    "message": "\"termsOfUseIds\" is required"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": 123
+    },
+    "httpCode": 400,
+    "message": "\"termsOfUseIds\" must be an array"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]",
+      "cc": 123
+    },
+    "httpCode": 400,
+    "message": "\"cc\" is not allowed"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": ["123"]
+    },
+    "httpCode": 400,
+    "message": "\"0\" must be a valid GUID"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": []
+    },
+    "httpCode": 400,
+    "message": "\"termsOfUseIds\" must contain at least 1 items"
+  },
+  {
+    "input": {
+      "reference": "challenge",
+      "referenceId": "123456",
+      "tag": "copilote",
+      "termsOfUseIds": "[\"{{TERMS_OF_USE_ID_1}}\"]"
+    },
+    "httpCode": 400,
+    "message": "Duplicate terms reference for tuple { reference: 'challenge', referenceId: '123456', tag: 'copilote' }"
+  }
+]

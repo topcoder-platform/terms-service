@@ -1,0 +1,4947 @@
+{
+	"info": {
+		"_postman_id": "e1ccaa4d-87c7-4516-982c-e4ed5ae57bba",
+		"name": "terms-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "terms of use",
+			"item": [
+				{
+					"name": "create terms of use",
+					"item": [
+						{
+							"name": "create terms of use by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"const idLabel = iterationData.get('idLabel')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.text).to.eq(iterationData.get('text'))",
+											"        pm.expect(response.title).to.eq(iterationData.get('title'))",
+											"        pm.expect(response.url).to.eq(iterationData.get('url'))",
+											"        pm.expect(response.legacyId).to.eq(iterationData.get('legacyId'))",
+											"        pm.environment.set(idLabel, response.id);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"{{text}}\",\n    \"title\": \"{{title}}\",\n    \"url\": \"{{url}}\",\n    \"legacyId\": {{legacyId}},\n    \"typeId\": {{typeId}},\n    \"agreeabilityTypeId\": \"{{agreeabilityTypeId}}\",\n    \"docusignTemplateId\": \"{{docusignTemplateId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms of use by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"const idLabel = iterationData.get('idLabel')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.text).to.eq(iterationData.get('text'))",
+											"        pm.expect(response.title).to.eq(iterationData.get('title'))",
+											"        pm.expect(response.url).to.eq(iterationData.get('url'))",
+											"        pm.expect(response.legacyId).to.eq(iterationData.get('legacyId'))",
+											"        pm.environment.set(idLabel, response.id);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{m2m_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"{{text}}\",\n    \"title\": \"{{title}}\",\n    \"url\": \"{{url}}\",\n    \"legacyId\": {{legacyId}},\n    \"typeId\": {{typeId}},\n    \"agreeabilityTypeId\": \"{{agreeabilityTypeId}}\",\n    \"docusignTemplateId\": \"{{docusignTemplateId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms of use with any optional fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.legacyId).to.eq(iterationData.get('expected').legacyId)",
+											"        pm.expect(response.text).to.eq(iterationData.get('expected').text)",
+											"        pm.expect(response.url).to.eq(iterationData.get('expected').url)",
+											"        const req = JSON.parse(pm.request.body.toJSON().raw)",
+											"        pm.expect(response.typeId).to.eq(parseInt(req.typeId))",
+											"        pm.expect(response.agreeabilityTypeId).to.eq(req.agreeabilityTypeId)",
+											"        pm.expect(response.title).to.eq(req.title)",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms of use with all kinds of invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms of use with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    if (response.message) {",
+											"        pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"    } else {",
+											"        pm.expect(response.result.success).to.eq(false)",
+											"        pm.expect(response.result.content.message).to.eq(iterationData.get('message'))",
+											"        pm.expect(response.result.status).to.eq(iterationData.get('httpCode'))",
+											"    }",
+											"    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"typeId\": 10,\n    \"title\": \"title\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_1}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "partially update terms of use",
+					"item": [
+						{
+							"name": "partially update terms of use with any field by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.get('expected').title) {",
+											"            pm.expect(response.title).to.eq(iterationData.get('expected').title)",
+											"        }",
+											"        if (iterationData.get('expected').url) {",
+											"            pm.expect(response.url).to.eq(iterationData.get('expected').url)",
+											"        }",
+											"        if (iterationData.get('expected').typeId) {",
+											"            const typeId = iterationData.get('expected').typeId",
+											"            if (typeId.startsWith('{')) {",
+											"                pm.expect(response.typeId).to.eq(parseInt(pm.environment.get(typeId.substr(2, typeId.length - 4))))",
+											"            } else {",
+											"                pm.expect(response.typeId).to.eq(typeId)",
+											"            }",
+											"        }",
+											"        if (iterationData.get('expected').agreeabilityTypeId) {",
+											"            const agreeabilityTypeId = iterationData.get('expected').agreeabilityTypeId",
+											"            if (agreeabilityTypeId.startsWith('{')) {",
+											"                pm.expect(response.agreeabilityTypeId).to.eq(pm.environment.get(agreeabilityTypeId.substr(2, agreeabilityTypeId.length - 4)))",
+											"            } else {",
+											"                pm.expect(response.agreeabilityTypeId).to.eq(agreeabilityTypeId)",
+											"            }",
+											"        }",
+											"        if (iterationData.get('expected').docusignTemplateId) {",
+											"            pm.expect(response.docusignTemplateId).to.eq(iterationData.get('expected').docusignTemplateId)",
+											"        }",
+											"        if (iterationData.get('expected').legacyId) {",
+											"            pm.expect(response.legacyId).to.eq(iterationData.get('expected').legacyId)",
+											"        }",
+											"        if (iterationData.get('expected').text) {",
+											"            pm.expect(response.text).to.eq(iterationData.get('expected').text)",
+											"        }",
+											"        ",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "partially update terms of use with any field by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.get('expected').title) {",
+											"            pm.expect(response.title).to.eq(iterationData.get('expected').title)",
+											"        }",
+											"        if (iterationData.get('expected').url) {",
+											"            pm.expect(response.url).to.eq(iterationData.get('expected').url)",
+											"        }",
+											"        if (iterationData.get('expected').typeId) {",
+											"            const typeId = iterationData.get('expected').typeId",
+											"            if (typeId.startsWith('{')) {",
+											"                pm.expect(response.typeId).to.eq(parseInt(pm.environment.get(typeId.substr(2, typeId.length - 4))))",
+											"            } else {",
+											"                pm.expect(response.typeId).to.eq(typeId)",
+											"            }",
+											"        }",
+											"        if (iterationData.get('expected').agreeabilityTypeId) {",
+											"            const agreeabilityTypeId = iterationData.get('expected').agreeabilityTypeId",
+											"            if (agreeabilityTypeId.startsWith('{')) {",
+											"                pm.expect(response.agreeabilityTypeId).to.eq(pm.environment.get(agreeabilityTypeId.substr(2, agreeabilityTypeId.length - 4)))",
+											"            } else {",
+											"                pm.expect(response.agreeabilityTypeId).to.eq(agreeabilityTypeId)",
+											"            }",
+											"        }",
+											"        if (iterationData.get('expected').docusignTemplateId) {",
+											"            pm.expect(response.docusignTemplateId).to.eq(iterationData.get('expected').docusignTemplateId)",
+											"        }",
+											"        if (iterationData.get('expected').legacyId) {",
+											"            pm.expect(response.legacyId).to.eq(iterationData.get('expected').legacyId)",
+											"        }",
+											"        if (iterationData.get('expected').text) {",
+											"            pm.expect(response.text).to.eq(iterationData.get('expected').text)",
+											"        }",
+											"        ",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "partially update terms of use with invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "partially update terms of use with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"title\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "fully update terms of use",
+					"item": [
+						{
+							"name": "fully update terms of use by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"const idLabel = iterationData.get('idLabel')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.text).to.eq(iterationData.get('text'))",
+											"        pm.expect(response.title).to.eq(iterationData.get('title'))",
+											"        pm.expect(response.url).to.eq(iterationData.get('url'))",
+											"        pm.expect(response.legacyId).to.eq(iterationData.get('legacyId'))",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"{{text}}\",\n    \"title\": \"{{title}}\",\n    \"url\": \"{{url}}\",\n    \"legacyId\": {{legacyId}},\n    \"typeId\": {{typeId}},\n    \"agreeabilityTypeId\": \"{{agreeabilityTypeId}}\",\n    \"docusignTemplateId\": \"{{docusignTemplateId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms of use by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"const idLabel = iterationData.get('idLabel')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.text).to.eq(iterationData.get('text'))",
+											"        pm.expect(response.title).to.eq(iterationData.get('title'))",
+											"        pm.expect(response.url).to.eq(iterationData.get('url'))",
+											"        pm.expect(response.legacyId).to.eq(iterationData.get('legacyId'))",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"text\": \"{{text}}\",\n    \"title\": \"{{title}}\",\n    \"url\": \"{{url}}\",\n    \"legacyId\": {{legacyId}},\n    \"typeId\": {{typeId}},\n    \"agreeabilityTypeId\": \"{{agreeabilityTypeId}}\",\n    \"docusignTemplateId\": \"{{docusignTemplateId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms of use with any optional fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.get('expected').title) {",
+											"            pm.expect(response.title).to.eq(iterationData.get('expected').title)",
+											"        }",
+											"        if (iterationData.get('expected').url) {",
+											"            pm.expect(response.url).to.eq(iterationData.get('expected').url)",
+											"        }",
+											"        if (iterationData.get('expected').typeId) {",
+											"            const typeId = iterationData.get('expected').typeId",
+											"            if (typeId.startsWith('{')) {",
+											"                pm.expect(response.typeId).to.eq(parseInt(pm.environment.get(typeId.substr(2, typeId.length - 4))))",
+											"            } else {",
+											"                pm.expect(response.typeId).to.eq(typeId)",
+											"            }",
+											"        }",
+											"        if (iterationData.get('expected').agreeabilityTypeId) {",
+											"            const agreeabilityTypeId = iterationData.get('expected').agreeabilityTypeId",
+											"            if (agreeabilityTypeId.startsWith('{')) {",
+											"                pm.expect(response.agreeabilityTypeId).to.eq(pm.environment.get(agreeabilityTypeId.substr(2, agreeabilityTypeId.length - 4)))",
+											"            } else {",
+											"                pm.expect(response.agreeabilityTypeId).to.eq(agreeabilityTypeId)",
+											"            }",
+											"        }",
+											"        if (iterationData.get('expected').docusignTemplateId) {",
+											"            pm.expect(response.docusignTemplateId).to.eq(iterationData.get('expected').docusignTemplateId)",
+											"        }",
+											"        if (iterationData.get('expected').legacyId) {",
+											"            pm.expect(response.legacyId).to.eq(iterationData.get('expected').legacyId)",
+											"        }",
+											"        if (iterationData.get('expected').text) {",
+											"            pm.expect(response.text).to.eq(iterationData.get('expected').text)",
+											"        }",
+											"        const req = JSON.parse(pm.request.body.toJSON().raw)",
+											"        if (req.docusignTemplateId) {",
+											"            pm.expect(response.docusignTemplateId).to.exist",
+											"        } else {",
+											"            pm.expect(response.docusignTemplateId).to.eq(undefined)",
+											"        }",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms of use with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"terms_id\": \"{{TERMS_OF_USE_ID_2}}\",\n    \"text\": \"terms text test 1\",\n    \"title\": \"terms title test 1\",\n    \"url\": \"http://some-1.url\",\n    \"legacyId\": 636662,\n    \"typeId\": \"{{TYPE_ID_1}}\",\n    \"agreeabilityTypeId\": \"{{AGREEABILITY_TYPE_ID_1}}\",\n    \"docusignTemplateId\": \"template id test 1\",\n    \"httpCode\": 200\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms of use with invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "search terms of use",
+					"item": [
+						{
+							"name": "search terms of use by default values",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/terms",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms of use with various parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms of use with invalid parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get terms of use",
+					"item": [
+						{
+							"name": "get term of use",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}?{{params}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									],
+									"query": [
+										{
+											"key": "{{params}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get term of use with all invalid request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}?{{params}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									],
+									"query": [
+										{
+											"key": "{{params}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "agree terms of use",
+					"item": [
+						{
+							"name": "agree terms of use by user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.success).to.eq(true)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_OF_USE_ID_2}}/agree",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_OF_USE_ID_2}}",
+										"agree"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "agree terms of use with all invalid request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/agree",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"agree"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "agree terms of use with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/agree",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"agree"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get terms of use users",
+					"item": [
+						{
+							"name": "get terms of use users by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gte(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms of use users by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gte(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms of use users with various parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gte(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms of use users with invalid parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms of use users with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"title\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "sign a user",
+					"item": [
+						{
+							"name": "sign a user by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.success).to.eq(true)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"userId\": \"{{userId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign a user by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.success).to.eq(true)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"userId\": \"{{userId}}\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign a user with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 77777\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "sign a user with all kinds of invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "unsign a user",
+					"item": [
+						{
+							"name": "unsign a user by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.success).to.eq(true)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users/{{userId}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "unsign a user by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.success).to.eq(true)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users/{{userId}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "unsign a user with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users/{{userId}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "unsign a user with all kinds of invalid request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}/users/{{userId}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}",
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "delete terms of use",
+					"item": [
+						{
+							"name": "delete terms of use by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 204`, function () {",
+											"    pm.response.to.have.status(204)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_OF_USE_ID_5}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_OF_USE_ID_5}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms of use by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 204`, function () {",
+											"    pm.response.to.have.status(204)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{TERMS_OF_USE_ID_6}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{TERMS_OF_USE_ID_6}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms of use with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms of use with all kinds of invalid request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/{{terms_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"{{terms_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "types",
+			"item": [
+				{
+					"name": "get terms types by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(`Status code is 200`, function () {",
+									"    pm.response.to.have.status(200);",
+									"    const response = pm.response.json()",
+									"    pm.expect(response.length).to.eq(11)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/types",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms types by m2m",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(`Status code is 200`, function () {",
+									"    pm.response.to.have.status(200);",
+									"    const response = pm.response.json()",
+									"    pm.expect(response.length).to.eq(11)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2m_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/types",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get terms types with all kinds of invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const iterationData = pm.iterationData",
+									"const httpCode = iterationData.get('httpCode')",
+									"pm.test(`Status code is ${httpCode}`, function () {",
+									"    pm.response.to.have.status(httpCode);",
+									"    const response = pm.response.json()",
+									"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/terms/types",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"types"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "agreeability types",
+			"item": [
+				{
+					"name": "list all agreeability types",
+					"item": [
+						{
+							"name": "get agreeability types by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.length).to.eq(3)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get agreeability types by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.length).to.eq(3)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get agreeability types with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get agreeability type by id",
+					"item": [
+						{
+							"name": "get agreeability type by id from admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    // the id should be in the response body",
+											"    pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"    pm.expect(response.legacyId).to.eq(iterationData.get('legacyId'))",
+											"    pm.expect(response.name).to.eq(iterationData.get('name'))",
+											"    pm.expect(response.description).to.eq(iterationData.get('description'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types/{{agreeability_type_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types",
+										"{{agreeability_type_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get agreeability type by id from m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    // the id should be in the response body",
+											"    pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"    pm.expect(response.legacyId).to.eq(iterationData.get('legacyId'))",
+											"    pm.expect(response.name).to.eq(iterationData.get('name'))",
+											"    pm.expect(response.description).to.eq(iterationData.get('description'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types/{{agreeability_type_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types",
+										"{{agreeability_type_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get agreeability type by id with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types/{{agreeability_type_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types",
+										"{{agreeability_type_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get agreeability type by id with all kinds of invalid data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/agreeability-types/{{agreeability_type_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"agreeability-types",
+										"{{agreeability_type_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "terms reference",
+			"item": [
+				{
+					"name": "create terms for resource",
+					"item": [
+						{
+							"name": "create terms for resource by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"const idLabel = iterationData.get('idLabel')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.reference).to.eq(iterationData.get('reference'))",
+											"        pm.expect(response.referenceId).to.eq(iterationData.get('referenceId'))",
+											"        pm.expect(response.tag).to.eq(iterationData.get('tag'))",
+											"        pm.expect(response.termsOfUseIds.length).to.eq(JSON.parse(pm.request.body.toJSON().raw).termsOfUseIds.length)",
+											"        pm.environment.set(idLabel, response.id);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"reference\": \"{{reference}}\",\n    \"referenceId\": \"{{referenceId}}\",\n    \"tag\": \"{{tag}}\",\n    \"termsOfUseIds\": {{termsOfUseIds}}\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms for resource by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"const idLabel = iterationData.get('idLabel')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        pm.expect(response.reference).to.eq(iterationData.get('reference'))",
+											"        pm.expect(response.referenceId).to.eq(iterationData.get('referenceId'))",
+											"        pm.expect(response.tag).to.eq(iterationData.get('tag'))",
+											"        pm.expect(response.termsOfUseIds.length).to.eq(JSON.parse(pm.request.body.toJSON().raw).termsOfUseIds.length)",
+											"        pm.environment.set(idLabel, response.id);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"reference\": \"{{reference}}\",\n    \"referenceId\": \"{{referenceId}}\",\n    \"tag\": \"{{tag}}\",\n    \"termsOfUseIds\": {{termsOfUseIds}}\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms for reference with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    if (response.message) {",
+											"        pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"    } else {",
+											"        pm.expect(response.result.success).to.eq(false)",
+											"        pm.expect(response.result.content.message).to.eq(iterationData.get('message'))",
+											"        pm.expect(response.result.status).to.eq(iterationData.get('httpCode'))",
+											"    }",
+											"    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"reference\": \"invalid token tests\",\n    \"referenceId\": \"123468216\",\n    \"tag\": \"copilote\",\n    \"termsOfUseIds\": [\"{{TERMS_OF_USE_ID_3}}\"]\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create terms for reference with all kinds of invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.includes(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "search terms for resource",
+					"item": [
+						{
+							"name": "search terms for resource by default values by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms for resource by default values by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms for reference with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    if (response.message) {",
+											"        pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"    } else {",
+											"        pm.expect(response.result.success).to.eq(false)",
+											"        pm.expect(response.result.content.message).to.eq(iterationData.get('message'))",
+											"        pm.expect(response.result.status).to.eq(iterationData.get('httpCode'))",
+											"    }",
+											"    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms for reference with various parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search terms for reference with invalid parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get terms for resource",
+					"item": [
+						{
+							"name": "get terms for resource by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms for resource by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms for reference with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    if (response.message) {",
+											"        pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"    } else {",
+											"        pm.expect(response.result.success).to.eq(false)",
+											"        pm.expect(response.result.content.message).to.eq(iterationData.get('message'))",
+											"        pm.expect(response.result.status).to.eq(iterationData.get('httpCode'))",
+											"    }",
+											"    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{TERMS_FOR_REFERENCE_ID_1}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{TERMS_FOR_REFERENCE_ID_1}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get terms for reference with all kinds of invalid id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "partially update terms for resource",
+					"item": [
+						{
+							"name": "partially update terms for resource with any field by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.get('expected').reference) {",
+											"            pm.expect(response.reference).to.eq(iterationData.get('expected').reference)",
+											"        }",
+											"        if (iterationData.get('expected').referenceId) {",
+											"            pm.expect(response.referenceId).to.eq(iterationData.get('expected').referenceId)",
+											"        }",
+											"        if (iterationData.get('expected').tag) {",
+											"            pm.expect(response.tag).to.eq(iterationData.get('expected').tag)",
+											"        }",
+											"        if (iterationData.get('expected').termsOfUseIds) {",
+											"            pm.expect(response.termsOfUseIds.toString()).to.eq(JSON.parse(pm.request.body.toJSON().raw).termsOfUseIds.toString())",
+											"        }",
+											"        ",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "partially update terms for resource with any field by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.get('expected').reference) {",
+											"            pm.expect(response.reference).to.eq(iterationData.get('expected').reference)",
+											"        }",
+											"        if (iterationData.get('expected').referenceId) {",
+											"            pm.expect(response.referenceId).to.eq(iterationData.get('expected').referenceId)",
+											"        }",
+											"        if (iterationData.get('expected').tag) {",
+											"            pm.expect(response.tag).to.eq(iterationData.get('expected').tag)",
+											"        }",
+											"        if (iterationData.get('expected').termsOfUseIds) {",
+											"            pm.expect(response.termsOfUseIds.toString()).to.eq(JSON.parse(pm.request.body.toJSON().raw).termsOfUseIds.toString())",
+											"        }",
+											"        ",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "partially update terms for resource with invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "partially update terms for resource with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tag\": \"updated tag\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "fully update terms for resource",
+					"item": [
+						{
+							"name": "fully update terms for resource by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.reference) {",
+											"            pm.expect(response.reference).to.eq(iterationData.reference)",
+											"        }",
+											"        if (iterationData.referenceId) {",
+											"            pm.expect(response.referenceId).to.eq(iterationData.referenceId)",
+											"        }",
+											"        if (iterationData.tag) {",
+											"            pm.expect(response.tag).to.eq(iterationData.tag)",
+											"        }",
+											"        if (iterationData.termsOfUseIds) {",
+											"            pm.expect(response.termsOfUseIds.toString()).to.eq(JSON.parse(pm.request.body.toJSON().raw).termsOfUseIds.toString())",
+											"        }",
+											"        ",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"reference\": \"{{reference}}\",\n    \"referenceId\": \"{{referenceId}}\",\n    \"tag\": \"{{tag}}\",\n    \"termsOfUseIds\": {{termsOfUseIds}}\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms for resource by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    if(httpCode === 200){",
+											"        const response = pm.response.json()",
+											"        // the id should be in the response body",
+											"        pm.expect(response.id).to.eq(pm.request.url.path[pm.request.url.path.length - 1])",
+											"        if (iterationData.reference) {",
+											"            pm.expect(response.reference).to.eq(iterationData.reference)",
+											"        }",
+											"        if (iterationData.referenceId) {",
+											"            pm.expect(response.referenceId).to.eq(iterationData.referenceId)",
+											"        }",
+											"        if (iterationData.tag) {",
+											"            pm.expect(response.tag).to.eq(iterationData.tag)",
+											"        }",
+											"        if (iterationData.termsOfUseIds) {",
+											"            pm.expect(response.termsOfUseIds.toString()).to.eq(JSON.parse(pm.request.body.toJSON().raw).termsOfUseIds.toString())",
+											"        }",
+											"        ",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"reference\": \"{{reference}}\",\n    \"referenceId\": \"{{referenceId}}\",\n    \"tag\": \"{{tag}}\",\n    \"termsOfUseIds\": {{termsOfUseIds}}\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms for resource with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reference\": \"challenge m2m updated\",\n    \"referenceId\": \"12322456\",\n    \"tag\": \"copilote a\",\n    \"termsOfUseIds\": [\"{{TERMS_OF_USE_ID_1}}\"]\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fully update terms for resource with invalid request body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var inputJSONdata = pm.iterationData.get(\"input\");",
+											"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{input_body}}"
+								},
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "delete terms for resource",
+					"item": [
+						{
+							"name": "delete terms for resource by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 204`, function () {",
+											"    pm.response.to.have.status(204)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{TERMS_FOR_REFERENCE_ID_5}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{TERMS_FOR_REFERENCE_ID_5}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms for resource by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 204`, function () {",
+											"    pm.response.to.have.status(204)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{TERMS_FOR_REFERENCE_ID_6}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{TERMS_FOR_REFERENCE_ID_6}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms for resource with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete terms for resource with all kinds of invalid request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/reference/{{terms_resource_id}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"reference",
+										"{{terms_resource_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "check terms for resource",
+					"item": [
+						{
+							"name": "check the user terms for resource with parameters by admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/user/{{user_id}}/reference?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"user",
+										"{{user_id}}",
+										"reference"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "check the user terms for resource with parameters by m2m",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(`Status code is 200`, function () {",
+											"    pm.response.to.have.status(200);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.result.length).to.gt(0)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{m2m_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/user/{{user_id}}/reference?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"user",
+										"{{user_id}}",
+										"reference"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "check the user terms for reference with all kinds of invalid token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    if (response.message) {",
+											"        pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"    } else {",
+											"        pm.expect(response.result.success).to.eq(false)",
+											"        pm.expect(response.result.content.message).to.eq(iterationData.get('message'))",
+											"        pm.expect(response.result.status).to.eq(iterationData.get('httpCode'))",
+											"    }",
+											"    ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "{{jwtToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/user/{{user_id}}/reference?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"user",
+										"{{user_id}}",
+										"reference"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "check the user terms for reference with invalid parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const iterationData = pm.iterationData",
+											"const httpCode = iterationData.get('httpCode')",
+											"pm.test(`Status code is ${httpCode}`, function () {",
+											"    pm.response.to.have.status(httpCode);",
+											"    const response = pm.response.json()",
+											"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{URL}}/terms/user/{{user_id}}/reference?{{input}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"terms",
+										"user",
+										"{{user_id}}",
+										"reference"
+									],
+									"query": [
+										{
+											"key": "{{input}}",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "generate docusign view url",
+			"item": [
+				{
+					"name": "generate docusign view url by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const iterationData = pm.iterationData",
+									"const httpCode = iterationData.get('httpCode')",
+									"const idLabel = iterationData.get('idLabel')",
+									"pm.test(`Status code is ${httpCode}`, function () {",
+									"    pm.response.to.have.status(httpCode);",
+									"    if(httpCode === 200){",
+									"        const response = pm.response.json()",
+									"        pm.expect(response.recipientViewUrl).to.be.a('string')",
+									"        pm.expect(response.recipientViewUrl.length).to.gt(0)",
+									"        pm.expect(response.envelopeId).to.be.a('string')",
+									"        pm.expect(response.envelopeId.length).to.gt(0)",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"{{templateId}}\",\n    \"tabs\": {{tabs}}\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign view url by user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const iterationData = pm.iterationData",
+									"const httpCode = iterationData.get('httpCode')",
+									"const idLabel = iterationData.get('idLabel')",
+									"pm.test(`Status code is ${httpCode}`, function () {",
+									"    pm.response.to.have.status(httpCode);",
+									"    if(httpCode === 200){",
+									"        const response = pm.response.json()",
+									"        pm.expect(response.recipientViewUrl).to.be.a('string')",
+									"        pm.expect(response.recipientViewUrl.length).to.gt(0)",
+									"        pm.expect(response.envelopeId).to.be.a('string')",
+									"        pm.expect(response.envelopeId.length).to.gt(0)",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"{{templateId}}\",\n    \"tabs\": {{tabs}}\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign with all kinds of invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const iterationData = pm.iterationData",
+									"const httpCode = iterationData.get('httpCode')",
+									"pm.test(`Status code is ${httpCode}`, function () {",
+									"    pm.response.to.have.status(httpCode);",
+									"    const response = pm.response.json()",
+									"    if (response.message) {",
+									"        pm.expect(response.message).to.eq(iterationData.get('message'))",
+									"    } else {",
+									"        pm.expect(response.result.success).to.eq(false)",
+									"        pm.expect(response.result.content.message).to.eq(iterationData.get('message'))",
+									"        pm.expect(response.result.status).to.eq(iterationData.get('httpCode'))",
+									"    }",
+									"    ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"7e987123-2e7c-4682-b01a-1cd72d6a70f5\",\n\t\"tabs\": [\"testKey||testValue\"]\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign view url by template id only",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const iterationData = pm.iterationData",
+									"const httpCode = iterationData.get('httpCode')",
+									"const idLabel = iterationData.get('idLabel')",
+									"pm.test(`Status code is ${httpCode}`, function () {",
+									"    pm.response.to.have.status(httpCode);",
+									"    if(httpCode === 200){",
+									"        const response = pm.response.json()",
+									"        pm.expect(response.recipientViewUrl).to.be.a('string')",
+									"        pm.expect(response.recipientViewUrl.length).to.gt(0)",
+									"        pm.expect(response.envelopeId).to.be.a('string')",
+									"        pm.expect(response.envelopeId.length).to.gt(0)",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"templateId\": \"{{templateId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate docusign view url with all kinds of invalid request body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const iterationData = pm.iterationData",
+									"const httpCode = iterationData.get('httpCode')",
+									"pm.test(`Status code is ${httpCode}`, function () {",
+									"    pm.response.to.have.status(httpCode);",
+									"    const response = pm.response.json()",
+									"    pm.expect(response.message).to.eq(iterationData.get('message'))",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var inputJSONdata = pm.iterationData.get(\"input\");",
+									"pm.variables.set(\"input_body\",JSON.stringify(inputJSONdata));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{input_body}}"
+						},
+						"url": {
+							"raw": "{{URL}}/terms/docusignViewURL",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"terms",
+								"docusignViewURL"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

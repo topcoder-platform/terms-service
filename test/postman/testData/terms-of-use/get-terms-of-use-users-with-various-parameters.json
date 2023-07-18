@@ -1,0 +1,26 @@
+[
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_2}}",
+    "input": "page=1&perPage=10&userId=23124329"
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "input": "page=1&perPage=1"
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "input": "page=1&perPage=1&userId=23124329,151743"
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "input": "signedAtFrom=2020-09-25T00:00:00.000Z"
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "input": "signedAtTo=2120-09-27T00:00:00.000Z"
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "input": "signedAtFrom=2020-09-25T00:00:00.000Z&signedAtTo=2120-09-27T00:00:00.000Z"
+  }
+]

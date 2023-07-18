@@ -1,0 +1,14 @@
+[
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "userId": 32345
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "userId": 323456
+  },
+  {
+    "terms_id": "{{TERMS_OF_USE_ID_1}}",
+    "userId": 3234578
+  }
+]
