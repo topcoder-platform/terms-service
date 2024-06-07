@@ -2,7 +2,7 @@
 set -eo pipefail
 UPDATE_CACHE=""
 echo "" > docker/api.env
-docker-compose -f docker/docker-compose.yml build terms-service
+docker compose -f docker/docker-compose.yml build terms-service
 #docker images
 docker create --name app terms-service:latest
 if [ -d node_modules ]
