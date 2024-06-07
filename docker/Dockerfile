@@ -10,4 +10,4 @@ WORKDIR /terms-service
 
 # Install the dependencies from package.json
 RUN npm install
-CMD node app.js
+CMD [ "node", "app.js" ]
