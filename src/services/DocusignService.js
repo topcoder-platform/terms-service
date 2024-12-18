@@ -38,10 +38,8 @@ async function generateDocusignViewURL (currentUser, data) {
   let baseUrl
   try {
     const res = await helper.getRequest(`https://${config.DOCUSIGN.OAUTH_BASE_PATH}/oauth/userinfo`)
-    console.log(`RESPONSE: ${res.body}`)
     baseUrl = res.body.accounts[0].base_uri
   } catch (err) {
-    console.log(`ERROR: ${JSON.stringify(err, null, 5)}`)
     console.log(`ERROR: ${err}`)
     throw new errors.InternalServerError('Login to DocuSign server failed.')
   }
