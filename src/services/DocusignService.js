@@ -20,11 +20,11 @@ const DocusignEnvelope = models.DocusignEnvelope
  */
 async function getUser (userId) {
   const m2mToken = await helper.getM2Mtoken()
-  const res = await helper.getRequest(`${config.USER_API_URL}?filter=id=${userId}`, `Bearer ${m2mToken}`)
-  if (res.body.result.content.length === 0) {
+  const res = await helper.getRequest(`${config.USER_API_URL}?userId=${userId}`, `Bearer ${m2mToken}`)
+  if (res.body.length === 0) {
     throw new errors.NotFoundError(`User with given id: ${userId} doesn't exist`)
   }
-  return res.body.result.content[0]
+  return res.body
 }
 
 /**
@@ -38,7 +38,7 @@ async function generateDocusignViewURL (currentUser, data) {
   let baseUrl
   try {
     const res = await helper.getRequest(`https://${config.DOCUSIGN.OAUTH_BASE_PATH}/oauth/userinfo`)
-    baseUrl = res.body.accounts[0].base_uri
+    baseUrl = res.body.accounts[0].base_uri + '/restapi/v2/accounts/' + res.body.accounts[0].account_id
   } catch (err) {
     console.log(`ERROR: ${err}`)
     throw new errors.InternalServerError('Login to DocuSign server failed.')
@@ -55,7 +55,6 @@ async function generateDocusignViewURL (currentUser, data) {
 
   // start transaction
   const transaction = await models.sequelize.transaction()
-
   try {
     if (_.isNull(docuEnvelope)) {
       let textTabs = []
@@ -91,6 +90,7 @@ async function generateDocusignViewURL (currentUser, data) {
         if (_.get(err, 'response.body.errorCode') === TEMPLATE_ID_INVALID) {
           throw new errors.NotFoundError('Template with given id was not found.')
         }
+        console.log(`ERROR: ${err}`)
         throw new errors.InternalServerError('Requesting Signature via template failed.')
       }
 

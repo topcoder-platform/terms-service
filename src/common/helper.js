@@ -82,11 +82,10 @@ async function getDocusignToken() {
       config.DOCUSIGN.JWT_LIFE_SPAN
     )
     let token = results.body.access_token
-    console.log(`Received Docusign token: ${token}`)
     return token
   }
   catch(err){
-    console.log(`TEST ERROR: ${err}`)
+    console.log(`ERROR: ${err}`)
   }
 }
 /**
@@ -99,7 +98,7 @@ async function postRequest (url, body) {
   return request
     .post(url)
     .send(body)
-    .set('X-DocuSign-Authentication', await getDocusignToken())
+    .set('Authorization', `Bearer ${await getDocusignToken()}`)
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/json')
 }
@@ -111,9 +110,7 @@ async function postRequest (url, body) {
  * @returns {Object} the response
  */
 async function getRequest (url, m2mToken) {
-  console.log(`URL: ${url}`)
   const authHeader = 'Authorization'
-  console.log(authHeader)
   return request
     .get(url)
     .set(authHeader, m2mToken || `Bearer ${await getDocusignToken()}`)
