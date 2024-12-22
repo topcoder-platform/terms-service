@@ -85,7 +85,7 @@ async function getDocusignToken() {
       config.DOCUSIGN.USERNAME,
       SCOPES,
       config.DOCUSIGN.PRIVATE_RSA_KEY,
-      config.DOCUSIGN.JWT_LIFE_SPAN
+      Number(config.DOCUSIGN.JWT_LIFE_SPAN)
     )
     let token = results.body.access_token
     return token
