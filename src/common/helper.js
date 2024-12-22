@@ -74,6 +74,12 @@ async function getDocusignToken() {
     dsClient.setBasePath(config.DOCUSIGN.SERVER_URL)
     dsClient.setOAuthBasePath(config.DOCUSIGN.OAUTH_BASE_PATH)
     
+    console.log(config.DOCUSIGN.INTEGRATOR_KEY)
+    console.log(config.DOCUSIGN.USERNAME)
+    console.log(SCOPES)
+    console.log(config.DOCUSIGN.PRIVATE_RSA_KEY)
+    console.log(config.DOCUSIGN.JWT_LIFE_SPAN)
+    
     results = await dsClient.requestJWTUserToken(
       config.DOCUSIGN.INTEGRATOR_KEY,
       config.DOCUSIGN.USERNAME,
@@ -85,7 +91,7 @@ async function getDocusignToken() {
     return token
   }
   catch(err){
-    console.log(`ERROR: ${err}`)
+    console.log(`TOKEN RETRIEVAL ERROR: ${err}`)
   }
 }
 /**
