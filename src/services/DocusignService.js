@@ -24,7 +24,7 @@ async function getUser (userId) {
   if (res.body.length === 0) {
     throw new errors.NotFoundError(`User with given id: ${userId} doesn't exist`)
   }
-  return res.body
+  return res.body[0]
 }
 
 /**
