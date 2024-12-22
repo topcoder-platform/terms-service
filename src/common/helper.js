@@ -91,7 +91,7 @@ async function getDocusignToken() {
     return token
   }
   catch(err){
-    console.log(`TOKEN RETRIEVAL ERROR: ${err}`)
+    console.log(`TOKEN RETRIEVAL ERROR: ${JSON.stringify(err, null, 4)}`)
   }
 }
 /**
