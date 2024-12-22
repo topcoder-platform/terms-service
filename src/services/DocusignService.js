@@ -90,7 +90,7 @@ async function generateDocusignViewURL (currentUser, data) {
         if (_.get(err, 'response.body.errorCode') === TEMPLATE_ID_INVALID) {
           throw new errors.NotFoundError('Template with given id was not found.')
         }
-        console.log(`ERROR: ${err}`)
+        console.log(`ERROR: ${JSON.stringify(err)}`)
         throw new errors.InternalServerError('Requesting Signature via template failed.')
       }
 
