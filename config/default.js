@@ -19,7 +19,7 @@ module.exports = {
   AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
   AUTH0_PROXY_SERVER_URL: process.env.AUTH0_PROXY_SERVER_URL || 'https://topcoder-dev.auth0.com/oauth/token',
 
-  USER_API_URL: process.env.USER_API_URL || 'https://api.topcoder-dev.com/v3/users',
+  USER_API_URL: process.env.USER_API_URL || 'https://api.topcoder-dev.com/v5/members',
 
   BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v5',
   KAFKA_ERROR_TOPIC: process.env.KAFKA_ERROR_TOPIC || 'common.error.reporting',
@@ -41,6 +41,9 @@ module.exports = {
     PASSWORD: process.env.DOCUSIGN_PASSWORD,
     INTEGRATOR_KEY: process.env.DOCUSIGN_INTEGRATOR_KEY,
     SERVER_URL: process.env.DOCUSIGN_SERVER_URL || 'https://demo.docusign.net/restapi/v2/',
+    OAUTH_BASE_PATH: process.env.DOCUSIGN_OAUTH_BASE_PATH || 'account-d.docusign.com',
+    PRIVATE_RSA_KEY: process.env.DOCUSIGN_PRIVATE_RSA_KEY,
+    JWT_LIFE_SPAN: process.env.DOCUSIGN_JWT_LIFE_SPAN || 600,
     ROLENAME: process.env.DOCUSIGN_ROLENAME || 'Member',
     CLIENT_USER_ID: process.env.DOCUSIGN_CLIENT_USER_ID || 'Member',
     RETURN_URL: process.env.DOCUSIGN_RETURN_URL || 'http://localhost:3000/terms/docusign/returnSigning&envelopeId=<%= envelopeId %>',

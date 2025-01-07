@@ -14,12 +14,8 @@ const m2m = m2mAuth(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_
 const busApi = require('tc-bus-api-wrapper')
 const busApiClient = busApi(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET', 'BUSAPI_URL', 'KAFKA_ERROR_TOPIC', 'AUTH0_PROXY_SERVER_URL']))
-
-const docuSignAuth = JSON.stringify({
-  Username: config.DOCUSIGN.USERNAME,
-  Password: config.DOCUSIGN.PASSWORD,
-  IntegratorKey: config.DOCUSIGN.INTEGRATOR_KEY
-})
+const docusign = require('docusign-esign')
+const fs = require('fs')
 
 /**
  * Wrap async function to standard express function
@@ -61,6 +57,43 @@ async function getM2Mtoken () {
   return m2m.getMachineToken(config.AUTH0_CLIENT_ID, config.AUTH0_CLIENT_SECRET)
 }
 
+async function getDocusignToken() {
+  console.log("Getting docusign token...")
+  let dsClient = new docusign.ApiClient();
+  try {
+    const SCOPES = [
+      'signature', 'impersonation'
+    ];
+    
+    let redirectUri = 'https://developers.docusign.com/platform/auth/consent'
+    let consentUrl = `${config.DOCUSIGN.OAUTH_BASE_PATH}/oauth/auth?response_type=code&` +
+    `scope=${SCOPES.join('+')}&client_id=${config.DOCUSIGN.INTEGRATOR_KEY}&` +
+    `redirect_uri=${redirectUri}`;
+    console.log(consentUrl)
+    
+    dsClient.setBasePath(config.DOCUSIGN.SERVER_URL)
+    dsClient.setOAuthBasePath(config.DOCUSIGN.OAUTH_BASE_PATH)
+    
+    console.log(config.DOCUSIGN.INTEGRATOR_KEY)
+    console.log(config.DOCUSIGN.USERNAME)
+    console.log(SCOPES)
+    console.log(config.DOCUSIGN.PRIVATE_RSA_KEY)
+    console.log(config.DOCUSIGN.JWT_LIFE_SPAN)
+    
+    results = await dsClient.requestJWTUserToken(
+      config.DOCUSIGN.INTEGRATOR_KEY,
+      config.DOCUSIGN.USERNAME,
+      SCOPES,
+      config.DOCUSIGN.PRIVATE_RSA_KEY,
+      Number(config.DOCUSIGN.JWT_LIFE_SPAN)
+    )
+    let token = results.body.access_token
+    return token
+  }
+  catch(err){
+    console.log(`TOKEN RETRIEVAL ERROR: ${JSON.stringify(err, null, 4)}`)
+  }
+}
 /**
  * Uses superagent to proxy post request
  * @param {String} url the url
@@ -71,7 +104,7 @@ async function postRequest (url, body) {
   return request
     .post(url)
     .send(body)
-    .set('X-DocuSign-Authentication', docuSignAuth)
+    .set('Authorization', `Bearer ${await getDocusignToken()}`)
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/json')
 }
@@ -83,10 +116,10 @@ async function postRequest (url, body) {
  * @returns {Object} the response
  */
 async function getRequest (url, m2mToken) {
-  const authHeader = m2mToken ? 'Authorization' : 'X-DocuSign-Authentication'
+  const authHeader = 'Authorization'
   return request
     .get(url)
-    .set(authHeader, m2mToken || docuSignAuth)
+    .set(authHeader, m2mToken || `Bearer ${await getDocusignToken()}`)
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/json')
 }
