@@ -17,7 +17,7 @@
     "config": "^3.2.0",
     "informix-wrapper": "git+https://github.com/appirio-tech/informix-wrapper.git#less-logs",
     "lodash": "^4.17.14",
-    "pg": "^7.10.0",
+    "pg": "^7.18.2",
     "pg-hstore": "^2.3.2",
     "sequelize": "^5.15.1",
     "uuid": "^3.3.2",
