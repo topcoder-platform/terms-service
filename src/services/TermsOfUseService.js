@@ -139,7 +139,7 @@ async function agreeTermsOfUse (currentUser, termsOfUseId) {
     where: { userId: currentUser.userId, termsOfUseId }
   })
   if (exist.length > 0) {
-    throw new errors.BadRequestError(`User ${current.userId} has already agreed to terms ${termsOfUseId}`)
+    throw new errors.BadRequestError(`User ${currentUser.userId} has already agreed to terms ${termsOfUseId}`)
   }
 
   // check user has agreed all dependency terms of use
