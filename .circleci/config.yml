@@ -1,21 +1,22 @@
-version: 2
+version: 2.1
 defaults: &defaults
-    docker:
-      - image: cimg/python:3.13.2-browsers       
+  docker:
+    - image: cimg/python:3.13.2-browsers
 install_dependency: &install_dependency
-          name: Installation of build and deployment dependencies.
-          command: |
-            sudo apt update
-            sudo apt install jq
-            sudo apt install python3-pip
-            sudo pip3 install awscli --upgrade
+  name: Installation of build and deployment dependencies.
+  command: |
+    sudo apt update
+    sudo apt install jq
+    sudo apt install python3-pip
+    sudo pip3 install awscli --upgrade
 install_deploysuite: &install_deploysuite
-          name: Installation of install_deploysuite.
-          command: |
-            git clone --branch v1.4.15 https://github.com/topcoder-platform/tc-deploy-scripts ../buildscript
-            cp ./../buildscript/master_deploy.sh .
-            cp ./../buildscript/buildenv.sh .
-            cp ./../buildscript/awsconfiguration.sh .
+  name: Installation of install_deploysuite.
+  command: |
+    git clone --branch v1.4.19 https://github.com/topcoder-platform/tc-deploy-scripts ../buildscript
+    cp ./../buildscript/master_deploy.sh .
+    cp ./../buildscript/buildenv.sh .
+    cp ./../buildscript/awsconfiguration.sh .
+    cp ./../buildscript/psvar-processor.sh .
 
 restore_cache_settings_for_build: &restore_cache_settings_for_build
   key: docker-node-modules-{{ checksum "package-lock.json" }}
@@ -26,25 +27,29 @@ save_cache_settings: &save_cache_settings
     - node_modules
 
 run_build: &run_build
-          name: Building images
-          command: ./build.sh
+  name: Build of Docker image
+  command: ./build.sh
 
-build_steps: &build_steps
-      - checkout
-      - setup_remote_docker
-      - run: *install_dependency
-      - run: *install_deploysuite
-      - restore_cache: *restore_cache_settings_for_build
-      - run: *run_build
-      - save_cache: *save_cache_settings
-      - deploy:
-          name: Running MasterScript.
-          command: |
-            ./awsconfiguration.sh ${DEPLOY_ENV}
-            source awsenvconf
-            ./buildenv.sh -e ${DEPLOY_ENV} -b ${LOGICAL_ENV}-${APP_NAME}-deployvar
-            source buildenvvar
-            ./master_deploy.sh -d ECS -e ${DEPLOY_ENV} -t latest -s ${LOGICAL_ENV}-global-appvar,${LOGICAL_ENV}-global-informix-appvar,${LOGICAL_ENV}-${APP_NAME}-appvar -i terms-service -p FARGATE
+builddeploy_steps: &builddeploy_steps
+  - checkout
+  - setup_remote_docker
+  - run: *install_dependency
+  - run: *install_deploysuite
+  - restore_cache: *restore_cache_settings_for_build
+  - run: *run_build
+  - save_cache: *save_cache_settings
+  - deploy:
+      name: Running deployment.
+      command: |
+        ./awsconfiguration.sh $DEPLOY_ENV
+        source awsenvconf
+        #./buildenv.sh -e DEV -b ${LOGICAL_ENV}-${APP_NAME}-deployvar
+        #source buildenvvar
+        #./master_deploy.sh -d ECS -e DEV -t latest -s dev-global-appvar,${LOGICAL_ENV}-${APP_NAME}-appvar -i ${APP_NAME} -p FARGATE
+        #./deploy.sh DEV $CIRCLE_SHA1  
+        ./psvar-processor.sh -t appenv -p /config/${APP_NAME}/deployvar
+        source deployvar_env
+        ./master_deploy.sh -d ECS -e $DEPLOY_ENV -t latest -j /config/${APP_NAME}/appvar,/config/common/global-appvar -i ${APP_NAME} -p FARGATE
 
 jobs:
   # Build & Deploy against development backend
@@ -54,7 +59,7 @@ jobs:
       DEPLOY_ENV: "DEV"
       LOGICAL_ENV: "dev"
       APP_NAME: "terms-service"
-    steps: *build_steps
+    steps: *builddeploy_steps
   # Build & Deploy against production backend
   "build-prod":
     <<: *defaults
@@ -62,22 +67,21 @@ jobs:
       DEPLOY_ENV: "PROD"
       LOGICAL_ENV: "prod"
       APP_NAME: "terms-service"
-    steps: *build_steps
+    steps: *builddeploy_steps
 workflows:
   version: 2
   build:
     jobs:
       # Development builds are executed on "develop" branch only.
       - "build-dev":
-          context : org-global
+          context: org-global
           filters:
             branches:
               only:
                 - dev
                 - docusign
       - "build-prod":
-          context : org-global
+          context: org-global
           filters:
             branches:
-              only:
-                - master
+              only: master
