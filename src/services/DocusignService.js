@@ -14,6 +14,23 @@ const models = require('../models')
 const DocusignEnvelope = models.DocusignEnvelope
 
 /**
+ * Publish the envelope-created notification without making DocuSign signing
+ * depend on BUS API availability. The shared database remains the source of
+ * truth used by the callback receiver.
+ * @param {Object} envelopeData the persisted envelope record
+ * @returns {Promise<void>} settled after publication succeeds or is safely skipped
+ * @throws Does not throw; publication failures are recorded without credentials
+ */
+async function publishEnvelopeCreatedEvent (envelopeData) {
+  try {
+    await helper.postEvent(config.DOCUSIGN_ENVELOPE_CREATE_TOPIC, envelopeData)
+  } catch (err) {
+    const status = _.get(err, 'status') || _.get(err, 'response.status') || 'unknown'
+    logger.error(`Failed to publish the DocuSign envelope-created event. BUS API status: ${status}.`)
+  }
+}
+
+/**
  * Get user by user id
  * @param {String} userId the user id
  * @returns {Object} the user data
@@ -34,13 +51,13 @@ async function getUser (userId) {
  * @returns {Object} the recipient view url and envelop id
  */
 async function generateDocusignViewURL (currentUser, data) {
-  logger.debug(`generateDocusignViewURL ${JSON.stringify(currentUser)} ${JSON.stringify(data)}`)
+  logger.debug(`Generating a DocuSign recipient view for template ${data.templateId}.`)
   let baseUrl
   try {
     const res = await helper.getRequest(`https://${config.DOCUSIGN.OAUTH_BASE_PATH}/oauth/userinfo`)
     baseUrl = res.body.accounts[0].base_uri + '/restapi/v2/accounts/' + res.body.accounts[0].account_id
   } catch (err) {
-    console.log(`ERROR: ${err}`)
+    logger.error('DocuSign user information request failed.')
     throw new errors.InternalServerError('Login to DocuSign server failed.')
   }
 
@@ -52,12 +69,14 @@ async function generateDocusignViewURL (currentUser, data) {
     raw: true
   })
   let envelopeId
+  let createdEnvelopeData
+  let recipientViewUrl
 
   // start transaction
   const transaction = await models.sequelize.transaction()
   try {
     if (_.isNull(docuEnvelope)) {
-      let textTabs = []
+      const textTabs = []
       // Set the default tab values if provided
       if (data.tabs && data.tabs.length > 0) {
         for (let i = 0; i < data.tabs.length; i++) {
@@ -78,11 +97,11 @@ async function generateDocusignViewURL (currentUser, data) {
           roleName: config.DOCUSIGN.ROLENAME,
           clientUserId: config.DOCUSIGN.CLIENT_USER_ID,
           tabs: {
-            textTabs: textTabs
+            textTabs
           }
         }]
       }
-      logger.debug(`docusign envelope request body ${JSON.stringify(body)}`)
+      logger.debug(`Creating a DocuSign envelope for template ${data.templateId}.`)
       try {
         const res = await helper.postRequest(`${baseUrl}/envelopes`, body)
         envelopeId = res.body.envelopeId
@@ -90,7 +109,8 @@ async function generateDocusignViewURL (currentUser, data) {
         if (_.get(err, 'response.body.errorCode') === TEMPLATE_ID_INVALID) {
           throw new errors.NotFoundError('Template with given id was not found.')
         }
-        console.log(`ERROR: ${JSON.stringify(err)}`)
+        const errorCode = _.get(err, 'response.body.errorCode') || 'unknown'
+        logger.error(`DocuSign envelope request failed. Error code: ${errorCode}.`)
         throw new errors.InternalServerError('Requesting Signature via template failed.')
       }
 
@@ -102,11 +122,11 @@ async function generateDocusignViewURL (currentUser, data) {
       }
 
       await DocusignEnvelope.create(envelopeData, { transaction })
-      await helper.postEvent(config.DOCUSIGN_ENVELOPE_CREATE_TOPIC, envelopeData)
+      createdEnvelopeData = envelopeData
     } else {
       envelopeId = docuEnvelope.id
       // envelope existed. Check if it's already signed
-      logger.debug(`Docusign Envelope Found ${JSON.stringify(docuEnvelope)}`)
+      logger.debug(`Existing DocuSign envelope ${envelopeId} found.`)
     }
 
     // Request recipient view
@@ -119,26 +139,32 @@ async function generateDocusignViewURL (currentUser, data) {
       userName: `${user.firstName} ${user.lastName}`,
       authenticationMethod: 'none'
     }
-    logger.debug(`docusign request body ${JSON.stringify(envelopeBody)}`)
-    let recipientViewUrl
+    logger.debug(`Requesting a DocuSign recipient view for envelope ${envelopeId}.`)
     try {
       const res = await helper.postRequest(url, envelopeBody)
       recipientViewUrl = res.body.url
     } catch (err) {
-      logger.logFullError(err)
+      const errorCode = _.get(err, 'response.body.errorCode') || 'unknown'
+      logger.error(`DocuSign recipient-view request failed. Error code: ${errorCode}.`)
       throw new errors.BadRequestError('Requesting recipient view failed.')
     }
 
     // commit
     await transaction.commit()
-
-    return { recipientViewUrl, envelopeId }
   } catch (err) {
     // roll back and re-throw error
     await transaction.rollback()
 
     throw err
   }
+
+  if (createdEnvelopeData) {
+    // The notification is observational; do not hold the recipient URL open
+    // when BUS API is slow or unavailable.
+    publishEnvelopeCreatedEvent(createdEnvelopeData)
+  }
+
+  return { recipientViewUrl, envelopeId }
 }
 
 generateDocusignViewURL.schema = {
@@ -151,7 +177,8 @@ generateDocusignViewURL.schema = {
 }
 
 module.exports = {
-  generateDocusignViewURL
+  generateDocusignViewURL,
+  publishEnvelopeCreatedEvent
 }
 
 // logger.buildService(module.exports)
