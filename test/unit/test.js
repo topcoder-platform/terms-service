@@ -10,10 +10,10 @@ const { initDB } = require('../../src/init-db')
 const { insertData } = require('../../src/test-data')
 
 describe('Topcoder - Terms API Unit Test', () => {
-  let infoLogs = []
-  let errorLogs = []
-  let debugLogs = []
-  let warnLogs = []
+  const infoLogs = []
+  const errorLogs = []
+  const debugLogs = []
+  const warnLogs = []
   const info = logger.info
   const error = logger.error
   const debug = logger.debug
@@ -73,8 +73,12 @@ describe('Topcoder - Terms API Unit Test', () => {
 
   describe('Docusign Unit Test', () => {
     require('./generateDocusignViewUrl.test')
+    require('./generateDocusignViewResilience.test')
+    require('./publishDocusignEnvelopeEvent.test')
     // require('./docusignCallback.test')
   })
+
+  require('./logger.test')
 
   describe('New features', () => {
     before(async () => {
