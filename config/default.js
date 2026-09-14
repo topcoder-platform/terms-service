@@ -21,7 +21,7 @@ module.exports = {
 
   USER_API_URL: process.env.USER_API_URL || 'https://api.topcoder-dev.com/v5/members',
 
-  BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v5',
+  BUSAPI_URL: process.env.BUSAPI_URL || 'https://api.topcoder-dev.com/v6',
   KAFKA_ERROR_TOPIC: process.env.KAFKA_ERROR_TOPIC || 'common.error.reporting',
   KAFKA_MESSAGE_ORIGINATOR: process.env.KAFKA_MESSAGE_ORIGINATOR || 'terms-api',
   TERMS_CREATE_TOPIC: process.env.TERMS_CREATE_TOPIC || 'terms.notification.created',

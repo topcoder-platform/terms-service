@@ -21,6 +21,28 @@ const logger = createLogger({
   ]
 })
 
+const PRIVATE_KEY_PATTERN = /-----BEGIN(?: [A-Z]+)? PRIVATE KEY-----[\s\S]*?-----END(?: [A-Z]+)? PRIVATE KEY-----/gi
+const SENSITIVE_FIELD_PATTERN = /(["']?(?:authorization|access[_-]?token|client[_-]?secret|private[_-]?(?:rsa[_-]?)?key)["']?\s*:\s*)(["'])([\s\S]*?)\2/gi
+const BEARER_TOKEN_PATTERN = /\bBearer\s+[^\s,"'\\}]+/gi
+const JWT_PATTERN = /\beyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g
+const SENSITIVE_QUERY_PATTERN = /([?&](?:client_id|client_secret|assertion)=)[^&\s]+/gi
+
+/**
+ * Redact authentication material from formatted log output.
+ * This is applied after inspection so it also covers nested HTTP request and
+ * response objects whose authorization headers would otherwise reach logs.
+ * @param {String} value the formatted value to sanitize
+ * @returns {String} text safe to write to application logs
+ */
+function redactSensitiveLogData (value) {
+  return String(value)
+    .replace(PRIVATE_KEY_PATTERN, '<redacted private key>')
+    .replace(SENSITIVE_FIELD_PATTERN, '$1$2<redacted>$2')
+    .replace(BEARER_TOKEN_PATTERN, 'Bearer <redacted>')
+    .replace(JWT_PATTERN, '<redacted jwt>')
+    .replace(SENSITIVE_QUERY_PATTERN, '$1<redacted>')
+}
+
 /**
  * Log error details with signature
  * @param err the error
@@ -33,9 +55,9 @@ logger.logFullError = (err, signature) => {
   if (signature) {
     logger.error(`Error happened in ${signature}`)
   }
-  logger.error(util.inspect(err))
+  logger.error(redactSensitiveLogData(util.inspect(err)))
   if (!err.logged) {
-    logger.error(err.stack)
+    logger.error(redactSensitiveLogData(err.stack))
     err.logged = true
   }
 }

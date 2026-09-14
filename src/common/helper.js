@@ -15,7 +15,6 @@ const busApi = require('tc-bus-api-wrapper')
 const busApiClient = busApi(_.pick(config, ['AUTH0_URL', 'AUTH0_AUDIENCE', 'TOKEN_CACHE_TIME', 'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET', 'BUSAPI_URL', 'KAFKA_ERROR_TOPIC', 'AUTH0_PROXY_SERVER_URL']))
 const docusign = require('docusign-esign')
-const fs = require('fs')
 
 /**
  * Wrap async function to standard express function
@@ -57,41 +56,32 @@ async function getM2Mtoken () {
   return m2m.getMachineToken(config.AUTH0_CLIENT_ID, config.AUTH0_CLIENT_SECRET)
 }
 
-async function getDocusignToken() {
-  console.log("Getting docusign token...")
-  let dsClient = new docusign.ApiClient();
+/**
+ * Request a DocuSign JWT user token without writing credentials or tokens to logs.
+ * @returns {String} DocuSign access token
+ * @throws {InternalServerError} when DocuSign authentication fails
+ */
+async function getDocusignToken () {
+  const dsClient = new docusign.ApiClient()
   try {
-    const SCOPES = [
+    const scopes = [
       'signature', 'impersonation'
-    ];
-    
-    let redirectUri = 'https://developers.docusign.com/platform/auth/consent'
-    let consentUrl = `${config.DOCUSIGN.OAUTH_BASE_PATH}/oauth/auth?response_type=code&` +
-    `scope=${SCOPES.join('+')}&client_id=${config.DOCUSIGN.INTEGRATOR_KEY}&` +
-    `redirect_uri=${redirectUri}`;
-    console.log(consentUrl)
-    
+    ]
+
     dsClient.setBasePath(config.DOCUSIGN.SERVER_URL)
     dsClient.setOAuthBasePath(config.DOCUSIGN.OAUTH_BASE_PATH)
-    
-    console.log(config.DOCUSIGN.INTEGRATOR_KEY)
-    console.log(config.DOCUSIGN.USERNAME)
-    console.log(SCOPES)
-    console.log(config.DOCUSIGN.PRIVATE_RSA_KEY)
-    console.log(config.DOCUSIGN.JWT_LIFE_SPAN)
-    
-    results = await dsClient.requestJWTUserToken(
+
+    const results = await dsClient.requestJWTUserToken(
       config.DOCUSIGN.INTEGRATOR_KEY,
       config.DOCUSIGN.USERNAME,
-      SCOPES,
+      scopes,
       config.DOCUSIGN.PRIVATE_RSA_KEY,
       Number(config.DOCUSIGN.JWT_LIFE_SPAN)
     )
-    let token = results.body.access_token
-    return token
-  }
-  catch(err){
-    console.log(`TOKEN RETRIEVAL ERROR: ${JSON.stringify(err, null, 4)}`)
+    return results.body.access_token
+  } catch (err) {
+    logger.error('DocuSign token retrieval failed.')
+    throw new errors.InternalServerError('Login to DocuSign server failed.')
   }
 }
 /**
