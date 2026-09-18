@@ -16,7 +16,7 @@
     "bluebird": "^3.5.5",
     "config": "^3.2.0",
     "informix-wrapper": "git+https://github.com/appirio-tech/informix-wrapper.git#less-logs",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.21",
     "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^5.15.1",
